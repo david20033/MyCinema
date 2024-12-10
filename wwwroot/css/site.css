@@ -20,3 +20,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.FilmImage:hover {
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+.FilmImage {
+    opacity: 1;
+    display: block;
+    height: auto;
+    transition: 0.5s ease;
+    backface-visibility: hidden;
+}
