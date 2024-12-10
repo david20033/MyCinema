@@ -12,7 +12,6 @@ namespace MyCinema.Data
         public virtual DbSet<Movie> Movie { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<MovieGenre> MovieGenre { get; set; }
-        public virtual DbSet<Actor> Actor { get; set; }
         public virtual DbSet<MoviePhoto> MoviePhoto { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +33,8 @@ namespace MyCinema.Data
                 .IsRequired();
                 e.Property(m => m.Description)
                 .IsRequired();
+                e.Property(m=>m.MovieActors)
+                .IsRequired();
                 e.Property(m => m.Subtitles)
                 .HasDefaultValue(false);
             });
@@ -52,18 +53,6 @@ namespace MyCinema.Data
                 .WithMany(g => g.MovieGenres)
                 .HasForeignKey(mg => mg.GenreId);
 
-            modelBuilder.Entity<MovieActor>()
-                .HasKey(ma => new { ma.MovieId, ma.ActorId });
-
-            modelBuilder.Entity<MovieActor>()
-                .HasOne(ma => ma.Movie)
-                .WithMany(m => m.MovieActors)
-                .HasForeignKey(ma => ma.MovieId);
-
-            modelBuilder.Entity<MovieActor>()
-                .HasOne(ma => ma.Actor)
-                .WithMany(a => a.MovieActors)
-                .HasForeignKey(ma => ma.ActorId);
 
             modelBuilder.Entity<MoviePhoto>()
                 .HasOne(p=>p.Movie)
