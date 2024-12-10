@@ -13,6 +13,8 @@ namespace MyCinema.Data
         public string Description { get; set; }
         public ICollection<MovieGenre> MovieGenres { get; set; }
         public ICollection<MovieActor> MovieActors { get; set; }
+
+        public ICollection<MoviePhoto> MoviePhotos { get; set; }    
         public bool Subtitles {  get; set; }    
     }
 }

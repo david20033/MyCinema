@@ -13,6 +13,7 @@ namespace MyCinema.Data
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<MovieGenre> MovieGenre { get; set; }
         public virtual DbSet<Actor> Actor { get; set; }
+        public virtual DbSet<MoviePhoto> MoviePhoto { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -63,6 +64,12 @@ namespace MyCinema.Data
                 .HasOne(ma => ma.Actor)
                 .WithMany(a => a.MovieActors)
                 .HasForeignKey(ma => ma.ActorId);
+
+            modelBuilder.Entity<MoviePhoto>()
+                .HasOne(p=>p.Movie)
+                .WithMany(m=>m.MoviePhotos)
+                .HasForeignKey(m=>m.MovieId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }
