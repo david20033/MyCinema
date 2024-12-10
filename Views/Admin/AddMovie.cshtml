@@ -1,0 +1,64 @@
+﻿
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">Add Movie</h1>
+    <form action="AddMovie" method="post" enctype="multipart/form-data" class="row g-3 needs-validation">
+        <div class="col-md-12">
+            <label for="" class="form-label">Name</label>
+            <input type="text" id="" name="" class="form-control" placeholder="Name" required />
+            <div class="invalid-feedback">Please enter a name.</div>
+        </div>
+        <div class="col-md-12">
+            <label for="" class="form-label">Original Title</label>
+            <input type="text" id="" name="" class="form-control" placeholder="Original Title" required />
+            <div class="invalid-feedback">Please enter an Original Title.</div>
+        </div>
+        <div class="col-md-6">
+            <label for="" class="form-label">Premier Date</label>
+            <input type="date" id="" name="" class="form-control"  required />
+            <div class="invalid-feedback">Please select premier date</div>
+        </div>
+        <div class="col-md-3">
+            <label for="" class="form-label">Duration (minutes)</label>
+            <input type="number" id="" name="" class="form-control" placeholder="Duration" required />
+            <div class="invalid-feedback">Please enter a Duration</div>
+        </div>
+        <div class="col-md-3">
+            <label for="Subtitles" class="form-label">Subtitles</label>
+            <select id="Subtitles" name="Subtitles" class="form-select" required>
+                <option value="1">Yes</option>
+                <option value="2">No</option>
+            </select>
+            <div class="invalid-feedback">Please select at least one genre.</div>
+        </div>
+        <div class="col-md-12">
+            <label for="genres" class="form-label">Genres</label>
+            <select id="genres" name="Genres" class="form-select" multiple required>
+                <option value="1">Action</option>
+                <option value="2">Comedy</option>
+                <option value="3">Drama</option>
+                <option value="4">Horror</option>
+                <option value="5">Romance</option>
+            </select>
+            <div class="invalid-feedback">Please select at least one genre.</div>
+        </div>
+        <div class="col-md-12">
+            <label for="" class="form-label">Actors (separeted by ',')</label>
+            <input type="text" id="" name="" class="form-control" placeholder="Actors" required />
+            <div class="invalid-feedback">Please enter Actors</div>
+        </div>
+        <div class="col-md-12">
+            <label for="" class="form-label">Upload Photos</label>
+            <input type="file" id="Photos" name="" class="form-control" multiple />
+            <small class="text-muted">You can upload multiple photos.</small>
+        </div>
+        <div class="col-md-12">
+            <label for="textarea" class="form-label">Description</label>
+            <textarea class="form-control" id="" rows="3" placeholder="Description..."></textarea>
+            <div class="invalid-feedback">Please enter a Description</div>
+        </div>
+        <div class="col-12 text-center mt-4">
+            <button type="submit" class="btn btn-primary w-50">Add Movie</button>
+        </div>
+    </form>
+</div>
