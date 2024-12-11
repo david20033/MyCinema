@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using Microsoft.AspNetCore.Identity;
 using MyCinema.Services;
+using MyCinema.Repositories.IRepositories;
+using MyCinema.Repositories;
+using MyCinema.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyCinemaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -11,6 +14,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<EnumServices>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
