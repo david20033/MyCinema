@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using Microsoft.AspNetCore.Identity;
+using MyCinema.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyCinemaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -9,6 +10,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<EnumServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
