@@ -66,5 +66,9 @@ namespace MyCinema.Services
                 Subtitles = subtitles
             };
         }
+        public async Task<List<Movie>> GetAllMoviesWithPhotosAsync()
+        {
+            return await _movieRepository.GetAllMoviesWithPhotosAsync();
+        }
     }
 }

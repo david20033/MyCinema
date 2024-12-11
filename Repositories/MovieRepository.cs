@@ -1,4 +1,5 @@
-﻿using MyCinema.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
 
 namespace MyCinema.Repositories
@@ -19,6 +20,11 @@ namespace MyCinema.Repositories
         {
             _context.MoviePhoto.Add(moviePhoto);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<Movie>> GetAllMoviesWithPhotosAsync()
+        {
+            return await _context.Movie.Include(m=>m.MoviePhotos)
+                .ToListAsync();
         }
     }
 }
