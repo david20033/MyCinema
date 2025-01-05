@@ -13,6 +13,7 @@ namespace MyCinema.Data
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<MovieGenre> MovieGenre { get; set; }
         public virtual DbSet<MoviePhoto> MoviePhoto { get; set; }
+        public virtual DbSet<TheatreSalon> TheatreSalon { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
