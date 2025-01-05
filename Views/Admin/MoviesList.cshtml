@@ -1,0 +1,41 @@
+﻿@model List<MyCinema.Data.Movie>
+
+<h1>All Movies</h1>
+
+<table class="table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Movie Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>
+                    @if (movie.MoviePhotos != null && movie.MoviePhotos.Any())
+                    {
+                        <img src="data:@(movie.MoviePhotos.First().ContentType);base64,@(Convert.ToBase64String(movie.MoviePhotos.First().Data))"
+                             class="img-fluid img-thumbnail" style="width:150px; height:150px" alt="Movie Photo" />
+                    }
+                    else
+                    {
+                        <img src="/images/placeholder-car.jpg" class="img-fluid img-thumbnail" style="width:150px; height:150px" alt="No Photo Available" />
+                    }
+                </td>
+                <td class="align-middle">
+                    <p class="fs-5 fw-bold">X-Men</p>
+                </td>
+                <td class="align-middle">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary">Details</button>
+                        <button type="button" class="btn btn-warning">Edit</button>
+                        <button type="button" class="btn btn-danger">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

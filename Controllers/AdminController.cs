@@ -17,9 +17,13 @@ namespace MyCinema.Controllers
         {
             _adminService = adminService;
         }
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+
+        //}
+        public async Task<IActionResult> MoviesList()
         {
-            var movies= await _adminService.GetAllMoviesWithPhotosAsync();
+            var movies = await _adminService.GetAllMoviesWithPhotosAsync();
             return View(movies);
         }
         public IActionResult AddMovie()
