@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using MyCinema.Enums;
@@ -11,11 +12,13 @@ namespace MyCinema.Services
     public class AdminService : IAdminService
     {
         private readonly IMovieRepository _movieRepository;
+        private readonly ISalonRepository _salonRepository;
         private readonly MyCinemaDBContext _context;
         private readonly EnumServices _enumServices;
-        public AdminService (IMovieRepository movieRepository, MyCinemaDBContext context, EnumServices enumServices)
+        public AdminService (IMovieRepository movieRepository, ISalonRepository salonRepository, MyCinemaDBContext context, EnumServices enumServices)
         {
             _movieRepository = movieRepository;
+            _salonRepository = salonRepository;
             _context = context;
             _enumServices = enumServices;
         }
@@ -69,6 +72,16 @@ namespace MyCinema.Services
         public async Task<List<Movie>> GetAllMoviesWithPhotosAsync()
         {
             return await _movieRepository.GetAllMoviesWithPhotosAsync();
+        }
+        public async Task AddSalonAsync(TheatreSalon salon)
+        {
+            if(await _salonRepository.IsSalonNumberExistsAsync(salon.SalonNumber))
+            {
+                throw new ArgumentException("The salon number already exists. Please choose a different number.");
+            }
+            salon.Id = Guid.NewGuid();
+            salon.InitializePlaces();
+            await _salonRepository.AddSalonAsync(salon);
         }
     }
 }

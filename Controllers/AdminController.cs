@@ -26,6 +26,28 @@ namespace MyCinema.Controllers
             var movies = await _adminService.GetAllMoviesWithPhotosAsync();
             return View(movies);
         }
+        public IActionResult AddSalon()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddSalon(TheatreSalon salon)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _adminService.AddSalonAsync(salon);
+                    return RedirectToAction("Index");
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("SalonNumber", ex.Message);
+                }
+            }
+            return RedirectToAction("AddSalon");
+        }
         public IActionResult AddMovie()
         {
             var viewData = _adminService.GetAddMovieViewDataAsync();

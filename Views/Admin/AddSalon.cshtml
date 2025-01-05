@@ -1,0 +1,54 @@
+﻿@model MyCinema.Data.TheatreSalon
+
+<h1 class="text-center my-4">Add New Theatre Salon</h1>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form asp-action="AddSalon" method="post">
+                        <div class="mb-3">
+                            <label for="SalonNumber" class="form-label">Salon Number</label>
+                            <input type="number" class="form-control" id="SalonNumber" name="SalonNumber" placeholder="Enter salon number" required />
+                            <div class="invalid-feedback">
+                                @ViewData.ModelState["SalonNumber"]?.Errors.FirstOrDefault()?.ErrorMessage
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Rows" class="form-label">Number of Rows</label>
+                            <input type="number" class="form-control" id="Rows" name="Rows" placeholder="Enter number of rows" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Columns" class="form-label">Number of Columns</label>
+                            <input type="number" class="form-control" id="Columns" name="Columns" placeholder="Enter number of columns" required />
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="isVip" name="isVip" />
+                            <label class="form-check-label" for="isVip">Is VIP?</label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Add Salon</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    document.querySelector("form").onsubmit = function() {
+        var checkbox = document.getElementById("isVip");
+        if (!checkbox.checked) {
+            document.getElementById("isVip").value = "false";
+        }
+        else {
+            document.getElementById("isVip").value = "true";
+        }
+    };
+</script>
