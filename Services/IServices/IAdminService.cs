@@ -8,6 +8,6 @@ namespace MyCinema.Services.IServices
         Task AddMovieWithPhotosAsync(Movie movie, List<IFormFile> MoviePhotos);
         Task<AddMovieViewModel> GetAddMovieViewDataAsync();
         Task<List<Movie>> GetAllMoviesWithPhotosAsync();
-        Task AddSalonAsync(TheatreSalon salon);
+        Task AddSalonAsync(TheatreSalon salon, string clickedCells);
     }
 }

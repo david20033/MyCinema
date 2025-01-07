@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
@@ -73,14 +74,21 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetAllMoviesWithPhotosAsync();
         }
-        public async Task AddSalonAsync(TheatreSalon salon)
+        public async Task AddSalonAsync(TheatreSalon salon, string clickedCells)
         {
             if(await _salonRepository.IsSalonNumberExistsAsync(salon.SalonNumber))
             {
                 throw new ArgumentException("The salon number already exists. Please choose a different number.");
             }
-            salon.Id = Guid.NewGuid();
-            salon.InitializePlaces();
+            if (!string.IsNullOrEmpty(clickedCells))
+            {
+                var clickedCoordinates = JsonSerializer.Deserialize<List<string>>(clickedCells);
+                foreach (var coordinate in clickedCoordinates)
+                {
+                    salon.EmptySeatsCoords.Add(coordinate);
+                }
+            }
+                salon.Id = Guid.NewGuid();
             await _salonRepository.AddSalonAsync(salon);
         }
     }

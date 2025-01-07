@@ -90,17 +90,27 @@
       const columns = parseInt(columnsInput.value) || 0;
       generateGrid(rows, columns);
     });
+    let clickedCells = [];
 
     function cellClicked(row, col) {
       // Select the cell using the data-row and data-col attributes
       const cell = document.querySelector(`.grid-item[data-row='${row}'][data-col='${col}']`);
       if (cell) {
-        // Toggle the 'clicked' class
+          const coordinate = `${row},${col}`;
         if (!cell.classList.contains('clicked')) {
           cell.classList.add('clicked');
+          clickedCells.push(coordinate);
         } else {
           cell.classList.remove('clicked');
+          clickedCells = clickedCells.filter(coord => coord !== coordinate);
         }
       }
+    }
+    document.querySelector("form").onsubmit = function (event) {
+    const clickedCellsInput = document.createElement("input");
+    clickedCellsInput.type = "hidden";
+    clickedCellsInput.name = "ClickedCells";
+    clickedCellsInput.value = JSON.stringify(clickedCells); // Send the clicked cells as a JSON string
+    this.appendChild(clickedCellsInput);
     }
 </script>

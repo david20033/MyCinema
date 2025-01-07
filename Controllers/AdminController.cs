@@ -32,13 +32,13 @@ namespace MyCinema.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSalon(TheatreSalon salon)
+        public async Task<IActionResult> AddSalon(TheatreSalon salon, string clickedCells)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _adminService.AddSalonAsync(salon);
+                    await _adminService.AddSalonAsync(salon, clickedCells);
                     return RedirectToAction("Index");
                 }
                 catch (ArgumentException ex)
