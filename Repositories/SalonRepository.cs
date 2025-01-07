@@ -20,5 +20,9 @@ namespace MyCinema.Repositories
         {
             return await _context.TheatreSalon.AnyAsync(s=>s.SalonNumber == salonNumber);
         }
+        public async Task<List<TheatreSalon>> GetTheatreSalonsAsync()
+        {
+            return await _context.TheatreSalon.ToListAsync();
+        }
     }
 }

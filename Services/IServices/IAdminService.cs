@@ -9,5 +9,6 @@ namespace MyCinema.Services.IServices
         Task<AddMovieViewModel> GetAddMovieViewDataAsync();
         Task<List<Movie>> GetAllMoviesWithPhotosAsync();
         Task AddSalonAsync(TheatreSalon salon, string clickedCells);
+        Task<List<TheatreSalon>> GetTheatreSalonsAsync();
     }
 }

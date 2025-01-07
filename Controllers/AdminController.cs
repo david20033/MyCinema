@@ -63,5 +63,11 @@ namespace MyCinema.Controllers
             await _adminService.AddMovieWithPhotosAsync(movie, MoviePhotos);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Salons()
+        {
+            var salons = await _adminService.GetTheatreSalonsAsync();
+            return View(salons);
+        }
     }
 }

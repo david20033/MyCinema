@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MyCinema.Data.TheatreSalon>
+<h1 class="text-center my-4">Theatre Salons</h1>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Salon Number</th>
+                    <th scope="col">Rows</th>
+                    <th scope="col">Columns</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Is VIP?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int index = 1;
+                    foreach (var salon in Model)
+                    {
+                        <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("SalonDetails", "AdminController", new { id = salon.Id })'">
+                            <th scope="row">@index</th>
+                            <td>@salon.SalonNumber</td>
+                            <td>@salon.Rows</td>
+                            <td>@salon.Columns</td>
+                            <td>@salon.Capacity</td>
+                            <td>@(salon.isVip ? "Yes" : "No")</td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No salons available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

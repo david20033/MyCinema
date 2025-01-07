@@ -88,8 +88,13 @@ namespace MyCinema.Services
                     salon.EmptySeatsCoords.Add(coordinate);
                 }
             }
-                salon.Id = Guid.NewGuid();
+            salon.Id = Guid.NewGuid();
+            salon.Capacity = salon.Rows+salon.Columns-salon.EmptySeatsCoords.Count;
             await _salonRepository.AddSalonAsync(salon);
+        }
+        public async Task<List<TheatreSalon>> GetTheatreSalonsAsync()
+        {
+            return await _salonRepository.GetTheatreSalonsAsync();
         }
     }
 }

@@ -6,5 +6,6 @@ namespace MyCinema.Repositories.IRepositories
     {
         public Task AddSalonAsync(TheatreSalon salon);
         public Task<bool> IsSalonNumberExistsAsync(int salonNumber);
+        public Task<List<TheatreSalon>> GetTheatreSalonsAsync();
     }
 }
