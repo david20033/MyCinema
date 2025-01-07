@@ -17,6 +17,7 @@ builder.Services.AddScoped<EnumServices>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ISalonRepository, SalonRepository>();
+builder.Services.AddScoped<IHomeService, HomeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
