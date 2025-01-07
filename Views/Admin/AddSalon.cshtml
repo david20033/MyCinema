@@ -1,10 +1,10 @@
-﻿@model MyCinema.Data.TheatreSalon
+﻿ @model MyCinema.Data.TheatreSalon
 
 <h1 class="text-center my-4">Add New Theatre Salon</h1>
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-12 col-md-12">
             <div class="card shadow">
                 <div class="card-body">
                     <form asp-action="AddSalon" method="post">
@@ -31,6 +31,10 @@
                             <label class="form-check-label" for="isVip">Is VIP?</label>
                         </div>
 
+                        <div class="container my-4">
+                            <div id="grid-container"></div>
+                        </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">Add Salon</button>
                         </div>
@@ -40,15 +44,63 @@
         </div>
     </div>
 </div>
-<script>
 
-    document.querySelector("form").onsubmit = function() {
-        var checkbox = document.getElementById("isVip");
-        if (!checkbox.checked) {
-            document.getElementById("isVip").value = "false";
+<script>
+    const rowsInput = document.getElementById("Rows");
+    const columnsInput = document.getElementById("Columns");
+    const gridContainer = document.getElementById("grid-container");
+
+    // Function to generate the grid with fixed cell sizes
+    function generateGrid(rows, columns) {
+      gridContainer.innerHTML = ""; // Clear the grid
+
+      const cellSize = 30; // Fixed size for each cell in pixels
+
+      for (let row = 0; row < rows; row++) {
+        const rowDiv = document.createElement("div");
+        rowDiv.className = "d-flex justify-content-center mb-2"; // Use flex to display items in one row
+        for (let col = 0; col < columns; col++) {
+          const cell = document.createElement("div");
+          cell.className = "grid-item addSalon border border-primary";
+          cell.textContent = `${col + 1}`;
+          cell.style.width = `${cellSize}px`;
+          cell.style.height = `${cellSize}px`;
+          cell.style.display = "flex";
+          cell.style.alignItems = "center";
+          cell.style.justifyContent = "center";
+          cell.style.margin = "2px";
+          cell.setAttribute("data-row", row);
+          cell.setAttribute("data-col", col);
+          cell.onclick = () => cellClicked(row, col);
+          rowDiv.appendChild(cell);
         }
-        else {
-            document.getElementById("isVip").value = "true";
+        gridContainer.appendChild(rowDiv); // Add the row to the grid container
+      }
+    }
+
+    // Event listeners to regenerate the grid on input change
+    rowsInput.addEventListener("input", () => {
+      const rows = parseInt(rowsInput.value) || 0;
+      const columns = parseInt(columnsInput.value) || 0;
+      generateGrid(rows, columns);
+    });
+
+    columnsInput.addEventListener("input", () => {
+      const rows = parseInt(rowsInput.value) || 0;
+      const columns = parseInt(columnsInput.value) || 0;
+      generateGrid(rows, columns);
+    });
+
+    function cellClicked(row, col) {
+      // Select the cell using the data-row and data-col attributes
+      const cell = document.querySelector(`.grid-item[data-row='${row}'][data-col='${col}']`);
+      if (cell) {
+        // Toggle the 'clicked' class
+        if (!cell.classList.contains('clicked')) {
+          cell.classList.add('clicked');
+        } else {
+          cell.classList.remove('clicked');
         }
-    };
+      }
+    }
 </script>

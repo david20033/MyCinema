@@ -33,3 +33,17 @@ body {
     transition: 0.5s ease;
     backface-visibility: hidden;
 }
+.grid-item {
+    background-color: lightblue;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .grid-item:hover {
+        background-color: lightcoral;
+    }
+
+.clicked {
+    background-color: red;
+}
