@@ -69,5 +69,9 @@ namespace MyCinema.Controllers
             var salons = await _adminService.GetTheatreSalonsAsync();
             return View(salons);
         }
+        public async Task<IActionResult> SalonDetails(Guid Id)
+        {
+            return View(await _adminService.GetTheatreSalonByIdAsync(Id));
+        }
     }
 }

@@ -96,5 +96,9 @@ namespace MyCinema.Services
         {
             return await _salonRepository.GetTheatreSalonsAsync();
         }
+        public async Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id)
+        {
+            return await _salonRepository.GetTheatreSalonByIdAsync(id);
+        }
     }
 }

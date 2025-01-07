@@ -24,5 +24,9 @@ namespace MyCinema.Repositories
         {
             return await _context.TheatreSalon.ToListAsync();
         }
+        public async Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id)
+        {
+            return await _context.TheatreSalon.Where(s=>s.Id == id).FirstOrDefaultAsync();
+        }
     }
 }

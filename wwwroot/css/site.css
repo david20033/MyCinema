@@ -38,6 +38,12 @@ body {
     border: 1px solid #ccc;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
 }
 
     .grid-item:hover {
@@ -46,4 +52,13 @@ body {
 
 .clicked {
     background-color: red;
+}
+.screen {  
+    width: 100%;
+    height: 50px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    margin-bottom: 20px;
 }

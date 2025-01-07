@@ -1,0 +1,46 @@
+﻿@model MyCinema.Data.TheatreSalon
+
+<div class="container">
+    <div class="screen "> SCREEN </div>
+    <div id="grid-container">
+
+        @for (int i = 0; i < Model.Rows; i++)
+        {
+            <div class="d-flex justify-content-center mb-2">
+                @for (int j = 0; j < Model.Columns; j++)
+                {
+                    var coords = $"{i},{j}";
+                    @if (Model.EmptySeatsCoords.Contains(coords))
+                    {
+                        <div class="grid-item addSalon border border-primary"
+                        style="visibility:hidden"
+                             data-row="@i"
+                             data-col="@j">
+                        </div>
+                    }
+                    else
+                    {
+                    <div class="grid-item addSalon border border-primary"
+                         data-row="@i"
+                         data-col="@j">
+						</div>
+					}
+                }
+            </div>
+        }
+        <div class="salon-details mt-4">
+            <h4>Salon Details</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Salon Number:</strong> @Model.SalonNumber
+                </li>
+                <li class="list-group-item">
+                    <strong>VIP:</strong> @(Model.isVip ? "Yes" : "No")
+                </li>
+                <li class="list-group-item">
+                    <strong>Capacity:</strong> @Model.Capacity
+                </li>
+            </ul>
+            <a type="button" class="btn btn-primary" href="@Url.Action("Salons", "Admin" )">Back </a>
+        </div>
+	</div>
