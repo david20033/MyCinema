@@ -1,0 +1,51 @@
+﻿@model MyCinema.Data.Movie
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="text-center">Movie Photos</h3>
+            @if (Model.MoviePhotos != null && Model.MoviePhotos.Any())
+            {
+                @foreach (var photo in Model.MoviePhotos)
+                {
+                    var base64Photo = $"data:{photo.ContentType};base64,{Convert.ToBase64String(photo.Data)}";
+                    <img src="@base64Photo" class="img-fluid img-thumbnail mb-2" alt="Movie Photo">
+                }
+            }
+            else
+            {
+                <p class="text-center text-muted">No photos available.</p>
+            }
+        </div>
+
+        <div class="col-md-8">
+            <h2>@Model.Name</h2>
+            <p><strong>Original Title:</strong> @Model.OriginalTitle</p>
+            <p><strong>Premier Date:</strong> @Model.PremierDate.ToString("MMMM dd, yyyy")</p>
+            <p><strong>Duration:</strong> @Model.DurationInMinutes minutes</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+            <p>
+                <strong>Subtitles:</strong>
+                @(Model.Subtitles ? "Yes" : "No")
+            </p>
+
+            <h5 class="mt-4">Genres</h5>
+            @if (Model.MovieGenres != null && Model.MovieGenres.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var genre in Model.MovieGenres)
+                    {
+                        <li class="list-group-item">@genre.Genre.Name</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No genres listed for this movie.</p>
+            }
+
+            <h5 class="mt-4">Actors</h5>
+            <p>@Model.MovieActors</p>
+        </div>
+    </div>
+</div>

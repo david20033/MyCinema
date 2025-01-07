@@ -10,7 +10,7 @@
     {
         var photo = movie.MoviePhotos.FirstOrDefault();
         string base64Photo = photo != null ? $"data:{photo.ContentType};base64,{Convert.ToBase64String(photo.Data)}" : null;
-        <div class="list-group filmlist" onclick="window.location.href='@Url.Action("MovieDetails", "Home", new { id = movie.Id })'">
+        <div class="list-group filmlist" onclick="window.location.href='@Url.Action("Details", "Movie", new { id = movie.Id })'">
             <img src="@base64Photo" class="img-fluid img-thumbnail FilmImage" width="300px" height="300px" alt="Movie Image">
             <p class="mt-2 fs-2 text-center fw-bold">@movie.Name</p>
         </div>

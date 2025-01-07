@@ -26,5 +26,11 @@ namespace MyCinema.Repositories
             return await _context.Movie.Include(m=>m.MoviePhotos)
                 .ToListAsync();
         }
+        public async Task<Movie> GetMovieWithPhotosByIdAsync(Guid id)
+        {
+            return await _context.Movie
+                .Where(m => m.Id == id)
+                .Include(m => m.MoviePhotos).FirstOrDefaultAsync();
+        }
     }
 }
