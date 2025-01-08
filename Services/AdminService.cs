@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using MyCinema.Enums;
@@ -14,14 +15,16 @@ namespace MyCinema.Services
     {
         private readonly IMovieRepository _movieRepository;
         private readonly ISalonRepository _salonRepository;
+        private readonly IApiService _apiService;
         private readonly MyCinemaDBContext _context;
         private readonly EnumServices _enumServices;
-        public AdminService (IMovieRepository movieRepository, ISalonRepository salonRepository, MyCinemaDBContext context, EnumServices enumServices)
+        public AdminService (IMovieRepository movieRepository, ISalonRepository salonRepository, MyCinemaDBContext context, EnumServices enumServices, IApiService apiService)
         {
             _movieRepository = movieRepository;
             _salonRepository = salonRepository;
             _context = context;
             _enumServices = enumServices;
+            _apiService = apiService;
         }
         public async Task AddMovieWithPhotosAsync(Movie movie, List<IFormFile> MoviePhotos)
         {
@@ -99,6 +102,22 @@ namespace MyCinema.Services
         public async Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id)
         {
             return await _salonRepository.GetTheatreSalonByIdAsync(id);
+        }
+        public async Task InsertLanguagesInDB()
+        {
+            if (_context.Language.Any()) { return;}
+            var Languages = await _apiService.GetLanguagesAsync();
+
+            var LanguageList = Languages.Select(dto => new Language
+            {
+                Id = Guid.NewGuid(),
+                iso_code = dto.iso_639_1,
+                English_Name = dto.english_name,
+                Name = dto.name
+            }).ToList();
+
+            await _context.Language.AddRangeAsync(LanguageList);
+            await _context.SaveChangesAsync();
         }
     }
 }

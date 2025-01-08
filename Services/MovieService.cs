@@ -1,5 +1,6 @@
 ﻿using MyCinema.Data;
 using MyCinema.Data.MovieApi;
+using MyCinema.Migrations;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
 using RestSharp;
@@ -10,10 +11,12 @@ namespace MyCinema.Services
     {
         private readonly IMovieRepository _movieRepository;
         private readonly IApiService _apiService;
-        public MovieService(IMovieRepository movieRepository, IApiService apiService)
+        private readonly ILanguageRepository _languageRepository;
+        public MovieService(IMovieRepository movieRepository, IApiService apiService, ILanguageRepository languageRepository)
         {
             _movieRepository = movieRepository;
             _apiService = apiService;
+            _languageRepository = languageRepository;
         }
         public  async Task<Movie> GetMovieWithPhotosByIdAsync(Guid id)
         {
@@ -23,7 +26,12 @@ namespace MyCinema.Services
         {
             try
             {
-                return await _apiService.GetNowPlayingMoviesAsync();
+                var movies = await _apiService.GetNowPlayingMoviesAsync();
+                foreach(var movie in movies)
+                {
+                    movie.original_language =await _languageRepository.GetLanguageNameByIsoCodeAsync(movie.original_language);
+                }
+                return movies;
             }
             catch (Exception ex)
             {

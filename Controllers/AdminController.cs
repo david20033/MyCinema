@@ -74,5 +74,10 @@ namespace MyCinema.Controllers
         {
             return View(await _adminService.GetTheatreSalonByIdAsync(Id));
         }
+        public async Task<IActionResult> InsertLanguagesInDb()
+        {
+            await _adminService.InsertLanguagesInDB();
+            return RedirectToAction("Index");
+        }
     }
 }

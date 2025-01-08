@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCinema.Data;
 
@@ -11,9 +12,11 @@ using MyCinema.Data;
 namespace MyCinema.Migrations
 {
     [DbContext(typeof(MyCinemaDBContext))]
-    partial class MyCinemaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250108164514_AddLanguageEntity")]
+    partial class AddLanguageEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,26 +240,6 @@ namespace MyCinema.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genre");
-                });
-
-            modelBuilder.Entity("MyCinema.Data.Language", b =>
-                {
-                    b.Property<string>("English_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("iso_code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Language");
                 });
 
             modelBuilder.Entity("MyCinema.Data.Movie", b =>

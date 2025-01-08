@@ -12,5 +12,6 @@ namespace MyCinema.Services.IServices
         Task<List<TheatreSalon>> GetTheatreSalonsAsync();
 
         Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id);
+        Task InsertLanguagesInDB();
     }
 }

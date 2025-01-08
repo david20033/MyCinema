@@ -5,7 +5,7 @@
 namespace MyCinema.Migrations
 {
     /// <inheritdoc />
-    public partial class Movie : Migration
+    public partial class AddLanguageEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
