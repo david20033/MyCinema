@@ -24,7 +24,7 @@
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active" aria-current="page">
+                        <a href="@Url.Action("Index", "Home" )" class="nav-link active" aria-current="page">
                             <svg class="bi pe-none me-2" width="16" height="16">
                                 <use xlink:href="#home"></use>
                             </svg>
@@ -32,48 +32,61 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link text-white">
+                        <a href="@Url.Action("Schedule", "Movie" )" class="nav-link text-white">
                             <svg class="bi pe-none me-2" width="16" height="16">
                                 <use xlink:href="#speedometer2"></use>
                             </svg>
-                            Dashboard
+                            Schedule
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link text-white">
+                        <a href="@Url.Action("Index", "Ticket" )" class="nav-link text-white">
                             <svg class="bi pe-none me-2" width="16" height="16">
                                 <use xlink:href="#table"></use>
                             </svg>
-                            Orders
+                            My Tickets
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link text-white">
+                        <a href="@Url.Action("Index", "Movie" )" class="nav-link text-white">
                             <svg class="bi pe-none me-2" width="16" height="16">
                                 <use xlink:href="#grid"></use>
-                            </svg>
-                            Products
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link text-white">
-                            <svg class="bi pe-none me-2" width="16" height="16">
-                                <use xlink:href="#people-circle"></use>
-                            </svg>
-                            Customers
-                        </a>
-                    </li>
-                    <hr>
-                    <li>
-                        <a href="#" class="nav-link text-white">
-                            <svg class="bi pe-none me-2" width="16" height="16">
-                                <use xlink:href="#people-circle"></use>
                             </svg>
                             Movies
                         </a>
                     </li>
+                    <li>
+                        <a href="@Url.Action("Index", "AboutUs" )" class="nav-link text-white">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#people-circle"></use>
+                            </svg>
+                            About us
+                        </a>
+                    </li>
+                    <hr>
+                    @if (User.IsInRole("Admin"))
+                    {
+                            <h4 class="fs-4"> Admin Panel</h4>
+                        <li>
+                                <a href="@Url.Action("Salons", "Admin" )" class="nav-link text-white">
+                                <svg class="bi pe-none me-2" width="16" height="16">
+                                    <use xlink:href="#people-circle"></use>
+                                </svg>
+                                Salons
+                            </a>
+                        </li>
+                        <li>
+                                    <a href="@Url.Action("MoviesList", "Admin" )" class="nav-link text-white">
+                                <svg class="bi pe-none me-2" width="16" height="16">
+                                    <use xlink:href="#people-circle"></use>
+                                </svg>
+                                Movies
+                            </a>
+                        </li>
+                    }
                 </ul>
-                <hr>
+                    
+                    <hr>
                 <div class="dropdown">
                       <partial name="_LoginPartial" />
                 </div>
