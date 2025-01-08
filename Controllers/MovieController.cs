@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
 
@@ -19,10 +20,11 @@ namespace MyCinema.Controllers
         {
             return View(await _movieService.GetMovieWithPhotosByIdAsync(id));
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> NowPlaying()
         {
             var movies = await _movieService.GetNowPlayingMoviesAsync();
-            return Json(movies);
+            return View(movies);
         }
     }
 }

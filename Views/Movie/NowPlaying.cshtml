@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MyCinema.Data.MovieApi.MovieNowPlayingDTO>
+<h1 class="text-center my-4">Theatre Salons</h1>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">id</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Release Date</th>
+                    <th scope="col">Original Lang</th>
+                    <th scope="col">Adult?</th>
+                    <th scope="col">Vote average</th>
+                    <th scope="col">Vote Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int index = 1;
+                    foreach (var movie in Model)
+                    {
+                                <tr>
+                                    <th scope="row">@index</th>
+                                    <td>@movie.id</td>
+                                    <td>@movie.title</td>
+                                    <td>@movie.release_date</td>
+                                    <td>@movie.original_language</td>
+                                    <td>@movie.adult</td>
+                                    <td>@movie.vote_avarage</td>
+                                    <td>@movie.vote_count</td>
+                                </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                        <tr>
+                            <td colspan="6" class="text-center">No salons available.</td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
