@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MyCinema.Data.MovieApi.Responses
 {
@@ -10,6 +11,7 @@ namespace MyCinema.Data.MovieApi.Responses
         public int? page {  get; set; }
         [JsonProperty("results")]
         public List<MovieNowPlayingDTO> results { get; set; }
+
     }
     public class DatesDTO
     {

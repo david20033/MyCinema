@@ -22,11 +22,11 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetMovieWithPhotosByIdAsync(id);
         }
-        public async Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync()
+        public async Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync(int page)
         {
             try
             {
-                var movies = await _apiService.GetNowPlayingMoviesAsync();
+                var movies = await _apiService.GetNowPlayingMoviesAsync(page);
                 foreach(var movie in movies)
                 {
                     movie.original_language =await _languageRepository.GetLanguageNameByIsoCodeAsync(movie.original_language);

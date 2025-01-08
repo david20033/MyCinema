@@ -1,4 +1,13 @@
 ﻿@model IEnumerable<MyCinema.Data.MovieApi.MovieNowPlayingDTO>
+
+@{
+    var currentPage = ViewBag.CurrentPage ?? 1;
+    var totalPages = ViewBag.TotalPages ?? 1;
+
+    int maxPagesToShow = 10;
+    int startPage = Math.Max(1, currentPage - maxPagesToShow / 2);
+    int endPage = Math.Min(totalPages, currentPage + maxPagesToShow / 2);
+}
 <h1 class="text-center my-4">Theatre Salons</h1>
 
 <div class="container">
@@ -9,7 +18,7 @@
                     <th scope="col">#</th>
                     <th scope="col">id</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Release Date</th>
+                    <th scope="col">Release date</th>
                     <th scope="col">Original Lang</th>
                     <th scope="col">Adult?</th>
                     <th scope="col">Vote average</th>
@@ -44,4 +53,17 @@
             </tbody>
         </table>
     </div>
+<div class="d-flex justify-content-center">
+    <div class="pagination-container overflow-auto">
+        <ul class="pagination">
+                @for (var i = 1; i <= ViewBag.totalPages; i++)
+                {
+                        <li class="page-item @(ViewBag.currentPage == i ? "active" : "")">
+                        <a class="page-link" href="?page=@i">@i</a>
+                    </li>
+                }
+        </ul>
+    </div>
+</div>
+
 </div>

@@ -21,9 +21,12 @@ namespace MyCinema.Controllers
             return View(await _movieService.GetMovieWithPhotosByIdAsync(id));
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> NowPlaying()
+        public async Task<IActionResult> NowPlaying(int page)
         {
-            var movies = await _movieService.GetNowPlayingMoviesAsync();
+            if (page == 0) page = 1;
+            ViewBag.currentPage = page;
+            ViewBag.totalPages = 100; //will be changed later
+            var movies = await _movieService.GetNowPlayingMoviesAsync(page);
             return View(movies);
         }
     }

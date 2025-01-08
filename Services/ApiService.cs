@@ -15,9 +15,9 @@ namespace MyCinema.Services
         }
 
 
-        public async Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync()
+        public async Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync(int page)
         {
-            var options = new RestClientOptions("https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1");
+            var options = new RestClientOptions($"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page={page}");
             var client = new RestClient(options);
             var request = new RestRequest("");
             string bearerToken = _configuration["ApiSettings:BearerToken"];

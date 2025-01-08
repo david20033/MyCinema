@@ -7,7 +7,7 @@ namespace MyCinema.Services.IServices
 {
     public interface IApiService
     {
-        Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync();
+        Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync(int page);
         Task<List<LanguageDTO>> GetLanguagesAsync();
     }
 }
