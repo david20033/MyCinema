@@ -19,5 +19,10 @@ namespace MyCinema.Controllers
         {
             return View(await _movieService.GetMovieWithPhotosByIdAsync(id));
         }
+        public async Task<IActionResult> NowPlaying()
+        {
+            var movies = await _movieService.GetNowPlayingMoviesAsync();
+            return Json(movies);
+        }
     }
 }

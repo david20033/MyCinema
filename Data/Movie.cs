@@ -17,4 +17,8 @@ namespace MyCinema.Data
         public ICollection<MoviePhoto> MoviePhotos { get; set; }    
         public bool Subtitles {  get; set; }    
     }
+    public class MovieResponse
+    {
+        public List<Movie> Results { get; set; }
+    }
 }

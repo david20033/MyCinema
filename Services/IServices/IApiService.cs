@@ -4,9 +4,8 @@ using RestSharp;
 
 namespace MyCinema.Services.IServices
 {
-    public interface IMovieService
+    public interface IApiService
     {
-        Task<Movie> GetMovieWithPhotosByIdAsync(Guid id);
         Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync();
     }
 }
