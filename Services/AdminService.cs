@@ -36,5 +36,18 @@ namespace MyCinema.Services
             await _context.Language.AddRangeAsync(LanguageList);
             await _context.SaveChangesAsync();
         }
+        public async Task InsertGenresInDB()
+        {
+            if(_context.Genre.Any()) { return;}
+            var Genres = await _apiService.GetGenresAsync();
+
+            var GenresList = Genres.Select(dto => new Genre
+            {
+                Id = Guid.NewGuid(),
+                Name = dto.name
+            }).ToList();
+            await _context.Genre.AddRangeAsync(GenresList);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace MyCinema.Services.IServices
     public interface IAdminService
     {
         Task InsertLanguagesInDB();
+        Task InsertGenresInDB();
     }
 }

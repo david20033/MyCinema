@@ -30,5 +30,10 @@ namespace MyCinema.Controllers
             await _adminService.InsertLanguagesInDB();
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> InsertGenresInDb()
+        {
+            await _adminService.InsertGenresInDB();
+            return RedirectToAction("Index");
+        }
     }
 }
