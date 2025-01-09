@@ -92,7 +92,7 @@ namespace MyCinema.Services
                 }
             }
             salon.Id = Guid.NewGuid();
-            salon.Capacity = salon.Rows+salon.Columns-salon.EmptySeatsCoords.Count;
+            salon.Capacity = salon.Rows*salon.Columns-salon.EmptySeatsCoords.Count;
             await _salonRepository.AddSalonAsync(salon);
         }
         public async Task<List<TheatreSalon>> GetTheatreSalonsAsync()
