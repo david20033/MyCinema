@@ -10,5 +10,6 @@ namespace MyCinema.Services.IServices
         Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync(int page);
         Task<List<LanguageDTO>> GetLanguagesAsync();
         Task<List<GenreDTO>> GetGenresAsync();
+        Task<MovieResponseDTO> GetMovieDetailsByIdAsync(int id);
     }
 }

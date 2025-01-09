@@ -19,15 +19,15 @@ namespace MyCinema.Controllers
             return View();
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> MoviesList()
+        public async Task<IActionResult> MovieList()
         {
             var movies = await _movieService.GetAllMoviesWithPhotosAsync();
             return View(movies);
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View(await _movieService.GetMovieWithPhotosByIdAsync(id));
+            return View(await _movieService.GetMovieDetailsByIdFromAPI(id));
         }
         [Authorize(Roles = "Admin")]
         public IActionResult AddMovie()

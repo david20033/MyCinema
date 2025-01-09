@@ -31,7 +31,7 @@
                     int index = 1;
                     foreach (var movie in Model)
                     {
-                                <tr>
+                                        <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Movie", new { id = movie.id })'">
                                     <th scope="row">@index</th>
                                     <td>@movie.id</td>
                                     <td>@movie.title</td>

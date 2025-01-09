@@ -71,5 +71,22 @@ namespace MyCinema.Services
             var genreResponse = JsonConvert.DeserializeObject<GenreResponseDTO>(response.Content);
             return genreResponse?.genres;
         }
+        public async Task<MovieResponseDTO> GetMovieDetailsByIdAsync(int id)
+        {
+            var options = new RestClientOptions($"https://api.themoviedb.org/3/movie/{id}?language=en-US");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+            var bearerToken =_configuration["ApiSettings:BearerToken"];
+            request.AddHeader("accept", "application/json");
+            request.AddHeader("Authorization", bearerToken);
+            var response = await client.GetAsync(request);
+
+            if (!response.IsSuccessful || string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception("Failed to fetch languages.");
+            }
+            var movieResponse = JsonConvert.DeserializeObject<MovieResponseDTO>(response.Content);
+            return movieResponse;
+        }
     }
 }

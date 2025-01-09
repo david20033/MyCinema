@@ -1,51 +1,103 @@
-﻿@model MyCinema.Data.Movie
+﻿@model MyCinema.Data.MovieApi.Responses.MovieResponseDTO
 
-<div class="container mt-5">
+@{
+    ViewData["Title"] = "Movie Details";
+}
+
+<div class="container my-5">
     <div class="row">
-        <div class="col-md-4">
-            <h3 class="text-center">Movie Photos</h3>
-            @if (Model.MoviePhotos != null && Model.MoviePhotos.Any())
+        <!-- Movie Poster -->
+        <div class="col-md-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.poster_path))
             {
-                @foreach (var photo in Model.MoviePhotos)
-                {
-                    var base64Photo = $"data:{photo.ContentType};base64,{Convert.ToBase64String(photo.Data)}";
-                    <img src="@base64Photo" class="img-fluid img-thumbnail mb-2" alt="Movie Photo">
-                }
+                string poster_path = $"https://image.tmdb.org/t/p/w500{Model.poster_path}";
+                        <img src=@poster_path alt="Movie Poster" class="img-fluid rounded shadow">
             }
             else
             {
-                <p class="text-center text-muted">No photos available.</p>
+                    <p>No poster available.</p>
             }
         </div>
 
+        <!-- Movie Information -->
         <div class="col-md-8">
-            <h2>@Model.Name</h2>
-            <p><strong>Original Title:</strong> @Model.OriginalTitle</p>
-            <p><strong>Premier Date:</strong> @Model.PremierDate.ToString("MMMM dd, yyyy")</p>
-            <p><strong>Duration:</strong> @Model.DurationInMinutes minutes</p>
-            <p><strong>Description:</strong> @Model.Description</p>
-            <p>
-                <strong>Subtitles:</strong>
-                @(Model.Subtitles ? "Yes" : "No")
-            </p>
+            <h1 class="display-4 text-primary">@Model.title</h1>
+            <h5 class="text-muted">@Model.original_title (@Model.release_date)</h5>
 
-            <h5 class="mt-4">Genres</h5>
-            @if (Model.MovieGenres != null && Model.MovieGenres.Any())
+            <!-- Overview -->
+            <div class="mt-3">
+                <h4 class="font-weight-bold">Overview:</h4>
+                <p>@Model.overview</p>
+            </div>
+
+            <!-- Movie Status -->
+            <div class="mt-3">
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <h5><strong>Status:</strong> @Model.status</h5>
+                </div>
+                <div class="col-sm-6">
+                    <h5><strong>Run Time:</strong> @Model.runtime minutes</h5>
+                </div>
+            </div>
+
+            <!-- Budget and Revenue -->
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <h5><strong>Budget:</strong> @Model.budget?.ToString("C")</h5>
+                </div>
+                <div class="col-sm-6">
+                    <h5><strong>Revenue:</strong> @Model.revenue?.ToString("C")</h5>
+                </div>
+            </div>
+
+            <!-- Genres -->
+            @if (Model.genres != null && Model.genres.Any())
             {
-                <ul class="list-group">
-                    @foreach (var genre in Model.MovieGenres)
-                    {
-                        <li class="list-group-item">@genre.Genre.Name</li>
-                    }
-                </ul>
+                    <div class="mt-3">
+                        <h5><strong>Genres:</strong> 
+                        @foreach (var genre in Model.genres)
+                        {
+                                    <span class="badge bg-info text-white">@genre.name</span>
+                        }
+                        </h5>
+                    </div>
             }
-            else
+            @if (Model.production_companies != null && Model.production_companies.Any())
             {
-                <p>No genres listed for this movie.</p>
+                        <div class="mt-3">
+                            <h5><strong>Production Companies:</strong> 
+                        @foreach (var comp in Model.production_companies)
+                        {
+                                                            <span class="badge bg-primary text-white">@comp.name</span>
+                        }
+                            </h5>
+                        </div>
             }
 
-            <h5 class="mt-4">Actors</h5>
-            <p>@Model.MovieActors</p>
+            <!-- Additional Information -->
+            <div class="mt-3">
+                <h5><strong>Original Language:</strong> @Model.original_language</h5>
+                <h5><strong>Popularity:</strong> @Model.popularity</h5>
+                <h5><strong>Vote Average:</strong> @Model.vote_avarage</h5>
+                <h5><strong>Vote Count:</strong> @Model.vote_count</h5>
+                <h5><strong>Only for adults:</strong> @Model.adult</h5>
+@*                 <h5><strong>Home Page:</strong> @Model.homapage</h5> *@
+                @if (!string.IsNullOrEmpty(Model.belongs_to_collection?.name))
+                {
+                        <h5><strong>Belongs to Collection:</strong> @Model.belongs_to_collection.name</h5>
+                }
+                else
+                {
+                               <h5><strong>Belongs to Collection:</strong> No collection available</h5>
+                }
+            </div>
         </div>
     </div>
+</div>
+
+<!-- Optional Footer (Optional for styling) -->
+<div class="text-center mt-5">
+    <a href="@Url.Action("NowPlaying", "Movie")" class="btn btn-secondary">Back</a>
 </div>

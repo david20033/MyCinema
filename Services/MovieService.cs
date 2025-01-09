@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using MyCinema.Data.MovieApi;
+using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Enums;
 using MyCinema.Migrations;
 using MyCinema.Repositories;
@@ -98,6 +99,10 @@ namespace MyCinema.Services
         public async Task<List<Movie>> GetAllMoviesWithPhotosAsync()
         {
             return await _movieRepository.GetAllMoviesWithPhotosAsync();
+        }
+        public async Task<MovieResponseDTO> GetMovieDetailsByIdFromAPI(int id)
+        {
+            return await _apiService.GetMovieDetailsByIdAsync(id);
         }
     }
 }
