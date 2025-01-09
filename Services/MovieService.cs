@@ -39,7 +39,11 @@ namespace MyCinema.Services
                 var movies = await _apiService.GetNowPlayingMoviesAsync(page);
                 foreach(var movie in movies)
                 {
-                    movie.original_language =await _languageRepository.GetLanguageNameByIsoCodeAsync(movie.original_language);
+                    var OriginalLanguage = await _languageRepository.GetLanguageNameByIsoCodeAsync(movie.original_language);
+                    if (OriginalLanguage != null)
+                    {
+                        movie.original_language=OriginalLanguage;
+                    }
                 }
                 return movies;
             }

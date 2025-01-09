@@ -18,49 +18,91 @@ namespace MyCinema.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Movie>(e =>
+
+            modelBuilder.Entity<Movie>(entity =>
             {
-                e.HasKey(m => m.Id);
-                e.Property(m => m.Name)
-                .IsRequired()
-                .HasMaxLength(200);
+                entity.HasKey(m => m.Id);
 
-                e.Property(m => m.OriginalTitle)
-                .IsRequired()
-                .HasMaxLength(200);
-
-                e.Property(m => m.PremierDate)
-                .IsRequired();
-                e.Property(m => m.DurationInMinutes)
-                .IsRequired();
-                e.Property(m => m.Description)
-                .IsRequired();
-                e.Property(m=>m.MovieActors)
-                .IsRequired();
-                e.Property(m => m.Subtitles)
-                .HasDefaultValue(false);
+                entity.Property(m => m.Title).IsRequired().HasMaxLength(200);
+                entity.Property(m => m.Release_date).IsRequired();
+                entity.Property(m => m.Runtime).IsRequired();
+                entity.Property(m => m.Overview).IsRequired();
             });
 
+            modelBuilder.Entity<Actor>(entity =>
+            {
+                entity.HasKey(a => a.Id);
 
-            modelBuilder.Entity<MovieGenre>()
-                .HasKey(mg => new { mg.MovieId, mg.GenreId });
+                entity.Property(a => a.Name).IsRequired().HasMaxLength(200);
+            });
 
-            modelBuilder.Entity<MovieGenre>()
-                .HasOne(mg => mg.Movie)
-                .WithMany(mg => mg.MovieGenres)
-                .HasForeignKey(mg => mg.MovieId);
+            modelBuilder.Entity<MovieActor>(entity =>
+            {
+                entity.HasKey(ma => new { ma.MovieId, ma.ActorId });
 
-            modelBuilder.Entity<MovieGenre>()
-                .HasOne(mg => mg.Genre)
-                .WithMany(g => g.MovieGenres)
-                .HasForeignKey(mg => mg.GenreId);
+                entity.HasOne(ma => ma.Movie)
+                      .WithMany(m => m.MovieActors)
+                      .HasForeignKey(ma => ma.MovieId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
+                entity.HasOne(ma => ma.Actor)
+                      .WithMany(a => a.MovieActors)
+                      .HasForeignKey(ma => ma.ActorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
-            modelBuilder.Entity<MoviePhoto>()
-                .HasOne(p=>p.Movie)
-                .WithMany(m=>m.MoviePhotos)
-                .HasForeignKey(m=>m.MovieId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<MoviePhoto>(entity =>
+            {
+                entity.HasKey(mp => mp.Id);
+
+                entity.HasOne(mp => mp.Movie)
+                      .WithMany(m => m.MoviePhotos)
+                      .HasForeignKey(mp => mp.MovieId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<MovieGenre>(entity =>
+            {
+                entity.HasKey(mg => new { mg.MovieId, mg.GenreId });
+
+                entity.HasOne(mg => mg.Movie)
+                      .WithMany(m => m.Genres)
+                      .HasForeignKey(mg => mg.MovieId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(mg => mg.Genre)
+                      .WithMany(g => g.MovieGenres)
+                      .HasForeignKey(mg => mg.GenreId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Genre>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+
+                entity.Property(g => g.Name).IsRequired().HasMaxLength(100);
+            });
+            modelBuilder.Entity<Language>(entity =>
+            {
+                entity.HasKey(l => l.Id);
+
+                entity.Property(l => l.Name).IsRequired().HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Spoken_languages)
+                .WithMany(l => l.SpokenMovies)
+                .UsingEntity(j => j.ToTable("MovieLanguages"));
+
+            modelBuilder.Entity<Movie>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.HasOne(m => m.Original_language)
+                      .WithMany() 
+                      .HasForeignKey(m => m.Original_languageId) 
+                      .OnDelete(DeleteBehavior.SetNull); 
+            });
         }
 
     }

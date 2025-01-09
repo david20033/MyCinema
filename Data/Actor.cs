@@ -2,11 +2,13 @@
 
 namespace MyCinema.Data
 {
-    public class Genre
+    public class Actor
     {
-        [Key]
         public Guid Id { get; set; }
+
         public string Name { get; set; }
-        public ICollection<MovieGenre> MovieGenres { get; set; }
+
+        
+        public ICollection<MovieActor>? MovieActors { get; set; } 
     }
 }

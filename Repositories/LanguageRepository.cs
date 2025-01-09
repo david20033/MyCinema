@@ -13,7 +13,7 @@ namespace MyCinema.Repositories
         }
         public async Task<string> GetLanguageNameByIsoCodeAsync(string isoCode)
         {
-            return _context.Language.Where(l=>l.iso_code == isoCode).FirstOrDefault().English_Name;
+            return _context.Language.Where(l=>l.iso_code == isoCode).FirstOrDefault()?.English_Name;
         }
 
     }

@@ -19,7 +19,8 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> Index()
         {
 
-            return View(await _homeService.GetAllMoviesWithPhotosAsync());
+            //return View(await _homeService.GetAllMoviesWithPhotosAsync());
+            return View();
         }
 
         public IActionResult Privacy()
