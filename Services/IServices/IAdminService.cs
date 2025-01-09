@@ -5,13 +5,6 @@ namespace MyCinema.Services.IServices
 {
     public interface IAdminService
     {
-        Task AddMovieWithPhotosAsync(Movie movie, List<IFormFile> MoviePhotos);
-        Task<AddMovieViewModel> GetAddMovieViewDataAsync();
-        Task<List<Movie>> GetAllMoviesWithPhotosAsync();
-        Task AddSalonAsync(TheatreSalon salon, string clickedCells);
-        Task<List<TheatreSalon>> GetTheatreSalonsAsync();
-
-        Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id);
         Task InsertLanguagesInDB();
     }
 }

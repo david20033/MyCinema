@@ -1,5 +1,6 @@
 ﻿using MyCinema.Data;
 using MyCinema.Data.MovieApi;
+using MyCinema.ViewModels;
 using RestSharp;
 
 namespace MyCinema.Services.IServices
@@ -8,5 +9,8 @@ namespace MyCinema.Services.IServices
     {
         Task<Movie> GetMovieWithPhotosByIdAsync(Guid id);
         Task<List<MovieNowPlayingDTO>> GetNowPlayingMoviesAsync(int page);
+        Task AddMovieWithPhotosAsync(Movie movie, List<IFormFile> MoviePhotos);
+        Task<AddMovieViewModel> GetAddMovieViewDataAsync();
+        Task<List<Movie>> GetAllMoviesWithPhotosAsync();
     }
 }

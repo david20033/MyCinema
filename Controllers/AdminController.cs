@@ -23,58 +23,8 @@ namespace MyCinema.Controllers
         //{
 
         //}
-        public async Task<IActionResult> MoviesList()
-        {
-            var movies = await _adminService.GetAllMoviesWithPhotosAsync();
-            return View(movies);
-        }
-        public IActionResult AddSalon()
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSalon(TheatreSalon salon, string EmptySeatsCoords)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _adminService.AddSalonAsync(salon, EmptySeatsCoords);
-                    return RedirectToAction("Index");
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("SalonNumber", ex.Message);
-                }
-            }
-            return RedirectToAction("AddSalon");
-        }
-        public IActionResult AddMovie()
-        {
-            var viewData = _adminService.GetAddMovieViewDataAsync();
-            ViewData["Lange"] = viewData.Result.Languages;
-            ViewData["Genre"] = new SelectList(viewData.Result.Genres, "Value", "Text");
-            ViewData["Subs"] = new SelectList(viewData.Result.Subtitles, "Value", "Text");
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddMovie(Movie movie, List<IFormFile> MoviePhotos)
-        {
-            await _adminService.AddMovieWithPhotosAsync(movie, MoviePhotos);
-            return RedirectToAction("Index");
-        }
-
-        public async Task<IActionResult> Salons()
-        {
-            var salons = await _adminService.GetTheatreSalonsAsync();
-            return View(salons);
-        }
-        public async Task<IActionResult> SalonDetails(Guid Id)
-        {
-            return View(await _adminService.GetTheatreSalonByIdAsync(Id));
-        }
+       
+       
         public async Task<IActionResult> InsertLanguagesInDb()
         {
             await _adminService.InsertLanguagesInDB();
