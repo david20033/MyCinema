@@ -20,7 +20,7 @@
                     int index = 1;
                     foreach (var salon in Model)
                     {
-                        <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("SalonDetails", "Admin", new { id = salon.Id })'">
+                        <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("SalonDetails", "Salon", new { id = salon.Id })'">
                             <th scope="row">@index</th>
                             <td>@salon.SalonNumber</td>
                             <td>@salon.Rows</td>

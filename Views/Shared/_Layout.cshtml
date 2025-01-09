@@ -67,22 +67,31 @@
                     @if (User.IsInRole("Admin"))
                     {
                             <h4 class="fs-4"> Admin Panel</h4>
-                        <li>
-                                <a href="@Url.Action("Salons", "Salon" )" class="nav-link text-white">
-                                <svg class="bi pe-none me-2" width="16" height="16">
-                                    <use xlink:href="#people-circle"></use>
-                                </svg>
-                                Salons
-                            </a>
-                        </li>
-                        <li>
-                                    <a href="@Url.Action("NowPlaying", "Movie" )" class="nav-link text-white">
-                                <svg class="bi pe-none me-2" width="16" height="16">
-                                    <use xlink:href="#people-circle"></use>
-                                </svg>
-                                Now Playing
-                            </a>
-                        </li>
+                            <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg class="bi pe-none me-2" width="16" height="16">
+                <use xlink:href="#people-circle"></use>
+            </svg>
+            Salon
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item text-secondary-emphasis" href="@Url.Action("Salons", "Salon")">View Salons</a></li>
+                <li><a class="dropdown-item text-secondary-emphasis" href="@Url.Action("AddSalon", "Salon")">Add Salon</a></li>
+        </ul>
+    </li>
+                            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bi pe-none me-2" width="16" height="16">
+                    <use xlink:href="#people-circle"></use>
+                </svg>
+                Movie
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item text-secondary-emphasis" href="@Url.Action("NowPlaying", "Movie")">Now Playing</a></li>
+                    <li><a class="dropdown-item text-secondary-emphasis" href="@Url.Action("MovieList", "Movie")">Movies in Db</a></li>
+                        <li><a class="dropdown-item text-secondary-emphasis" href="@Url.Action("AddMovie", "Movie")">Add Movie</a></li>
+            </ul>
+        </li>
                     }
                 </ul>
                     
