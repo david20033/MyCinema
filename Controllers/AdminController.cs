@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
+using System.Text.Json;
 
 namespace MyCinema.Controllers
 {
@@ -33,13 +34,13 @@ namespace MyCinema.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSalon(TheatreSalon salon, string clickedCells)
+        public async Task<IActionResult> AddSalon(TheatreSalon salon, string EmptySeatsCoords)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _adminService.AddSalonAsync(salon, clickedCells);
+                    await _adminService.AddSalonAsync(salon, EmptySeatsCoords);
                     return RedirectToAction("Index");
                 }
                 catch (ArgumentException ex)

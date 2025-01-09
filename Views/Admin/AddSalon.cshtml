@@ -7,7 +7,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card shadow">
                 <div class="card-body">
-                    <form asp-action="AddSalon" method="post">
+                    <form asp-action="AddSalon" method="post" id="AddSalonForm">
                         <div class="mb-3">
                             <label for="SalonNumber" class="form-label">Salon Number</label>
                             <input type="number" class="form-control" id="SalonNumber" name="SalonNumber" placeholder="Enter salon number" required />
@@ -34,9 +34,9 @@
                         <div class="container my-4">
                             <div id="grid-container"></div>
                         </div>
-
+                        <input type="hidden" name="EmptySeatsCoords" id="EmptySeatsCoords"/>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Add Salon</button>
+                            <input type="submit" class="btn btn-primary btn-lg">Add Salon</input>
                         </div>
                     </form>
                 </div>
@@ -44,73 +44,74 @@
         </div>
     </div>
 </div>
-
 <script>
-    const rowsInput = document.getElementById("Rows");
+   const rowsInput = document.getElementById("Rows");
     const columnsInput = document.getElementById("Columns");
     const gridContainer = document.getElementById("grid-container");
 
-    // Function to generate the grid with fixed cell sizes
     function generateGrid(rows, columns) {
-      gridContainer.innerHTML = ""; // Clear the grid
+        gridContainer.innerHTML = ""; 
 
-      const cellSize = 30; // Fixed size for each cell in pixels
+        const cellSize = 30; 
 
-      for (let row = 0; row < rows; row++) {
-        const rowDiv = document.createElement("div");
-        rowDiv.className = "d-flex justify-content-center mb-2"; // Use flex to display items in one row
-        for (let col = 0; col < columns; col++) {
-          const cell = document.createElement("div");
-          cell.className = "grid-item addSalon border border-primary";
-          cell.textContent = `${col + 1}`;
-          cell.style.width = `${cellSize}px`;
-          cell.style.height = `${cellSize}px`;
-          cell.style.display = "flex";
-          cell.style.alignItems = "center";
-          cell.style.justifyContent = "center";
-          cell.style.margin = "2px";
-          cell.setAttribute("data-row", row);
-          cell.setAttribute("data-col", col);
-          cell.onclick = () => cellClicked(row, col);
-          rowDiv.appendChild(cell);
+        for (let row = 0; row < rows; row++) {
+            const rowDiv = document.createElement("div");
+            rowDiv.className = "d-flex justify-content-center mb-2";
+            for (let col = 0; col < columns; col++) {
+                const cell = document.createElement("div");
+                cell.className = "grid-item addSalon border border-primary";
+                cell.textContent = `${col + 1}`;
+                cell.style.width = `${cellSize}px`;
+                cell.style.height = `${cellSize}px`;
+                cell.style.display = "flex";
+                cell.style.alignItems = "center";
+                cell.style.justifyContent = "center";
+                cell.style.margin = "2px";
+                cell.setAttribute("data-row", row);
+                cell.setAttribute("data-col", col);
+                cell.onclick = () => cellClicked(row, col);
+                rowDiv.appendChild(cell);
+            }
+            gridContainer.appendChild(rowDiv);
         }
-        gridContainer.appendChild(rowDiv); // Add the row to the grid container
-      }
     }
 
-    // Event listeners to regenerate the grid on input change
     rowsInput.addEventListener("input", () => {
-      const rows = parseInt(rowsInput.value) || 0;
-      const columns = parseInt(columnsInput.value) || 0;
-      generateGrid(rows, columns);
+        const rows = parseInt(rowsInput.value) || 0;
+        const columns = parseInt(columnsInput.value) || 0;
+        generateGrid(rows, columns);
     });
 
     columnsInput.addEventListener("input", () => {
-      const rows = parseInt(rowsInput.value) || 0;
-      const columns = parseInt(columnsInput.value) || 0;
-      generateGrid(rows, columns);
+        const rows = parseInt(rowsInput.value) || 0;
+        const columns = parseInt(columnsInput.value) || 0;
+        generateGrid(rows, columns);
     });
     let clickedCells = [];
 
     function cellClicked(row, col) {
-      // Select the cell using the data-row and data-col attributes
-      const cell = document.querySelector(`.grid-item[data-row='${row}'][data-col='${col}']`);
-      if (cell) {
-          const coordinate = `${row},${col}`;
-        if (!cell.classList.contains('clicked')) {
-          cell.classList.add('clicked');
-          clickedCells.push(coordinate);
-        } else {
-          cell.classList.remove('clicked');
-          clickedCells = clickedCells.filter(coord => coord !== coordinate);
+        const cell = document.querySelector(`.grid-item[data-row='${row}'][data-col='${col}']`);
+        if (cell) {
+            const coordinate = `${row},${col}`;
+            if (!cell.classList.contains('clicked')) {
+                cell.classList.add('clicked');
+                clickedCells.push(coordinate);
+            } else {
+                cell.classList.remove('clicked');
+                clickedCells = clickedCells.filter(coord => coord !== coordinate);
+            }
         }
-      }
     }
-    document.querySelector("form").onsubmit = function (event) {
-    const clickedCellsInput = document.createElement("input");
-    clickedCellsInput.type = "hidden";
-    clickedCellsInput.name = "ClickedCells";
-    clickedCellsInput.value = JSON.stringify(clickedCells); // Send the clicked cells as a JSON string
-    this.appendChild(clickedCellsInput);
+document.getElementById("AddSalonForm").addEventListener("submit", function (event) {
+    const isVipCheckbox = document.getElementById("isVip");
+    if (isVipCheckbox.checked) {
+        isVipCheckbox.value = "true"; 
+    } else {
+        isVipCheckbox.value = "false"; 
     }
+
+    const hiddenInput = document.getElementById("EmptySeatsCoords");
+        hiddenInput.value = JSON.stringify(clickedCells);
+
+});
 </script>
