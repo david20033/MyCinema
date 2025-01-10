@@ -13,8 +13,17 @@ namespace MyCinema.Repositories
         }
         public async Task AddMovieAsync(Movie movie)
         {
-            _context.Movie.Add(movie);
-            await _context.SaveChangesAsync();
+            if(movie == null)
+            {
+                return;
+            }
+            var existingMovie = await _context.Movie
+                                       .FirstOrDefaultAsync(m => m.Imdb_id == movie.Imdb_id);
+            if (existingMovie == null)
+            {
+                _context.Movie.Add(movie);
+                await _context.SaveChangesAsync();
+            }
         }
         public async Task AddMoviePhotoAsync(MoviePhoto moviePhoto)
         {
