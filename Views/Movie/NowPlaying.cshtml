@@ -8,13 +8,16 @@
     int startPage = Math.Max(1, currentPage - maxPagesToShow / 2);
     int endPage = Math.Min(totalPages, currentPage + maxPagesToShow / 2);
 }
-<h1 class="text-center my-4">Theatre Salons</h1>
+<h1 class="text-center my-2">Now Playing Movies</h1>
 
 <div class="container">
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-dark">
                 <tr>
+                    <th scope="col">
+                            <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)">
+                        </th>
                     <th scope="col">#</th>
                     <th scope="col">id</th>
                     <th scope="col">Title</th>
@@ -31,7 +34,10 @@
                     int index = 1;
                     foreach (var movie in Model)
                     {
-                                        <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Movie", new { id = movie.id })'">
+                                   <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Movie", new { id = movie.id })'">
+                                    <td>
+                                                                <input type="checkbox" name="selectedMovies" value="@movie.id" class="movie-checkbox"  onclick="event.stopPropagation(); updateButtonState();">
+                                    </td>
                                     <th scope="row">@index</th>
                                     <td>@movie.id</td>
                                     <td>@movie.title</td>
@@ -47,13 +53,16 @@
                 else
                 {
                         <tr>
-                            <td colspan="6" class="text-center">No salons available.</td>
+                            <td colspan="6" class="text-center">No movies available.</td>
                         </tr>
                 }
             </tbody>
         </table>
     </div>
-<div class="d-flex justify-content-center">
+     <div class="d-flex justify-content-between">
+            <button type="submit" id="add-to-database-btn" value="AddToDataBase" class="btn btn-primary" disabled>Add to Database</button>
+        </div>
+<div class="d-flex justify-content-between mt-2">
     <div class="pagination-container overflow-auto">
         <ul class="pagination">
                 @for (var i = 1; i <= ViewBag.totalPages; i++)
@@ -67,3 +76,17 @@
 </div>
 
 </div>
+<script>
+    function toggleSelectAll(source) {
+        const checkboxes = document.querySelectorAll('.movie-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+    function updateButtonState() {
+        const checkboxes = document.querySelectorAll('.movie-checkbox');
+        const selected = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        const button = document.getElementById('add-to-database-btn');
+        button.disabled = !selected;
+    }
+</script>
