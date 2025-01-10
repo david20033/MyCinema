@@ -15,7 +15,7 @@ namespace MyCinema.Data
 
         public bool? Adult { get; set; }
         public string? Backdrop_path { get; set; }
-        //public MovieCollectionDTO? Belongs_to_collection { get; set; }
+        public string? Belongs_to_collection_name { get; set; }
         public decimal? Budget { get; set; }
         //public List<>? Actors { get; set; }
         public string? Homapage { get; set; }
@@ -28,7 +28,7 @@ namespace MyCinema.Data
         public string? Overview { get; set; }
         public decimal? Popularity { get; set; }
         public string? Poster_path { get; set; }
-        //public List<ProductionCompanyDTO>? Production_companies { get; set; }
+        public List<string?>? Production_companies { get; set; }
         //public List<CountryDTO>? production_countries { get; set; }
         public string? Release_date { get; set; }
         public int? Revenue { get; set; }

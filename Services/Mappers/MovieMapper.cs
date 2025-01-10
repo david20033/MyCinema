@@ -4,6 +4,7 @@ using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Enums;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.Mappers.IMappers;
+using MyCinema.ViewModels;
 
 namespace MyCinema.Services.Mappers
 {
@@ -25,6 +26,7 @@ namespace MyCinema.Services.Mappers
                 moviedb_id = movieDTO.id ?? default,
                 Adult = movieDTO.adult,
                 Backdrop_path = movieDTO.backdrop_path,
+                Belongs_to_collection_name = movieDTO.belongs_to_collection?.name ?? default,
                 Budget = movieDTO.budget,
                 Homapage = movieDTO.homapage,
                 Imdb_id = movieDTO.imdb_id,
@@ -33,6 +35,7 @@ namespace MyCinema.Services.Mappers
                 Overview = movieDTO.overview,
                 Popularity = movieDTO.popularity,
                 Poster_path = movieDTO.poster_path,
+                Production_companies =movieDTO.production_companies?.Select(movieDTO => movieDTO.name).ToList() ?? new List<string?>(),
                 Release_date = movieDTO.release_date,
                 Revenue = movieDTO.revenue,
                 Runtime = movieDTO.runtime,
@@ -90,6 +93,38 @@ namespace MyCinema.Services.Mappers
                 });
             }
             return result;
+        }
+        public MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie,  MovieResponseDTO MovieDTO)
+        {
+            return new MovieDetailsViewModel
+            {
+                Adult = Movie.Adult ?? MovieDTO.adult,
+                Backdrop_path = Movie.Backdrop_path ?? MovieDTO.backdrop_path,
+                Budget = Movie.Budget ?? MovieDTO.budget,
+                Homapage = Movie.Homapage ?? MovieDTO.homapage,
+                Imdb_id = Movie.Imdb_id ?? MovieDTO.imdb_id,
+                Original_language = Movie.Original_language?.English_Name ?? MovieDTO.original_language,
+                Original_title = Movie.Original_title ?? MovieDTO.original_title,
+                Overview = Movie.Overview ?? MovieDTO.overview,
+                Popularity = Movie.Popularity ?? MovieDTO.popularity,
+                Poster_path = Movie.Poster_path ?? MovieDTO.poster_path,
+                Release_date = Movie.Release_date ?? MovieDTO.release_date,
+                Revenue = Movie.Revenue ?? MovieDTO.revenue,
+                RunTime = Movie.Runtime ?? MovieDTO.runtime,
+                Spoken_languages =
+                         Movie.Spoken_languages?.Select(m => m.English_Name).ToList()
+                         ?? MovieDTO.spoken_languages?.Select(m => m.english_name).ToList(),
+                Status = Movie.Status.ToString() ?? MovieDTO.status,
+                Tagline = Movie.Tagline ?? MovieDTO.tagline,
+                Title = Movie.Title ?? MovieDTO.title,
+                Vote_average = Movie.Vote_avarage ?? MovieDTO.vote_avarage,
+                Vote_count = (Movie.Vote_count != 0) ? Movie.Vote_count : (MovieDTO.vote_count != 0 ? MovieDTO.vote_count : 0),
+                Genres = Movie.Genres?.Select(g => g.Genre.Name).ToList() ??
+                         MovieDTO.genres?.Select(g => g.name).ToList(),
+                Production_companies = Movie.Production_companies ?? MovieDTO.production_companies?.Select(p=>p.name).ToList(),
+                Bellongs_to_collection = Movie.Belongs_to_collection_name ?? MovieDTO.belongs_to_collection?.name
+
+            };
         }
     }
 }

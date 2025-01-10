@@ -32,5 +32,13 @@ namespace MyCinema.Repositories
                 .Where(m => m.Id == id)
                 .Include(m => m.MoviePhotos).FirstOrDefaultAsync();
         }
+        public async Task<Movie> GetMovieDetailsByIdAsync(Guid id)
+        {
+            return await _context.Movie
+                .Where(m => m.Id == id)
+                .Include(m=> m.Genres)
+                .ThenInclude(mg => mg.Genre)
+                .FirstOrDefaultAsync();
+        }
     }
 }

@@ -111,6 +111,10 @@ namespace MyCinema.Services
         {
             return await _apiService.GetMovieDetailsByIdAsync(id);
         }
+        public async Task<Movie> GetMovieDetailsByIdFromDb(Guid id)
+        {
+            return await _movieRepository.GetMovieDetailsByIdAsync(id);
+        }
         public async Task AddMovieRangeInDataBaseByIds(List<int> movies)
         {
             foreach (var Movieid in movies)
@@ -125,6 +129,10 @@ namespace MyCinema.Services
                 await _movieRepository.AddMovieAsync(movieEntity);
             }
         }    
+        public MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieResponseDTO MovieDTO)
+        {
+            return _movieMapper.MapToMovieDetailViewModel(movie, MovieDTO);
+        }
 
     }
 }
