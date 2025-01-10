@@ -8,6 +8,7 @@ using MyCinema.Migrations;
 using MyCinema.Repositories;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
+using MyCinema.Services.Mappers.IMappers;
 using MyCinema.ViewModels;
 using RestSharp;
 
@@ -18,12 +19,14 @@ namespace MyCinema.Services
         private readonly IMovieRepository _movieRepository;
         private readonly IApiService _apiService;
         private readonly ILanguageRepository _languageRepository;
+        private readonly IMovieMapper _movieMapper;
         private readonly MyCinemaDBContext _context;
         private readonly EnumServices _enumServices;
-        public MovieService(IMovieRepository movieRepository, IApiService apiService, ILanguageRepository languageRepository, MyCinemaDBContext context, EnumServices enumServices)
+        public MovieService(IMovieRepository movieRepository, IApiService apiService, IMovieMapper movieMapper, ILanguageRepository languageRepository, MyCinemaDBContext context, EnumServices enumServices)
         {
             _movieRepository = movieRepository;
             _apiService = apiService;
+            _movieMapper = movieMapper;
             _languageRepository = languageRepository;
             _context = context;
             _enumServices = enumServices;
@@ -42,7 +45,7 @@ namespace MyCinema.Services
                     var OriginalLanguage = await _languageRepository.GetLanguageNameByIsoCodeAsync(movie.original_language);
                     if (OriginalLanguage != null)
                     {
-                        movie.original_language=OriginalLanguage;
+                        movie.original_language=OriginalLanguage?.English_Name;
                     }
                 }
                 return movies;
@@ -108,5 +111,20 @@ namespace MyCinema.Services
         {
             return await _apiService.GetMovieDetailsByIdAsync(id);
         }
+        public async Task AddMovieRangeInDataBaseByIds(List<int> movies)
+        {
+            foreach (var Movieid in movies)
+            {
+                var movieDTO = _apiService.GetMovieDetailsByIdAsync(Movieid).Result;
+                if (movieDTO == null)
+                {
+                    continue;
+                }
+                
+                var movieEntity = await _movieMapper.MapMovieDTOToEntity(movieDTO);
+                await _movieRepository.AddMovieAsync(movieEntity);
+            }
+        }    
+
     }
 }

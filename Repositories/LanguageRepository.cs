@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
-using MyCinema.Services.IServices;
+using MyCinema.Repositories.IRepositories;
 
 namespace MyCinema.Repositories
 {
@@ -11,9 +11,9 @@ namespace MyCinema.Repositories
         {
             _context = context;
         }
-        public async Task<string> GetLanguageNameByIsoCodeAsync(string isoCode)
+        public async Task<Language> GetLanguageNameByIsoCodeAsync(string isoCode)
         {
-            return _context.Language.Where(l=>l.iso_code == isoCode).FirstOrDefault()?.English_Name;
+            return _context.Language.Where(l=>l.iso_code == isoCode).FirstOrDefault();
         }
 
     }

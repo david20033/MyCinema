@@ -5,6 +5,8 @@ using MyCinema.Services;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Repositories;
 using MyCinema.Services.IServices;
+using MyCinema.Services.Mappers.IMappers;
+using MyCinema.Services.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyCinemaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -24,6 +26,8 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 builder.Services.AddScoped<ISalonService, SalonService>();
+builder.Services.AddScoped<IMovieMapper, MovieMapper>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;

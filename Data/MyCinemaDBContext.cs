@@ -18,6 +18,17 @@ namespace MyCinema.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Movie>()
+       .HasMany(m => m.Spoken_languages)
+       .WithMany(l => l.SpokenMovies)
+       .UsingEntity<Dictionary<string, object>>(
+           "MovieLanguages", 
+           j => j.HasOne<Language>().WithMany().HasForeignKey("LanguageId"),
+           j => j.HasOne<Movie>().WithMany().HasForeignKey("MovieId"),
+           j =>
+           {
+               j.HasKey("MovieId", "LanguageId"); 
+           });
 
             modelBuilder.Entity<Movie>(entity =>
             {
@@ -103,6 +114,7 @@ namespace MyCinema.Data
                       .HasForeignKey(m => m.Original_languageId) 
                       .OnDelete(DeleteBehavior.SetNull); 
             });
+
         }
 
     }

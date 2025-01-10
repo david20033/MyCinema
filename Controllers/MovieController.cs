@@ -55,5 +55,13 @@ namespace MyCinema.Controllers
             var movies = await _movieService.GetNowPlayingMoviesAsync(page);
             return View(movies);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMoviesToDataBase(string selectedMovies)
+        {
+            var selectedMovieIds = selectedMovies.Split(',').Select(int.Parse).ToList();
+            await _movieService.AddMovieRangeInDataBaseByIds(selectedMovieIds);
+            return RedirectToAction("MovieList", "Movie");
+        }
     }
 }

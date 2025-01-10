@@ -59,9 +59,12 @@
             </tbody>
         </table>
     </div>
+    <form id="movie-form" method="post" asp-action="AddMoviesToDataBase">
+    <input type="hidden" id="selectedMoviesInput" name="selectedMovies" value="" />
      <div class="d-flex justify-content-between">
-            <button type="submit" id="add-to-database-btn" value="AddToDataBase" class="btn btn-primary" disabled>Add to Database</button>
+            <input type="submit" id="add-to-database-btn" value="AddMoviesToDataBase" class="btn btn-primary" disabled>Add to Database</input>
         </div>
+        </form>
 <div class="d-flex justify-content-between mt-2">
     <div class="pagination-container overflow-auto">
         <ul class="pagination">
@@ -77,16 +80,71 @@
 
 </div>
 <script>
+    // Array to store selected movie IDs
+    let selectedMovieIds = [];
+
+    // Function to handle the select/deselect all checkbox
     function toggleSelectAll(source) {
         const checkboxes = document.querySelectorAll('.movie-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = source.checked;
+            // If "select all" is checked, add all movie IDs to the array
+            if (checkbox.checked) {
+                addMovieId(checkbox.value);
+            } else {
+                removeMovieId(checkbox.value);
+            }
         });
+        updateButtonState();
     }
+
+    // Function to handle individual checkbox clicks
     function updateButtonState() {
         const checkboxes = document.querySelectorAll('.movie-checkbox');
-        const selected = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        selectedMovieIds = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        // Update the hidden input field with selected movie IDs
+        const hiddenInput = document.getElementById('selectedMoviesInput');
+        hiddenInput.value = selectedMovieIds.join(','); // Store selected IDs as comma-separated string
+
+        // Enable/Disable the button based on whether any movie is selected
         const button = document.getElementById('add-to-database-btn');
-        button.disabled = !selected;
+        button.disabled = selectedMovieIds.length === 0;
     }
+
+    // Function to add a movie ID to the selectedMovieIds array
+    function addMovieId(id) {
+        if (!selectedMovieIds.includes(id)) {
+            selectedMovieIds.push(id);
+        }
+    }
+
+    // Function to remove a movie ID from the selectedMovieIds array
+    function removeMovieId(id) {
+        const index = selectedMovieIds.indexOf(id);
+        if (index !== -1) {
+            selectedMovieIds.splice(index, 1);
+        }
+    }
+
+    // Event listener for checkbox change
+    document.querySelectorAll('.movie-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                addMovieId(this.value);
+            } else {
+                removeMovieId(this.value);
+            }
+            updateButtonState();
+        });
+    });
+
+    // Handle the form submission and set the hidden input value
+    document.getElementById('movie-form').addEventListener('submit', function(event) {
+        // Set the value of the hidden input to the selected movie IDs before submitting
+        const hiddenInput = document.getElementById('selectedMoviesInput');
+        hiddenInput.value = selectedMovieIds.join(','); // Join the array into a comma-separated string
+    });
 </script>

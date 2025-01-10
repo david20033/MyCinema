@@ -14,5 +14,6 @@ namespace MyCinema.Services.IServices
         Task<AddMovieViewModel> GetAddMovieViewDataAsync();
         Task<List<Movie>> GetAllMoviesWithPhotosAsync();
         Task<MovieResponseDTO> GetMovieDetailsByIdFromAPI(int id);
+        Task AddMovieRangeInDataBaseByIds(List<int> movies);
     }
 }

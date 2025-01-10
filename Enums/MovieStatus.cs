@@ -2,6 +2,6 @@
 {
     public enum MovieStatus
     {
-        Production, Released
+        Production, Released, Unknown
     }
 }
