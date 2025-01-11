@@ -25,7 +25,11 @@ namespace MyCinema.Controllers
         {
             Guid result;
             Movie Movie = new Movie();
-            MovieResponseDTO MovieDTO = new MovieResponseDTO();
+            MovieWithCreditsDTO MovieDTO = new MovieWithCreditsDTO();
+            MovieCreditsResponseDTO MovieCreditsResponse = new MovieCreditsResponseDTO();
+            MovieResponseDTO MovieResponseDTO = new MovieResponseDTO();
+            MovieDTO.Movie = MovieResponseDTO;
+            MovieDTO.Credits = MovieCreditsResponse;
             ViewBag.BackButton = null;
             if (Guid.TryParse(id, out result))
             {

@@ -12,5 +12,6 @@ namespace MyCinema.Services.IServices
         Task<List<GenreDTO>> GetGenresAsync();
         Task<MovieResponseDTO> GetMovieDetailsByIdAsync(int id);
         Task<MovieCreditsResponseDTO> GetMovieCreditsByIdAsync(int id);
+        Task<MovieWithCreditsDTO> GetMovieWithCreditsByIdDTO(int id);
     }
 }

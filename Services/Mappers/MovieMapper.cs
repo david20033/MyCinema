@@ -96,8 +96,10 @@ namespace MyCinema.Services.Mappers
             }
             return result;
         }
-        public MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie,  MovieResponseDTO MovieDTO)
+        public MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie, MovieWithCreditsDTO MovieWithCreditsDTO)
         {
+            var MovieDTO = MovieWithCreditsDTO?.Movie;
+            var CreditsDTO = MovieWithCreditsDTO?.Credits;
             return new MovieDetailsViewModel
             {
                 Adult = Movie.Adult ?? MovieDTO.adult,
@@ -124,8 +126,9 @@ namespace MyCinema.Services.Mappers
                 Genres = Movie.Genres?.Select(g => g.Genre.Name).ToList() ??
                          MovieDTO.genres?.Select(g => g.name).ToList(),
                 Production_companies = Movie.Production_companies ?? MovieDTO.production_companies?.Select(p=>p.name).ToList(),
-                Bellongs_to_collection = Movie.Belongs_to_collection_name ?? MovieDTO.belongs_to_collection?.name
-
+                Bellongs_to_collection = Movie.Belongs_to_collection_name ?? MovieDTO.belongs_to_collection?.name,
+                Cast = Movie.Cast ?? CreditsDTO?.cast?.Select(p => p?.name)?.Take(10)?.ToList() ?? new List<string>(),
+                Directors = Movie.Crew ?? CreditsDTO?.crew?.Where(m => m?.job == "Director")?.Select(p => p?.name)?.Take(5)?.ToList() ?? new List<string>(),
             };
         }
         public MovieListViewModel MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO)

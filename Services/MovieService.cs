@@ -111,9 +111,9 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetMoviesAsync(page);
         }
-        public async Task<MovieResponseDTO> GetMovieDetailsByIdFromAPI(int id)
+        public async Task<MovieWithCreditsDTO> GetMovieDetailsByIdFromAPI(int id)
         {
-            return await _apiService.GetMovieDetailsByIdAsync(id);
+            return await _apiService.GetMovieWithCreditsByIdDTO(id);
         }
         public async Task<Movie> GetMovieDetailsByIdFromDb(Guid id)
         {
@@ -146,7 +146,7 @@ namespace MyCinema.Services
                 await _movieRepository.AddMovieAsync(movieEntity);
             }
         }    
-        public MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieResponseDTO MovieDTO)
+        public MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieWithCreditsDTO MovieDTO)
         {
             return _movieMapper.MapToMovieDetailViewModel(movie, MovieDTO);
         }

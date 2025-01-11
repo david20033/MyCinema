@@ -27,5 +27,7 @@ namespace MyCinema.ViewModels
         
         public List<string?>? Production_companies { get; set; }
         public string? Bellongs_to_collection { get; set; }
+        public List<string>? Cast { get; set; }
+        public List<string>? Directors { get; set; }
     }
 }

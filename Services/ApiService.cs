@@ -105,5 +105,11 @@ namespace MyCinema.Services
             var creditResponse = JsonConvert.DeserializeObject<MovieCreditsResponseDTO>(response.Content);
             return creditResponse;
         }
+        public async Task<MovieWithCreditsDTO> GetMovieWithCreditsByIdDTO(int id)
+        {
+            var Credits = await GetMovieCreditsByIdAsync(id);
+            var Movie = await GetMovieDetailsByIdAsync(id);
+            return new MovieWithCreditsDTO { Credits = Credits, Movie = Movie };
+        }
     }
 }
