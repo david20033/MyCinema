@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
+using System.Drawing.Printing;
 
 namespace MyCinema.Repositories
 {
@@ -43,6 +44,11 @@ namespace MyCinema.Repositories
                 .Include(l=>l.Original_language)
                 .Skip((pageNumber - 1) * pageSize) 
                 .Take(pageSize)                   
+                .ToListAsync();
+        }
+        public async Task<List<Movie>> GetAllMoviesAsync()
+        {
+            return await _context.Movie
                 .ToListAsync();
         }
         public async Task<Movie> GetMovieWithPhotosByIdAsync(Guid id)

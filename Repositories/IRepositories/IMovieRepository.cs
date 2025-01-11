@@ -11,5 +11,6 @@ namespace MyCinema.Repositories.IRepositories
         Task<Movie> GetMovieDetailsByIdAsync(Guid id);
         Task<List<Movie>> GetMoviesAsync(int pageNumber);
         Task<int> GetMoviesCount();
+        Task<List<Movie>> GetAllMoviesAsync();
     }
 }

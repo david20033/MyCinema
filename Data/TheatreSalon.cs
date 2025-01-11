@@ -10,6 +10,7 @@
         public List<string> EmptySeatsCoords { get; set; } = new List<string>();
         public int Capacity { get; set; }
         public bool isVip { get; set; }
+        public List<Screening> Screenings { get; set; } = new List<Screening>();
 
     }
 }
