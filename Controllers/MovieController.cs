@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyCinema.Data;
+using MyCinema.Data.MovieApi;
 using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
@@ -20,24 +21,21 @@ namespace MyCinema.Controllers
         {
             return View();
         }
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> MovieList()
-        {
-            var movies = await _movieService.GetAllMoviesWithPhotosAsync();
-            return View(movies);
-        }
         public async Task<IActionResult> Details(string id)
         {
             Guid result;
             Movie Movie = new Movie();
             MovieResponseDTO MovieDTO = new MovieResponseDTO();
+            ViewBag.BackButton = null;
             if (Guid.TryParse(id, out result))
             {
                 Movie = await _movieService.GetMovieDetailsByIdFromDb(result);
+                ViewBag.BackButton = "MovieList";
             }
             else
             {
                 MovieDTO = await _movieService.GetMovieDetailsByIdFromAPI(int.Parse(id));
+                ViewBag.BackButton = "NowPlaying";
             }
          
             return View(_movieService.MovieDetailsViewModel(Movie,MovieDTO));
@@ -65,9 +63,18 @@ namespace MyCinema.Controllers
             if (page == 0) page = 1;
             ViewBag.currentPage = page;
             ViewBag.totalPages = 100; //will be changed later
-            var movies = await _movieService.GetNowPlayingMoviesAsync(page);
-            return View(movies);
+            return View(await _movieService.GetMovieListViewModelFromApi(page));
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MovieList(int page)
+        {
+            if (page == 0) page = 1;
+            ViewBag.currentPage = 1;
+            var totalMovies = await _movieService.GetMoviesCount();
+            ViewBag.totalPages = Math.Ceiling((decimal) totalMovies/20); 
+            return View(await _movieService.GetMovieListViewModelFromDb(page));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]

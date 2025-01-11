@@ -17,5 +17,9 @@ namespace MyCinema.Services.IServices
         Task AddMovieRangeInDataBaseByIds(List<int> movies);
         Task<Movie> GetMovieDetailsByIdFromDb(Guid id);
         MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieResponseDTO MovieDTO);
+        Task<List<Movie>> GetMoviesAsync(int page);
+        Task<List<MovieListViewModel>> GetMovieListViewModelFromDb(int page);
+        Task<List<MovieListViewModel>> GetMovieListViewModelFromApi(int page);
+        Task<int> GetMoviesCount();
     }
 }

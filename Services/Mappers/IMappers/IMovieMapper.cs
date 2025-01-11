@@ -1,6 +1,7 @@
 ﻿using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Data;
 using MyCinema.ViewModels;
+using MyCinema.Data.MovieApi;
 
 namespace MyCinema.Services.Mappers.IMappers
 {
@@ -8,5 +9,6 @@ namespace MyCinema.Services.Mappers.IMappers
     {
         Task<Movie> MapMovieDTOToEntity(MovieResponseDTO movieDTO);
         MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie, MovieResponseDTO MovieDTO);
+        MovieListViewModel MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO);
     }
 }

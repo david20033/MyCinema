@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Movie Details";
+    string Back = ViewBag.BackButton;
 }
 
 <div class="container my-5">
@@ -99,5 +100,5 @@
 
 <!-- Optional Footer (Optional for styling) -->
 <div class="text-center mt-5">
-    <a href="@Url.Action("NowPlaying", "Movie")" class="btn btn-secondary">Back</a>
+    <a href="@Url.Action(Back, "Movie")" class="btn btn-secondary">Back</a>
 </div>

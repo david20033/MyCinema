@@ -1,0 +1,56 @@
+﻿@model IEnumerable<MyCinema.ViewModels.MovieListViewModel>
+
+@{
+    var currentPage = ViewBag.CurrentPage ?? 1;
+    var totalPages = ViewBag.TotalPages ?? 1;
+
+    int maxPagesToShow = 10;
+    int startPage = Math.Max(1, (int)currentPage - maxPagesToShow / 2);
+    int endPage = Math.Min((int)totalPages, (int)currentPage + maxPagesToShow / 2);
+}
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">
+                            <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)">
+                        </th>
+                    <th scope="col">#</th>
+                    <th scope="col">id</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Release date</th>
+                    <th scope="col">Original Lang</th>
+                    <th scope="col">Adult?</th>
+                    <th scope="col">Vote average</th>
+                    <th scope="col">Vote Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int index = 1;
+                    foreach (var movie in Model)
+                    {
+                                                           <tr style="cursor:pointer" onclick="window.location.href='@Url.Action("Details", "Movie", new { id = movie.id })'">
+                                                            <td>
+                                                                                        <input type="checkbox" name="selectedMovies" value="@movie.id" class="movie-checkbox"  onclick="event.stopPropagation(); updateButtonState();">
+                                                            </td>
+                                                            <th scope="row">@index</th>
+                                                            <td>@movie.moviedbId</td>
+                                                            <td>@movie.Title</td>
+                                                            <td>@movie.Release_date</td>
+                                                            <td>@movie.Original_language</td>
+                                                            <td>@movie.Adult</td>
+                                                            <td>@movie.Vote_average</td>
+                                                            <td>@movie.Vote_count</td>
+                                                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                                    <tr>
+                                        <td colspan="6" class="text-center">No movies available.</td>
+                                    </tr>
+                }
+            </tbody>
+        </table>

@@ -11,7 +11,7 @@ namespace MyCinema.Data
     {
         [Required]
         public Guid Id { get; set; }
-        public int moviedb_id { get; set; }
+        public int? moviedb_id { get; set; }
 
         public bool? Adult { get; set; }
         public string? Backdrop_path { get; set; }
@@ -38,7 +38,7 @@ namespace MyCinema.Data
         public string? Tagline { get; set; }
         public string? Title { get; set; }
         public decimal? Vote_avarage { get; set; }
-        public int Vote_count { get; set; }
+        public int? Vote_count { get; set; }
         public ICollection<MoviePhoto>? MoviePhotos { get; set; }
         public ICollection<MovieGenre>? Genres { get; set; }
         public ICollection<MovieActor>? MovieActors { get; set; }

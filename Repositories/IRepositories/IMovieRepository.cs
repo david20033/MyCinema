@@ -9,5 +9,7 @@ namespace MyCinema.Repositories.IRepositories
         Task<List<Movie>> GetAllMoviesWithPhotosAsync();
         Task<Movie> GetMovieWithPhotosByIdAsync(Guid id);
         Task<Movie> GetMovieDetailsByIdAsync(Guid id);
+        Task<List<Movie>> GetMoviesAsync(int pageNumber);
+        Task<int> GetMoviesCount();
     }
 }

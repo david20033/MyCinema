@@ -107,6 +107,10 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetAllMoviesWithPhotosAsync();
         }
+        public async Task<List<Movie>> GetMoviesAsync(int page)
+        {
+            return await _movieRepository.GetMoviesAsync(page);
+        }
         public async Task<MovieResponseDTO> GetMovieDetailsByIdFromAPI(int id)
         {
             return await _apiService.GetMovieDetailsByIdAsync(id);
@@ -132,6 +136,32 @@ namespace MyCinema.Services
         public MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieResponseDTO MovieDTO)
         {
             return _movieMapper.MapToMovieDetailViewModel(movie, MovieDTO);
+        }
+        public async Task<List<MovieListViewModel>> GetMovieListViewModelFromDb (int page)
+        {
+            var list = new List<MovieListViewModel>();
+            var movies = await _movieRepository.GetMoviesAsync(page);
+            var movieDTO = new MovieNowPlayingDTO();
+            foreach (var m in movies)
+            {
+                list.Add(_movieMapper.MapToMovieListViewModel(m, movieDTO));
+            }
+            return list;
+        }
+        public async Task<List<MovieListViewModel>> GetMovieListViewModelFromApi(int page)
+        {
+            var list = new List<MovieListViewModel>();
+            var movies = await _apiService.GetNowPlayingMoviesAsync(page);
+            var movieEntity = new Movie();
+            foreach (var m in movies)
+            {
+                list.Add(_movieMapper.MapToMovieListViewModel(movieEntity, m));
+            }
+            return list;
+        }
+        public async Task<int> GetMoviesCount()
+        {
+            return await _movieRepository.GetMoviesCount();
         }
 
     }

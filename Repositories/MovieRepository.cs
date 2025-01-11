@@ -35,6 +35,16 @@ namespace MyCinema.Repositories
             return await _context.Movie.Include(m=>m.MoviePhotos)
                 .ToListAsync();
         }
+        public async Task<List<Movie>> GetMoviesAsync(int pageNumber)
+        {
+            int pageSize = 20;  
+
+            return await _context.Movie
+                .Include(l=>l.Original_language)
+                .Skip((pageNumber - 1) * pageSize) 
+                .Take(pageSize)                   
+                .ToListAsync();
+        }
         public async Task<Movie> GetMovieWithPhotosByIdAsync(Guid id)
         {
             return await _context.Movie
@@ -48,6 +58,10 @@ namespace MyCinema.Repositories
                 .Include(m=> m.Genres)
                 .ThenInclude(mg => mg.Genre)
                 .FirstOrDefaultAsync();
+        }
+        public async Task<int> GetMoviesCount()
+        {
+            return _context.Movie.Count();
         }
     }
 }
