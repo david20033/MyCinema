@@ -17,7 +17,8 @@ namespace MyCinema.Data
         public string? Backdrop_path { get; set; }
         public string? Belongs_to_collection_name { get; set; }
         public decimal? Budget { get; set; }
-        //public List<>? Actors { get; set; }
+        public List<string>? Cast { get; set; }
+        public List<string>? Crew { get; set; }
         public string? Homapage { get; set; }
         public string? Imdb_id { get; set; }
         // public List<string>? Original_country { get; set; }
@@ -41,6 +42,5 @@ namespace MyCinema.Data
         public int? Vote_count { get; set; }
         public ICollection<MoviePhoto>? MoviePhotos { get; set; }
         public ICollection<MovieGenre>? Genres { get; set; }
-        public ICollection<MovieActor>? MovieActors { get; set; }
     }
 }

@@ -40,27 +40,6 @@ namespace MyCinema.Data
                 entity.Property(m => m.Overview).IsRequired();
             });
 
-            modelBuilder.Entity<Actor>(entity =>
-            {
-                entity.HasKey(a => a.Id);
-
-                entity.Property(a => a.Name).IsRequired().HasMaxLength(200);
-            });
-
-            modelBuilder.Entity<MovieActor>(entity =>
-            {
-                entity.HasKey(ma => new { ma.MovieId, ma.ActorId });
-
-                entity.HasOne(ma => ma.Movie)
-                      .WithMany(m => m.MovieActors)
-                      .HasForeignKey(ma => ma.MovieId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(ma => ma.Actor)
-                      .WithMany(a => a.MovieActors)
-                      .HasForeignKey(ma => ma.ActorId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
 
             modelBuilder.Entity<MoviePhoto>(entity =>
             {

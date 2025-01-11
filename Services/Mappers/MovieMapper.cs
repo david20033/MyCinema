@@ -17,7 +17,7 @@ namespace MyCinema.Services.Mappers
             _languageRepository = languageRepository;
             _genreRepository = genreRepository;
         }
-        public async Task<Movie> MapMovieDTOToEntity(MovieResponseDTO movieDTO)
+        public async Task<Movie> MapMovieDTOToEntity(MovieResponseDTO movieDTO, List<string> cast, List<string> crew)
         {
             var guidID = Guid.NewGuid();
             return new Movie
@@ -45,7 +45,9 @@ namespace MyCinema.Services.Mappers
                 Vote_avarage = movieDTO.vote_avarage,
                 Vote_count = movieDTO.vote_count,
                 Title = movieDTO.title,
-                Genres = await MapMovieGenres(guidID, movieDTO.genres)
+                Genres = await MapMovieGenres(guidID, movieDTO.genres),
+                Cast = cast,
+                Crew = crew,
             };
         }
         private List<Language>? MapLanguageDTOsToEntities(List<LanguageDTO> langsDTO)

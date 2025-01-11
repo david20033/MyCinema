@@ -124,12 +124,25 @@ namespace MyCinema.Services
             foreach (var Movieid in movies)
             {
                 var movieDTO = _apiService.GetMovieDetailsByIdAsync(Movieid).Result;
+                var movieCastList = _apiService
+                    .GetMovieCreditsByIdAsync(Movieid)
+                    .Result.cast?
+                    .Select(m=>m.name)
+                    .Take(10)
+                    .ToList();
+                var movieCrewList = _apiService
+                    .GetMovieCreditsByIdAsync(Movieid)
+                    .Result.crew?
+                    .Where(m=>m.job == "Director")
+                    .Select(m => m.name)
+                    .Take(5)
+                    .ToList();
                 if (movieDTO == null)
                 {
                     continue;
                 }
                 
-                var movieEntity = await _movieMapper.MapMovieDTOToEntity(movieDTO);
+                var movieEntity = await _movieMapper.MapMovieDTOToEntity(movieDTO,movieCastList ,movieCrewList);
                 await _movieRepository.AddMovieAsync(movieEntity);
             }
         }    
