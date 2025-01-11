@@ -7,10 +7,10 @@
 <div class="container my-5">
     <h1 class="text-primary mb-4">Add Screening</h1>
 
-    <form asp-action="AddScreening" method="post">
+    <form asp-action="CreateScreening" method="post">
         <div class="form-group mb-3">
             <label for="StartTime" class="form-label">Start Time</label>
-            <input asp-for="StartTime" type="datetime-local" class="form-control" id="StartTime" />
+            <input asp-for="StartTime" type="datetime-local" class="form-control" id="StartTime"  value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
             <span asp-validation-for="StartTime" class="text-danger"></span>
         </div>
 
@@ -32,7 +32,7 @@
                 <option value="">-- Select a Movie --</option>
                 @foreach (var movie in Model.Movies)
                 {
-                        <option value="@movie.Id">@movie.Title (@movie.Release_date)</option>
+                            <option value="@movie.Id" data-duration="@movie.Runtime">@movie.Title (@movie.Release_date)</option>
                 }
             </select>
             <span asp-validation-for="MovieId" class="text-danger"></span>

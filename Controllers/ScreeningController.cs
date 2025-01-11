@@ -29,12 +29,27 @@ namespace MyCinema.Controllers
 
             return View(model);
         }
-        //[Authorize(Roles ="Admin")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public Task<IActionResult> CreateScreening()
-        //{
-
-        //}
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateScreening(AddScreeningViewModel model)
+        {
+            foreach (var state in ModelState)
+            {
+                if (state.Value.Errors.Count > 0)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Key: {state.Key}, Error: {error.ErrorMessage}");
+                    }
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                await _screeningService.AddScreeningInDbAsync(model);
+                return RedirectToAction("Index", "Screening");
+            }
+            return RedirectToAction("Index", "CreateScreening");
+        }
     }
 }

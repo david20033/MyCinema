@@ -1,6 +1,7 @@
 ﻿using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
+using MyCinema.ViewModels;
 
 namespace MyCinema.Services
 {
@@ -23,8 +24,21 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetAllMoviesAsync();
         }
-        public async Task AddScreeningInDbAsync(Screening screening)
+        public async Task AddScreeningInDbAsync(AddScreeningViewModel model)
         {
+            Movie movie = await _movieRepository.GetMovieDetailsByIdAsync(model.MovieId);
+            var runtimeInMinutes = movie.Runtime;
+            TimeSpan duration = TimeSpan.FromMinutes(runtimeInMinutes.Value);
+            var screening = new Screening
+            {
+                Id = Guid.NewGuid(),
+                StartTime = model.StartTime,
+                TheatreSalonId = model.TheatreSalonId,
+                MovieId = model.MovieId,
+                TicketPrice = model.TicketPrice,
+                Duration = duration,
+
+            };
             await _screeningRepository.AddScreeningInDbAsync (screening);
         }
     }
