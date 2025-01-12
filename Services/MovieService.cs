@@ -184,6 +184,7 @@ namespace MyCinema.Services
             {
                 var model = new MovieScreeningViewModel
                 {
+                    Id = s.Id,
                     Title = s.Title,
                     Overview = s.Overview,
                     Genres = s.Genres?.ToList(),

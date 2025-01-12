@@ -21,7 +21,9 @@
 
                         <!-- Movie Details -->
                         <div class="col-md-8">
-                            <h3>@movie.Title</h3>
+                                     <h3><a href="@Url.Action("Details", "Movie", new { id = movie.Id })" class="text-decoration-none text-dark">
+                        @movie.Title
+                                </a></h3>
                             <p class="text-muted">
                         @if (!string.IsNullOrEmpty(movie.Overview))
                         {
