@@ -10,7 +10,7 @@
     <form asp-action="CreateScreening" method="post">
         <div class="form-group mb-3">
             <label for="StartTime" class="form-label">Start Time</label>
-            <input asp-for="StartTime" type="datetime-local" class="form-control" id="StartTime"  value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
+            <input asp-for="StartTime" type="datetime-local" class="form-control" id="StartTime"  value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
             <span asp-validation-for="StartTime" class="text-danger"></span>
         </div>
 
@@ -47,3 +47,15 @@
         <button type="submit" class="btn btn-primary">Add Screening</button>
     </form>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const startTimeInput = document.getElementById("StartTime");
+        const updateMinValue = () => {
+            const now = new Date();
+            const formatted = now.toISOString().slice(0, 16); // Format as yyyy-MM-ddTHH:mm
+            startTimeInput.min = formatted;
+        };
+        updateMinValue();
+        setInterval(updateMinValue, 60000); // Update every minute
+    });
+</script>
