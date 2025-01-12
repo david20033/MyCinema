@@ -1,4 +1,5 @@
 ﻿using MyCinema.Data;
+using MyCinema.Helpers;
 
 namespace MyCinema.Repositories.IRepositories
 {
@@ -12,6 +13,6 @@ namespace MyCinema.Repositories.IRepositories
         Task<List<Movie>> GetMoviesAsync(int pageNumber);
         Task<int> GetMoviesCount();
         Task<List<Movie>> GetAllMoviesAsync();
-        Task<List<Movie>> GetAllUnprojectedScreenings();
+        Task<List<Movie>> GetAllUnprojectedScreenings(QueryObject query);
     }
 }

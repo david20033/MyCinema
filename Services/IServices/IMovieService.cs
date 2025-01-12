@@ -1,6 +1,7 @@
 ﻿using MyCinema.Data;
 using MyCinema.Data.MovieApi;
 using MyCinema.Data.MovieApi.Responses;
+using MyCinema.Helpers;
 using MyCinema.ViewModels;
 using RestSharp;
 
@@ -21,7 +22,7 @@ namespace MyCinema.Services.IServices
         Task<List<MovieListViewModel>> GetMovieListViewModelFromDb(int page);
         Task<List<MovieListViewModel>> GetMovieListViewModelFromApi(int page);
         Task<int> GetMoviesCount();
-        Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync();
+        Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync(QueryObject query);
 
     }
 }

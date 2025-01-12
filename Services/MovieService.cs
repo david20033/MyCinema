@@ -4,6 +4,7 @@ using MyCinema.Data;
 using MyCinema.Data.MovieApi;
 using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Enums;
+using MyCinema.Helpers;
 using MyCinema.Migrations;
 using MyCinema.Repositories;
 using MyCinema.Repositories.IRepositories;
@@ -176,10 +177,14 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetMoviesCount();
         }
-        public async Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync()
+        public async Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync(QueryObject query)
         {
+            if (query.Date == null)
+            {
+                query.Date = DateTime.Now;
+            }
             var result = new List<MovieScreeningViewModel>();
-            var screening = await _movieRepository.GetAllUnprojectedScreenings();
+            var screening = await _movieRepository.GetAllUnprojectedScreenings(query);
             foreach (var s in screening)
             {
                 var model = new MovieScreeningViewModel

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyCinema.Data;
 using MyCinema.Data.MovieApi;
 using MyCinema.Data.MovieApi.Responses;
+using MyCinema.Helpers;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
 using MyCinema.ViewModels;
@@ -17,9 +18,9 @@ namespace MyCinema.Controllers
         {
             _movieService = movieService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] QueryObject query)
         {
-            var screenings = await _movieService.GetMovieScreeningViewModelsAsync();
+            var screenings = await _movieService.GetMovieScreeningViewModelsAsync(query);
             return View(screenings);
         }
         public async Task<IActionResult> Details(string id)

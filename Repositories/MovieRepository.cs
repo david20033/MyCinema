@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
+using MyCinema.Helpers;
 using MyCinema.Repositories.IRepositories;
 using System.Drawing.Printing;
 
@@ -69,7 +70,7 @@ namespace MyCinema.Repositories
         {
             return _context.Movie.Count();
         }
-        public async Task<List<Movie>> GetAllUnprojectedScreenings()
+        public async Task<List<Movie>> GetAllUnprojectedScreenings(QueryObject query)
         {
             var currentTime = DateTime.Now;
 
@@ -79,7 +80,10 @@ namespace MyCinema.Repositories
                     .Include(m => m.Genres)
                     .ThenInclude(g => g.Genre)
                     .ToListAsync();
-
+            if (query.Date != null)
+            {
+                movies = movies.Where(m => m.Screenings.Any(s => s.StartTime.Date == query.Date.Value.Date)).ToList();
+            }
             return movies;
         }
     }

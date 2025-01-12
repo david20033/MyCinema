@@ -2,14 +2,36 @@
 
 @{
     ViewData["Title"] = "Movies Now Showing";
+    var today = DateTime.Today;
+    var oneWeekFromNow = today.AddDays(7);
+    var selectedDate = Context.Request.Query["date"].ToString();
 }
 
 <div class="container mt-4">
     <h1 class="text-center mb-4">Now Showing</h1>
 
+    <!-- Date Filter Buttons (7 days ahead) -->
+    <div class="text-center mb-4">
+        <h5>Select a Date:</h5>
+        <div class="btn-group" role="group" aria-label="Date Filter">
+            @for (int i = 0; i <= 7; i++)
+            {
+                var date = today.AddDays(i);
+                var dateString = date.ToString("yyyy-MM-dd");
+
+                // Determine if this date is selected by comparing with query date
+                var buttonClass = dateString == selectedDate ? "btn btn-outline-primary active" : "btn btn-outline-primary";
+
+                    <a href="@Url.Action("Index", "Movie", new { date = dateString })" class="@buttonClass">
+                    @date.ToString("dd-MM-yyyy")
+                    </a>
+            }
+        </div>
+    </div>
+
     @if (Model != null && Model.Any())
     {
-        @foreach (var movie in Model)
+        @foreach (var movie in Model.OrderBy(m => m.Screenings.Min(s => s.StartTime)))
         {
             string poster_path = $"https://image.tmdb.org/t/p/original{movie.Poster_path}";
 
@@ -21,9 +43,7 @@
 
                         <!-- Movie Details -->
                         <div class="col-md-8">
-                                     <h3><a href="@Url.Action("Details", "Movie", new { id = movie.Id })" class="text-decoration-none text-dark">
-                        @movie.Title
-                                </a></h3>
+                            <h3><a href="@Url.Action("Details", "Movie", new { id = movie.Id })" class="text-decoration-none text-dark">@movie.Title</a></h3>
                             <p class="text-muted">
                         @if (!string.IsNullOrEmpty(movie.Overview))
                         {
@@ -40,10 +60,10 @@
 
                             <p><strong>Available Screenings:</strong></p>
                             <div class="d-flex flex-wrap gap-2">
-                        @foreach (var screening in movie.Screenings)
+                        @foreach (var screening in movie.Screenings.OrderBy(s => s.StartTime))
                         {
                                         <button class="btn btn-outline-primary">
-                                @screening.StartTime.ToString("yyyy-MM-dd HH:mm")
+                                @screening.StartTime.ToString("HH:mm")
                                         </button>
                         }
                             </div>
