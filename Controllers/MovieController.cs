@@ -17,9 +17,10 @@ namespace MyCinema.Controllers
         {
             _movieService = movieService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var screenings = await _movieService.GetMovieScreeningViewModelsAsync();
+            return View(screenings);
         }
         public async Task<IActionResult> Details(string id)
         {

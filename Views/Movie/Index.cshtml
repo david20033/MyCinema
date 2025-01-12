@@ -1,0 +1,58 @@
+﻿@model List<MyCinema.ViewModels.MovieScreeningViewModel>
+
+@{
+    ViewData["Title"] = "Movies Now Showing";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Now Showing</h1>
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var movie in Model)
+        {
+            string poster_path = $"https://image.tmdb.org/t/p/original{movie.Poster_path}";
+
+                    <div class="row mb-5 align-items-center">
+                        <!-- Movie Poster -->
+                        <div class="col-md-4">
+                            <img src="@poster_path" class="img-fluid rounded shadow-sm" alt="@movie.Title Poster" />
+                        </div>
+
+                        <!-- Movie Details -->
+                        <div class="col-md-8">
+                            <h3>@movie.Title</h3>
+                            <p class="text-muted">
+                        @if (!string.IsNullOrEmpty(movie.Overview))
+                        {
+                            @movie.Overview
+                        }
+                        else
+                        {
+                                        <span>No description available.</span>
+                        }
+                            </p>
+                            <p><strong>Genres:</strong> @string.Join(", ", movie.Genres?.Select(g => g.Genre.Name).ToList() ?? new List<string>())</p>
+                            <p><strong>Runtime:</strong> @movie.RunTime minutes</p>
+                            <p><strong>Adult:</strong> @(movie.isAdult @* ? "Yes" : "No" *@)</p>
+
+                            <p><strong>Available Screenings:</strong></p>
+                            <div class="d-flex flex-wrap gap-2">
+                        @foreach (var screening in movie.Screenings)
+                        {
+                                        <button class="btn btn-outline-primary">
+                                @screening.StartTime.ToString("yyyy-MM-dd HH:mm")
+                                        </button>
+                        }
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+        }
+    }
+    else
+    {
+            <p class="text-center">No movies are currently available.</p>
+    }
+</div>

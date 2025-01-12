@@ -1,6 +1,7 @@
 ﻿using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
+using MyCinema.Services.Mappers.IMappers;
 using MyCinema.ViewModels;
 
 namespace MyCinema.Services
@@ -10,11 +11,13 @@ namespace MyCinema.Services
         private readonly IScreeningRepository _screeningRepository;
         private readonly ISalonRepository _salonRepository;
         private readonly IMovieRepository _movieRepository;
-        public ScreeningService (IScreeningRepository screeningRepository, ISalonRepository salonRepository, IMovieRepository movieRepository)
+        private readonly IMovieMapper _movieMapper;
+        public ScreeningService (IScreeningRepository screeningRepository, ISalonRepository salonRepository, IMovieRepository movieRepository, IMovieMapper movieMapper)
         {
             _screeningRepository = screeningRepository;
             _salonRepository = salonRepository;
             _movieRepository = movieRepository;
+            _movieMapper = movieMapper;
         }
         public async Task<List<TheatreSalon>> GetSalonsAsync()
         {

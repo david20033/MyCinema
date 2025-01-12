@@ -69,5 +69,18 @@ namespace MyCinema.Repositories
         {
             return _context.Movie.Count();
         }
+        public async Task<List<Movie>> GetAllUnprojectedScreenings()
+        {
+            var currentTime = DateTime.Now;
+
+            var movies = await _context.Movie
+                    .Where(m => m.Screenings.Any(s => s.StartTime > currentTime)) 
+                    .Include(m => m.Screenings.Where(s => s.StartTime > currentTime)) 
+                    .Include(m => m.Genres)
+                    .ThenInclude(g => g.Genre)
+                    .ToListAsync();
+
+            return movies;
+        }
     }
 }

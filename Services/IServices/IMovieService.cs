@@ -21,5 +21,7 @@ namespace MyCinema.Services.IServices
         Task<List<MovieListViewModel>> GetMovieListViewModelFromDb(int page);
         Task<List<MovieListViewModel>> GetMovieListViewModelFromApi(int page);
         Task<int> GetMoviesCount();
+        Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync();
+
     }
 }

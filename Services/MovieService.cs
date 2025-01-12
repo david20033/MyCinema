@@ -176,6 +176,26 @@ namespace MyCinema.Services
         {
             return await _movieRepository.GetMoviesCount();
         }
+        public async Task<List<MovieScreeningViewModel>> GetMovieScreeningViewModelsAsync()
+        {
+            var result = new List<MovieScreeningViewModel>();
+            var screening = await _movieRepository.GetAllUnprojectedScreenings();
+            foreach (var s in screening)
+            {
+                var model = new MovieScreeningViewModel
+                {
+                    Title = s.Title,
+                    Overview = s.Overview,
+                    Genres = s.Genres?.ToList(),
+                    RunTime = s.Runtime,
+                    Poster_path = s.Poster_path,
+                    isAdult = s.Adult,
+                    Screenings = s.Screenings
+                };
+                result.Add(model);
+            }
+            return result;
+        }
 
     }
 }
