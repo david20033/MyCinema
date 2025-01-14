@@ -1,4 +1,5 @@
-﻿using MyCinema.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
 
 namespace MyCinema.Repositories
@@ -12,6 +13,18 @@ namespace MyCinema.Repositories
         }
         public async Task AddScreeningInDbAsync(Screening screening)
         {
+            TimeSpan timeWindow = TimeSpan.FromHours(5);
+            var screeningsInSalon = await _context.Screening
+                .Where(s=> s.TheatreSalonId == screening.TheatreSalonId &&
+                ((s.StartTime < screening.EndTime && s.StartTime >= screening.StartTime.Add(-timeWindow)) ||
+                (s.EndTime > screening.StartTime && s.EndTime <= screening.EndTime.Add(timeWindow))))
+                .ToListAsync();
+            bool isOverlapping = screeningsInSalon
+                   .Any(s => s.StartTime < screening.EndTime && s.EndTime > screening.StartTime);
+            if (isOverlapping)
+            {
+                throw new InvalidOperationException("The screening time overlaps with an existing screening.");
+            }
             await _context.Screening.AddAsync(screening);
             await _context.SaveChangesAsync();
         }

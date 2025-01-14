@@ -62,6 +62,7 @@ namespace MyCinema.Repositories
         {
             return await _context.Movie
                 .Where(m => m.Id == id)
+                .Include(m=> m.Original_language)
                 .Include(m=> m.Genres)
                 .ThenInclude(mg => mg.Genre)
                 .FirstOrDefaultAsync();

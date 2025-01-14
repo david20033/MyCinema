@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCinema.Data;
 
@@ -11,9 +12,11 @@ using MyCinema.Data;
 namespace MyCinema.Migrations
 {
     [DbContext(typeof(MyCinemaDBContext))]
-    partial class MyCinemaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250113163630_AddTicketEntity")]
+    partial class AddTicketEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +89,11 @@ namespace MyCinema.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -137,6 +145,10 @@ namespace MyCinema.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -495,34 +507,23 @@ namespace MyCinema.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("Ticket");
-                });
-
-            modelBuilder.Entity("MyCinema.Data.TicketOwnership", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TicketId")
-                        .IsUnique();
+                    b.HasIndex("MovieId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TicketOwnership");
+                    b.ToTable("Ticket");
+                });
+
+            modelBuilder.Entity("MyCinema.Data.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -658,24 +659,11 @@ namespace MyCinema.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyCinema.Data.User", "User")
+                        .WithMany("Tickets")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("MyCinema.Data.TicketOwnership", b =>
-                {
-                    b.HasOne("MyCinema.Data.Ticket", "Ticket")
-                        .WithOne()
-                        .HasForeignKey("MyCinema.Data.TicketOwnership", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ticket");
 
                     b.Navigation("User");
                 });
@@ -699,6 +687,11 @@ namespace MyCinema.Migrations
             modelBuilder.Entity("MyCinema.Data.TheatreSalon", b =>
                 {
                     b.Navigation("Screenings");
+                });
+
+            modelBuilder.Entity("MyCinema.Data.User", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

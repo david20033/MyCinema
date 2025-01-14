@@ -16,6 +16,8 @@ namespace MyCinema.Data
         public virtual DbSet<TheatreSalon> TheatreSalon { get; set; }
         public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<Screening> Screening { get; set; }
+        public virtual DbSet<TicketOwnership> TicketOwnership { get; set; }
+        public virtual DbSet<Ticket> Ticket { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -147,6 +149,37 @@ namespace MyCinema.Data
                 .HasMany(m => m.Spoken_languages)
                 .WithMany(l => l.SpokenMovies)
                 .UsingEntity(j => j.ToTable("MovieLanguages"));
+            modelBuilder.Entity<Ticket>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+
+                entity.Property(t => t.Price)
+                      .IsRequired()
+                      .HasColumnType("decimal(18,2)");
+
+                entity.Property(t => t.SeatNumber)
+                      .IsRequired()
+                      .HasMaxLength(10);
+
+                entity.HasOne(t => t.Movie)
+                      .WithMany(m => m.Tickets)
+                      .HasForeignKey(t => t.MovieId);
+            });
+
+            modelBuilder.Entity<TicketOwnership>(entity =>
+            {
+                entity.HasKey(to => to.Id);
+
+                entity.HasOne(to => to.User)
+                      .WithMany()
+                      .HasForeignKey(to => to.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(to => to.Ticket)
+                      .WithOne() 
+                      .HasForeignKey<TicketOwnership>(to => to.TicketId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
 
 

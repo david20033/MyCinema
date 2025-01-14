@@ -42,6 +42,7 @@ namespace MyCinema.Data
         public int? Vote_count { get; set; }
         public ICollection<MoviePhoto>? MoviePhotos { get; set; }
         public ICollection<MovieGenre>? Genres { get; set; }
-        public List<Screening> Screenings { get; set; } = new List<Screening>();
+        public List<Screening> Screenings { get; set; } = [];
+        public List<Ticket> Tickets { get; set; } = [];
     }
 }
