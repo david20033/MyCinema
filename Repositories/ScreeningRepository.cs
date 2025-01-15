@@ -25,8 +25,21 @@ namespace MyCinema.Repositories
             {
                 throw new InvalidOperationException("The screening time overlaps with an existing screening.");
             }
+
             await _context.Screening.AddAsync(screening);
             await _context.SaveChangesAsync();
+        }
+        public async Task<Screening> GetScreeningByIdAsync(Guid id)
+        {
+            return await _context.Screening
+                .Where(s => s.Id == id)
+                .Include(s=>s.Movie)
+                .ThenInclude(s=>s.Original_language)
+                .Include(s => s.Movie)
+                .ThenInclude(s => s.Genres)
+                .ThenInclude(s=>s.Genre)
+                .Include(s=>s.TheatreSalon)
+                .FirstOrDefaultAsync();
         }
     }
 }

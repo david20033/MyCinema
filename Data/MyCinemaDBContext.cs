@@ -157,13 +157,8 @@ namespace MyCinema.Data
                       .IsRequired()
                       .HasColumnType("decimal(18,2)");
 
-                entity.Property(t => t.SeatNumber)
-                      .IsRequired()
-                      .HasMaxLength(10);
-
-                entity.HasOne(t => t.Movie)
-                      .WithMany(m => m.Tickets)
-                      .HasForeignKey(t => t.MovieId);
+                entity.Property(t => t.Type)
+                      .IsRequired();
             });
 
             modelBuilder.Entity<TicketOwnership>(entity =>
@@ -173,12 +168,21 @@ namespace MyCinema.Data
                 entity.HasOne(to => to.User)
                       .WithMany()
                       .HasForeignKey(to => to.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.SetNull);
 
-                entity.HasOne(to => to.Ticket)
-                      .WithOne() 
-                      .HasForeignKey<TicketOwnership>(to => to.TicketId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(to => to.Salon)
+                      .WithMany()
+                      .HasForeignKey(to => to.TheatreSalonId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(to => to.Movie)
+                      .WithMany()
+                      .HasForeignKey(to => to.MovieId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany(to => to.Tickets)
+                      .WithOne()
+                      .OnDelete(DeleteBehavior.Restrict);
             });
         }
 

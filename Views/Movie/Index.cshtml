@@ -62,9 +62,9 @@
                             <div class="d-flex flex-wrap gap-2">
                         @foreach (var screening in movie.Screenings.OrderBy(s => s.StartTime))
                         {
-                                        <button class="btn btn-outline-primary">
+                                                    <a href="@Url.Action("SelectTicket","Ticket", new {id = screening.Id})" class="btn btn-outline-primary">
                                 @screening.StartTime.ToString("HH:mm")
-                                        </button>
+                                        </a>
                         }
                             </div>
                         </div>
