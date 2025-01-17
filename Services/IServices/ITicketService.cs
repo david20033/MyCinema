@@ -5,7 +5,7 @@ namespace MyCinema.Services.IServices
 {
     public interface ITicketService
     {
-        Task AddTicketAsync(Ticket ticket);
         Task<SelectTicketViewModel> GetSelectTicketViewModel(Guid ScreeningId);
+        Task AddTicketOwnershipInDbAsync(SelectTicketViewModel ticket);
     }
 }

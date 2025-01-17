@@ -417,6 +417,9 @@ namespace MyCinema.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
@@ -478,13 +481,18 @@ namespace MyCinema.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("MovieId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("TicketOwnershipId")
+                    b.Property<Guid>("ScreeningId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SeatNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<Guid>("TicketOrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
@@ -492,43 +500,30 @@ namespace MyCinema.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("ScreeningId");
 
-                    b.HasIndex("TicketOwnershipId");
+                    b.HasIndex("TicketOrderId");
 
                     b.ToTable("Ticket");
                 });
 
-            modelBuilder.Entity("MyCinema.Data.TicketOwnership", b =>
+            modelBuilder.Entity("MyCinema.Data.TicketOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MovieId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SeatsCoords")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TheatreSalonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("OrderDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("TheatreSalonId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TicketOwnership");
+                    b.ToTable("TicketOrder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -658,40 +653,21 @@ namespace MyCinema.Migrations
 
             modelBuilder.Entity("MyCinema.Data.Ticket", b =>
                 {
-                    b.HasOne("MyCinema.Data.Movie", null)
-                        .WithMany("Tickets")
-                        .HasForeignKey("MovieId");
-
-                    b.HasOne("MyCinema.Data.TicketOwnership", null)
-                        .WithMany("Tickets")
-                        .HasForeignKey("TicketOwnershipId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("MyCinema.Data.TicketOwnership", b =>
-                {
-                    b.HasOne("MyCinema.Data.Movie", "Movie")
+                    b.HasOne("MyCinema.Data.Screening", "Screening")
                         .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("ScreeningId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyCinema.Data.TheatreSalon", "Salon")
-                        .WithMany()
-                        .HasForeignKey("TheatreSalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("MyCinema.Data.TicketOrder", "TicketOrder")
+                        .WithMany("Tickets")
+                        .HasForeignKey("TicketOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.Navigation("Screening");
 
-                    b.Navigation("Movie");
-
-                    b.Navigation("Salon");
-
-                    b.Navigation("User");
+                    b.Navigation("TicketOrder");
                 });
 
             modelBuilder.Entity("MyCinema.Data.Genre", b =>
@@ -706,8 +682,6 @@ namespace MyCinema.Migrations
                     b.Navigation("MoviePhotos");
 
                     b.Navigation("Screenings");
-
-                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("MyCinema.Data.TheatreSalon", b =>
@@ -715,7 +689,7 @@ namespace MyCinema.Migrations
                     b.Navigation("Screenings");
                 });
 
-            modelBuilder.Entity("MyCinema.Data.TicketOwnership", b =>
+            modelBuilder.Entity("MyCinema.Data.TicketOrder", b =>
                 {
                     b.Navigation("Tickets");
                 });

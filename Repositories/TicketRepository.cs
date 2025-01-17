@@ -15,10 +15,14 @@ namespace MyCinema.Repositories
         {
             return await _context.Ticket.ToListAsync();
         }
-        public async Task AddTicketAsync(Ticket ticket)
+        public async Task AddTicketOrderAsync(TicketOrder ticket)
         {
-            await _context.Ticket.AddAsync(ticket);
+            await _context.TicketOrder.AddAsync(ticket);
             await _context.SaveChangesAsync();
+        }
+        public async Task<Ticket> GetTicketByIdAsync(Guid id)
+        {
+            return await _context.Ticket.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
     }
 }

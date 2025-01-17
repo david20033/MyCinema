@@ -3,81 +3,109 @@
     string Poster_path = $"https://image.tmdb.org/t/p/original{Model.PosterPath}";
 }
 <div class="container mt-4">
+    <form asp-action="SelectTicket" method="post">
+        <input type="hidden" asp-for="ScreeningId" value="@Model.ScreeningId"/>
+        <input type="hidden" asp-for="RegularTicketPrice" value="@Model.RegularTicketPrice"/>
+        <input type="hidden" asp-for="VipTicketPrice" value="@Model.VipTicketPrice"/>
+        <input type="hidden" id="regular-count" asp-for="RegularTicketCount" value=0/>
+        <input type="hidden" id="vip-count" asp-for="VipTicketCount" value=0/>
+
     <!-- Movie Details Section -->
     <div class="row">
         <div class="col-md-4 text-center">
-            <img src="@Poster_path" alt="@Model.Title" class="img-fluid rounded">
+            <img src="@Poster_path" alt="@Model.Title Poster" class="img-fluid rounded">
         </div>
         <div class="col-md-8">
             <h1>@Model.Title</h1>
             <p class="text-muted">@Model.Language | @string.Join(", ", Model.Genres)</p>
             <p><strong>Salon:</strong> @Model.SalonNumber</p>
-            <p><strong>Show Time:</strong> @Model.ShowTime?.ToString("dd.MM.yyyy, HH:mm")</p>
-                <!-- Ticket Selection Section -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h3 class="mb-4">Select Your Tickets</h3>
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Ticket Type</th>
-                        <th>Price (лв.)</th>
-                        <th class="text-center">Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                            @foreach (var ticket in Model.TicketTypes)
-                            {
-                                <tr>
-                                    <td>@ticket.Name</td>
-                                    <td>@ticket.Price.ToString("F2")</td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group" aria-label="Quantity controls">
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('@ticket.Name', -1)">-</button>
-                                            <span class="px-3" id="quantity-@ticket.Name">@ticket.Quantity</span>
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('@ticket.Name', 1)">+</button>
-                                        </div>
-                                    </td>
-                                </tr>
+            <p><strong>Show Time:</strong> @Model.ShowTime.ToString()</p>
 
-                            }
-                </tbody>
-            </table>
-        </div>
-    </div>
-        <!-- Total Price Section -->
-    <div class="row mt-4">
-        <div class="col-md-12 text-right">
-            <h4>Total: <span id="total-price">0.00</span> лв.</h4>
-        </div>
-    </div>
+            <!-- Ticket Selection Section -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h3 class="mb-4">Select Your Tickets</h3>
+                   <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Ticket Type</th>
+                                <th>Price (лв.)</th>
+                                <th class="text-center">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Regular Ticket -->
+                            <tr>
+                                <td>Regular</td>
+                                <td>@Model.RegularTicketPrice</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group" aria-label="Regular Quantity controls">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('regular', -1)">-</button>
+                                        <span class="px-3" id="quantity-regular">0</span>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('regular', 1)">+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- VIP Ticket -->
+                            <tr>
+                                <td>VIP</td>
+                                <td>@Model.VipTicketPrice</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group" aria-label="VIP Quantity controls">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('vip', -1)">-</button>
+                                        <span class="px-3" id="quantity-vip">0</span>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity('vip', 1)">+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <!-- Continue Button -->
-    <div class="row mt-4">
-        <div class="col-md-12 text-center">
-            <button class="btn btn-warning btn-lg w-100">Continue</button>
+            <!-- Total Price Section -->
+            <div class="row mt-4">
+                <div class="col-md-12 text-right">
+                    <h4>Total: <span id="total-price">0.00</span> лв.</h4>
+                </div>
+            </div>
+
+            <!-- Continue Button -->
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-warning btn-lg w-100">Continue</button>
+                </div>
+            </div>
         </div>
     </div>
+</form>
 </div>
-        </div>
-    </div>
-
-
 <script>
-    const ticketTypes = @Html.Raw(Json.Serialize(Model.TicketTypes));
+    let regularQuantity = 0;
+    let vipQuantity = 0;
 
-    function updateQuantity(ticketName, change) {
-        const ticket = ticketTypes.find(t => t.name === ticketName);
-        if (ticket) {
-            ticket.quantity = Math.max(0, ticket.quantity + change);
-            document.getElementById(`quantity-${ticketName}`).innerText = ticket.quantity;
-            updateTotalPrice();
+    const regularPrice = @Model.RegularTicketPrice;
+    const vipPrice = @Model.VipTicketPrice;
+
+    function updateQuantity(ticketType, change) {
+        if (ticketType === 'regular') {
+            regularQuantity = Math.max(0, regularQuantity + change);
+            document.getElementById('quantity-regular').innerText = regularQuantity
+            document.getElementById('regular-count').value = regularQuantity;
+        } else if (ticketType === 'vip') {
+            vipQuantity = Math.max(0, vipQuantity + change);
+            document.getElementById('quantity-vip').innerText = vipQuantity;
+            document.getElementById('vip-count').value = vipQuantity;
         }
+
+        updateTotalPrice();
     }
 
     function updateTotalPrice() {
-        let totalPrice = 0;
-        ticketTypes.forEach(t => totalPrice += t.price * t.quantity);
+        const totalPrice = (regularQuantity * regularPrice) + (vipQuantity * vipPrice);
         document.getElementById('total-price').innerText = totalPrice.toFixed(2);
     }
+
+    updateTotalPrice();
 </script>
+

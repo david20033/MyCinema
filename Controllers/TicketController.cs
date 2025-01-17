@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyCinema.Data;
 using MyCinema.Services.IServices;
+using MyCinema.ViewModels;
 
 namespace MyCinema.Controllers
 {
@@ -18,6 +20,17 @@ namespace MyCinema.Controllers
         {
             var SelectTicketViewModel = await _ticketService.GetSelectTicketViewModel(id);
             return View(SelectTicketViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SelectTicket(SelectTicketViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                await _ticketService.AddTicketOwnershipInDbAsync(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
     }
 }

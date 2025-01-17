@@ -5,7 +5,6 @@ using MyCinema.Data.MovieApi;
 using MyCinema.Data.MovieApi.Responses;
 using MyCinema.Enums;
 using MyCinema.Helpers;
-using MyCinema.Migrations;
 using MyCinema.Repositories;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;

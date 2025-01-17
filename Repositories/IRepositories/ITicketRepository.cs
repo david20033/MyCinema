@@ -4,7 +4,8 @@ namespace MyCinema.Repositories.IRepositories
 {
     public interface ITicketRepository
     {
-        Task AddTicketAsync(Ticket ticket);
+        Task AddTicketOrderAsync(TicketOrder ticket);
         Task<List<Ticket>> GetAllTickets();
+        Task<Ticket> GetTicketByIdAsync(Guid id);
     }
 }

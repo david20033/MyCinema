@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime EndTime => StartTime.Add(Duration); 
+        public DateTime EndTime { get; set; }
         public TimeSpan Duration { get; set; }
 
         public Guid TheatreSalonId { get; set; }

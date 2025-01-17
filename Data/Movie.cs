@@ -1,6 +1,5 @@
 ﻿using MyCinema.Data.MovieApi;
 using MyCinema.Enums;
-using MyCinema.Migrations;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -43,6 +42,6 @@ namespace MyCinema.Data
         public ICollection<MoviePhoto>? MoviePhotos { get; set; }
         public ICollection<MovieGenre>? Genres { get; set; }
         public List<Screening> Screenings { get; set; } = [];
-        public List<Ticket> Tickets { get; set; } = [];
+        //public List<Ticket> Tickets { get; set; } = [];
     }
 }

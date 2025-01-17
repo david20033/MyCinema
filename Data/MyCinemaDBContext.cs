@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MyCinema.Enums;
 
 namespace MyCinema.Data
 {
@@ -16,7 +17,7 @@ namespace MyCinema.Data
         public virtual DbSet<TheatreSalon> TheatreSalon { get; set; }
         public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<Screening> Screening { get; set; }
-        public virtual DbSet<TicketOwnership> TicketOwnership { get; set; }
+        public virtual DbSet<TicketOrder> TicketOrder { get; set; }
         public virtual DbSet<Ticket> Ticket { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -126,6 +127,8 @@ namespace MyCinema.Data
 
                 entity.Property(s => s.StartTime)
                     .IsRequired();
+                entity.Property(s => s.EndTime)
+                    .IsRequired();
 
                 entity.Property(s => s.Duration)
                     .IsRequired();
@@ -149,41 +152,29 @@ namespace MyCinema.Data
                 .HasMany(m => m.Spoken_languages)
                 .WithMany(l => l.SpokenMovies)
                 .UsingEntity(j => j.ToTable("MovieLanguages"));
-            modelBuilder.Entity<Ticket>(entity =>
-            {
-                entity.HasKey(t => t.Id);
+            modelBuilder.Entity<TicketOrder>()
+                .HasMany(t => t.Tickets)
+                .WithOne(t => t.TicketOrder)
+                .HasForeignKey(t => t.TicketOrderId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
-                entity.Property(t => t.Price)
-                      .IsRequired()
-                      .HasColumnType("decimal(18,2)");
+            //modelBuilder.Entity<Ticket>()
+            //    .HasDiscriminator<TicketType>("TicketType") 
+            //    .HasValue<Regular>(TicketType.Regular)
+            //    .HasValue<VIPTicket>(TicketType.VIP);
 
-                entity.Property(t => t.Type)
-                      .IsRequired();
-            });
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.Price)
+                .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<TicketOwnership>(entity =>
-            {
-                entity.HasKey(to => to.Id);
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.SeatNumber)
+                .IsRequired()
+                .HasMaxLength(10); 
 
-                entity.HasOne(to => to.User)
-                      .WithMany()
-                      .HasForeignKey(to => to.UserId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(to => to.Salon)
-                      .WithMany()
-                      .HasForeignKey(to => to.TheatreSalonId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(to => to.Movie)
-                      .WithMany()
-                      .HasForeignKey(to => to.MovieId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasMany(to => to.Tickets)
-                      .WithOne()
-                      .OnDelete(DeleteBehavior.Restrict);
-            });
+            modelBuilder.Entity<TicketOrder>()
+                .Property(t => t.OrderDate)
+                .HasDefaultValueSql("GETDATE()");
         }
 
 

@@ -18,32 +18,57 @@ namespace MyCinema.Services
         public async Task<SelectTicketViewModel> GetSelectTicketViewModel(Guid ScreeningId)
         {
             var Screening = await _screeningRepository.GetScreeningByIdAsync(ScreeningId);
-            var TicketTypes = await _ticketRepository.GetAllTickets();
-            var TicketViewModel = new List<TicketTypeViewModel>();
-            foreach (var t in TicketTypes)
-            {
-                var ticket = new TicketTypeViewModel
-                {
-                    Name = t.Type.ToString(),
-                    Price = t.Price,
-                    Quantity = 0
-                };
-                TicketViewModel.Add(ticket);
-            }
             return new SelectTicketViewModel
             {
-                PosterPath = Screening.Movie.Poster_path,
+                PosterPath=Screening.Movie.Poster_path,
                 Title = Screening.Movie.Title,
-                Language = Screening.Movie.Original_language?.Name,
-                Genres = Screening.Movie.Genres?.Select(g => g.Genre.Name).ToList(),
+                Language = Screening.Movie.Original_language?.English_Name,
+                Genres = Screening.Movie.Genres.Select(g=>g.Genre.Name).ToList(),
                 SalonNumber = Screening.TheatreSalon.SalonNumber,
                 ShowTime = Screening.StartTime,
-                TicketTypes = TicketViewModel
+                RegularTicketPrice = 12,
+                VipTicketPrice = 15,
+                ScreeningId = ScreeningId
             };
         }
-        public async Task AddTicketAsync(Ticket ticket)
+        public async Task AddTicketOwnershipInDbAsync(SelectTicketViewModel model)
         {
-            await _ticketRepository.AddTicketAsync(ticket);
+            //screeningId, vip count regular count
+            var Screening = await _screeningRepository.GetScreeningByIdAsync(model.ScreeningId);
+            List<Ticket> Tickets = [];
+            var TicketOrder = new TicketOrder()
+            {
+                Id=Guid.NewGuid(),
+                OrderDate=DateTime.Now,
+            };
+            for(int i=0;i<model.RegularTicketCount; i++)
+            {
+                Tickets.Add(new Ticket
+                {
+                    Id = Guid.NewGuid(),
+                    Price = model.RegularTicketPrice,
+                    Type = Enums.TicketType.Regular,
+                    ScreeningId = Screening.Id,
+                    TicketOrderId = TicketOrder.Id,
+                    TicketOrder=TicketOrder,
+                    SeatNumber = "-1"
+                });
+            }
+            for (int i = 0; i < model.VipTicketCount; i++)
+            {
+                Tickets.Add(new Ticket
+                {
+                    Id = Guid.NewGuid(),
+                    Price = model.VipTicketPrice,
+                    Type = Enums.TicketType.VIP,
+                    ScreeningId = Screening.Id,
+                    TicketOrderId = TicketOrder.Id,
+                    TicketOrder = TicketOrder,
+                    SeatNumber = "-1"
+                });
+            }
+            TicketOrder.Tickets = Tickets;
+            await _ticketRepository.AddTicketOrderAsync(TicketOrder);   
         }
     }
 }

@@ -81,6 +81,14 @@ namespace MyCinema.Repositories
                     .Include(m => m.Genres)
                     .ThenInclude(g => g.Genre)
                     .ToListAsync();
+
+            foreach (var movie in movies)
+            {
+                foreach (var screening in movie.Screenings)
+                {
+                    screening.EndTime = screening.StartTime.Add(screening.Duration);
+                }
+            }
             if (query.Date != null)
             {
                 movies = movies.Where(m => m.Screenings.Any(s => s.StartTime.Date == query.Date.Value.Date)).ToList();
