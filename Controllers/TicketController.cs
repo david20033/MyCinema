@@ -27,10 +27,25 @@ namespace MyCinema.Controllers
         {
             if(ModelState.IsValid)
             {
-                await _ticketService.AddTicketOwnershipInDbAsync(model);
-                return RedirectToAction("Index");
+                var TicketId = await _ticketService.AddTicketOwnershipInDbAsync(model);
+                return RedirectToAction("SelectSeats", new { Id = TicketId });
             }
             return View(model);
+        }
+        public async Task<IActionResult> SelectSeats(Guid id)
+        {
+            var model = await _ticketService.GetTicketOrderByIdAsync(id);
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SelectSeats(TicketOrder model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View();
         }
     }
 }

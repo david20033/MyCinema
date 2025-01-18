@@ -31,7 +31,7 @@ namespace MyCinema.Services
                 ScreeningId = ScreeningId
             };
         }
-        public async Task AddTicketOwnershipInDbAsync(SelectTicketViewModel model)
+        public async Task<Guid> AddTicketOwnershipInDbAsync(SelectTicketViewModel model)
         {
             //screeningId, vip count regular count
             var Screening = await _screeningRepository.GetScreeningByIdAsync(model.ScreeningId);
@@ -68,7 +68,12 @@ namespace MyCinema.Services
                 });
             }
             TicketOrder.Tickets = Tickets;
-            await _ticketRepository.AddTicketOrderAsync(TicketOrder);   
+            await _ticketRepository.AddTicketOrderAsync(TicketOrder);
+            return TicketOrder.Id;
+        }
+        public async Task<TicketOrder> GetTicketOrderByIdAsync(Guid id)
+        {
+            return await _ticketRepository.GetTicketOrderByIdAsync(id);
         }
     }
 }
