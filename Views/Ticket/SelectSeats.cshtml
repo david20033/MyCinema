@@ -1,19 +1,21 @@
-﻿@model MyCinema.Data.TicketOrder
+﻿@model MyCinema.ViewModels.SelectSeatsViewModel
 @{
-    var Salon = Model.Tickets[0].Screening.TheatreSalon;
-    int maxSelectableSeats = Model.Tickets.Count;
+    //var Salon = Model.Tickets[0].Screening.TheatreSalon;
+    int maxSelectableSeats = Model.TicketCount;
 }
 <form asp-action="SelectSeats" method="post">
 <div class="container mt-5">
     <div class="screen"> SCREEN </div>
     <div id="grid-container">
-        @for (int i = 0; i < Salon.Rows; i++)
+            <input type="hidden" name="SeatCoords" id="SeatCoords" />
+            <input type="hidden" asp-for="TicketOrderId" />
+        @for (int i = 0; i < Model.SalonRows; i++)
         {
                 <div class="d-flex justify-content-center mb-2">
-                @for (int j = 0; j < Salon.Columns; j++)
+                @for (int j = 0; j < Model.SalonColumns; j++)
                 {
                     var coords = $"{i},{j}";
-                    if (Salon.EmptySeatsCoords.Contains(coords))
+                    if (Model.EmptySeatsCoords.Contains(coords))
                     {
                                     <div class="grid-item addSalon border border-primary"
                                          style="visibility:hidden"
@@ -42,38 +44,31 @@
     <script>
     const maxSelectableSeats = @maxSelectableSeats;
     let selectedSeatsCount = 0;
-
+    const clickerCoords = []
     function toggleSeatSelection(element) {
+        const row = element.getAttribute('data-row');
+        const col = element.getAttribute('data-col');
+        const coordinate = `${row},${col}`;
         if (element.classList.contains('clicked')) {
             element.classList.remove('clicked');
-            selectedSeatsCount--;
+             selectedSeatsCount--;
+             const index = clickerCoords.indexOf(coordinate);
+             clickerCoords.splice(index, 1);
         } else if (selectedSeatsCount < maxSelectableSeats) {
             element.classList.add('clicked');
             selectedSeatsCount++;
+             clickerCoords.push(coordinate);
         }
 
         document.getElementById('selected-seats-count').innerText = selectedSeatsCount;
 
         document.getElementById('submit-seats').disabled = (selectedSeatsCount !== maxSelectableSeats);
+
     }
-    function getClickedCells() {
-    const clickedCells = [];
-    document.querySelectorAll('.grid-item.clicked').forEach(cell => {
-        const row = cell.getAttribute('data-row');
-        const col = cell.getAttribute('data-col');
-        clickedCells.push({ row: parseInt(row), col: parseInt(col) });
-    });
-    return clickedCells;
-}
 
 document.getElementById('submit-seats').addEventListener('click', () => {
-    const clickedCells = getClickedCells();
-    const seatDataInput = document.createElement('input');
-    seatDataInput.type = 'hidden';
-    seatDataInput.name = 'selectedSeats';
-    seatDataInput.value = JSON.stringify(clickedCells);
-    document.querySelector('form').appendChild(seatDataInput);
-
-    document.querySelector('form').submit(); // Submit the form
+        const hiddenInput = document.getElementById("SeatCoords");
+        hiddenInput.value = JSON.stringify(clickerCoords);
+    document.querySelector('form').submit();
 });
 </script>

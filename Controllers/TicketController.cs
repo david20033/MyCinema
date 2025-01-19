@@ -34,16 +34,17 @@ namespace MyCinema.Controllers
         }
         public async Task<IActionResult> SelectSeats(Guid id)
         {
-            var model = await _ticketService.GetTicketOrderByIdAsync(id);
+            var model = await _ticketService.GetSelectSeatsViewModel(id);
             return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SelectSeats(TicketOrder model)
+        public async Task<IActionResult> SelectSeats(SelectSeatsViewModel model)
         {
             if (ModelState.IsValid)
             {
-
+                await _ticketService.SeedSeatsCoordsWithTicketOrder(model);
+                return RedirectToAction("Index");
             }
             return View();
         }

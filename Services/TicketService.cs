@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
@@ -71,9 +72,28 @@ namespace MyCinema.Services
             await _ticketRepository.AddTicketOrderAsync(TicketOrder);
             return TicketOrder.Id;
         }
-        public async Task<TicketOrder> GetTicketOrderByIdAsync(Guid id)
+        public async Task<SelectSeatsViewModel> GetSelectSeatsViewModel(Guid id)
         {
-            return await _ticketRepository.GetTicketOrderByIdAsync(id);
+            var Order = await _ticketRepository.GetTicketOrderByIdAsync(id);
+            var Salon = Order.Tickets[0].Screening.TheatreSalon;
+            return new SelectSeatsViewModel
+            {
+                SalonColumns = Salon.Columns,
+                SalonRows = Salon.Rows,
+                EmptySeatsCoords = Salon.EmptySeatsCoords,
+                TicketCount = Order.Tickets.Count,
+                TicketOrderId = id
+            };
+        }
+        public async Task SeedSeatsCoordsWithTicketOrder(SelectSeatsViewModel model)
+        {
+            var Order = await _ticketRepository.GetTicketOrderByIdAsync(model.TicketOrderId);
+            var Seats = JsonSerializer.Deserialize<List<string>>(model.SeatCoords);
+            for (int i = 0; i < Order.Tickets.Count; i++)
+            {
+                Order.Tickets[i].SeatNumber = Seats[i];
+            }
+            await _ticketRepository.SaveAsync();
         }
     }
 }

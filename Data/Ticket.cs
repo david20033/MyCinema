@@ -1,4 +1,6 @@
-﻿using MyCinema.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MyCinema.Enums;
 
 namespace MyCinema.Data
 {
@@ -9,8 +11,10 @@ namespace MyCinema.Data
         public string SeatNumber { get; set; }
         public TicketType Type { get; set; } 
         public Guid ScreeningId { get; set; }
+        [BindNever]
         public Screening Screening { get; set; }
-        public Guid TicketOrderId { get; set; } 
+        public Guid TicketOrderId { get; set; }
+        [BindNever]
         public TicketOrder TicketOrder { get; set; }
     }
 }

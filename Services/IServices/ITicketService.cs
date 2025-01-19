@@ -7,6 +7,7 @@ namespace MyCinema.Services.IServices
     {
         Task<SelectTicketViewModel> GetSelectTicketViewModel(Guid ScreeningId);
         Task<Guid> AddTicketOwnershipInDbAsync(SelectTicketViewModel ticket);
-        Task<TicketOrder> GetTicketOrderByIdAsync(Guid id);
+        Task<SelectSeatsViewModel> GetSelectSeatsViewModel(Guid id);
+        Task SeedSeatsCoordsWithTicketOrder(SelectSeatsViewModel model);
     }
 }

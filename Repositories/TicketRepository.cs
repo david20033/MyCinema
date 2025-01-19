@@ -28,5 +28,9 @@ namespace MyCinema.Repositories
                 .ThenInclude(t=>t.TheatreSalon)
                 .FirstOrDefaultAsync();
         }
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

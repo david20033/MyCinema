@@ -7,5 +7,6 @@ namespace MyCinema.Repositories.IRepositories
         Task AddTicketOrderAsync(TicketOrder ticket);
         Task<List<Ticket>> GetAllTickets();
         Task<TicketOrder> GetTicketOrderByIdAsync(Guid id);
+        Task SaveAsync();
     }
 }
