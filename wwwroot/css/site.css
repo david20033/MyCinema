@@ -49,10 +49,23 @@ body {
 }
 
     .grid-item:hover {
-        background-color: lightcoral;
+        background-color: lightgreen;
+    }
+.no-select {
+    user-select: none;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none;
+}
+    .no-select:hover {
+        background-color: red; 
+        cursor: default; 
     }
 
 .clicked {
+    background-color: green;
+}
+.reserved {
     background-color: red;
 }
 .screen {  

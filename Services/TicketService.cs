@@ -81,6 +81,7 @@ namespace MyCinema.Services
                 SalonColumns = Salon.Columns,
                 SalonRows = Salon.Rows,
                 EmptySeatsCoords = Salon.EmptySeatsCoords,
+                ReservedSeatsCoords = Order.Tickets[0].Screening.ReservedSeats,
                 TicketCount = Order.Tickets.Count,
                 TicketOrderId = id
             };
@@ -89,9 +90,11 @@ namespace MyCinema.Services
         {
             var Order = await _ticketRepository.GetTicketOrderByIdAsync(model.TicketOrderId);
             var Seats = JsonSerializer.Deserialize<List<string>>(model.SeatCoords);
+            var Screening = Order.Tickets[0].Screening;
             for (int i = 0; i < Order.Tickets.Count; i++)
             {
                 Order.Tickets[i].SeatNumber = Seats[i];
+                Screening.ReservedSeats.Add(Seats[i]);
             }
             await _ticketRepository.SaveAsync();
         }

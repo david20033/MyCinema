@@ -23,6 +23,14 @@
                                          data-col="@j"> @j
                                     </div>
                     }
+                    else if(Model.ReservedSeatsCoords.Contains(coords))
+                    {
+                            <div class="grid-item addSalon border border-primary reserved no-select"
+                                 data-row="@i"
+                                 data-col="@j">
+                                @j
+                            </div>
+                    }
                     else
                     {
                                     <div class="grid-item addSalon border border-primary"
