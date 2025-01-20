@@ -20,7 +20,7 @@
                                     <div class="grid-item addSalon border border-primary"
                                          style="visibility:hidden"
                                          data-row="@i"
-                                         data-col="@j">
+                                         data-col="@j"> @j
                                     </div>
                     }
                     else
@@ -28,7 +28,8 @@
                                     <div class="grid-item addSalon border border-primary"
                                          onclick="toggleSeatSelection(this)"
                                          data-row="@i"
-                                         data-col="@j">
+                                 data-col="@j">
+                                @(j+1)
                                     </div>
                     }
                 }

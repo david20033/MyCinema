@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyCinema.Data;
 using MyCinema.Services.IServices;
 using MyCinema.ViewModels;
@@ -44,9 +46,28 @@ namespace MyCinema.Controllers
             if (ModelState.IsValid)
             {
                 await _ticketService.SeedSeatsCoordsWithTicketOrder(model);
-                return RedirectToAction("Index");
+                return RedirectToAction("ConfirmOrder", new { Id = model.TicketOrderId });
             }
             return View();
+        }
+        public async Task<IActionResult> ConfirmOrder(Guid Id) 
+        {
+            var model = await _ticketService.GetConfirmOrderViewModel(Id);
+            return View(model);
+        }
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmOrder(ConfirmOrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var OrderId = model.TicketOrderId;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await _ticketService.AddUserIdInTickerOrder(OrderId, userId);
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
     }
 }

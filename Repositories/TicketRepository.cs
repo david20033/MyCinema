@@ -26,6 +26,15 @@ namespace MyCinema.Repositories
                 .Include(t=>t.Tickets)
                 .ThenInclude(t=>t.Screening)
                 .ThenInclude(t=>t.TheatreSalon)
+                .Include(t => t.Tickets)
+                .ThenInclude(t => t.Screening)
+                .ThenInclude(t=>t.Movie)
+                .ThenInclude(t=>t.Original_language)
+                .Include(t => t.Tickets)
+                .ThenInclude(t => t.Screening)
+                .ThenInclude(t => t.Movie)
+                .ThenInclude(t => t.Genres)
+                .ThenInclude(t=>t.Genre)
                 .FirstOrDefaultAsync();
         }
         public async Task SaveAsync()

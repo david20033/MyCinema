@@ -1,0 +1,77 @@
+﻿@model MyCinema.ViewModels.ConfirmOrderViewModel
+@{
+    string Poster_path = $"https://image.tmdb.org/t/p/original{Model.PosterPath}";
+    decimal TotalPirce = Model.RegularTicketPrice * Model.RegularTicketSeatsCoords.Count +
+    Model.VipTicketPrice * Model.VipTicketSeatsCoords.Count;
+}
+<div class="container mt-4">
+    <form asp-action="ConfirmOrder" method="post">
+        <input type="hidden" asp-for="TicketOrderId" />
+        <!-- Movie Details Section -->
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="@Poster_path" alt="@Model.Title Poster" class="img-fluid rounded">
+            </div>
+            <div class="col-md-8">
+                <h1>@Model.Title (@Model.ReleaseYear.Year)</h1>
+                <p class="text-muted">@Model.Language | @string.Join(", ", Model.Genres)</p>
+                <p><strong>Salon:</strong> @Model.SalonNumber</p>
+                <p><strong>Show Time:</strong> @Model.ShowStartTime.ToString("dd-MM-yyyy, HH:mm") - @Model.ShowEndTime.ToString("HH:mm")</p>
+
+                <!-- Ticket Selection Section -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h3 class="mb-4">Select Your Tickets</h3>
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Ticket Type and Seats</th>
+                                    <th>Price (лв.)</th>
+                                    <th class="text-center">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Regular Ticket -->
+                                <tr>
+                                    <td>
+                                        Regular  (@foreach (var t in Model.RegularTicketSeatsCoords)
+                                        {
+                                            @t
+                                            <text> </text>
+                                        })
+                                    </td>
+                                    <td>@Model.RegularTicketPrice</td>
+                                    <td class="text-center">@Model.RegularTicketSeatsCoords.Count</td>
+                                </tr>
+                                <!-- VIP Ticket -->
+                                <tr>
+                                    <td>VIP  (@foreach (var t in Model.VipTicketSeatsCoords)
+                                        {
+                                            @(t)
+                                            <text> </text>
+                                        })</td>
+                                    <td>@Model.VipTicketPrice</td>
+                                    <td class="text-center">@Model.VipTicketSeatsCoords.Count</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Total Price Section -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-right">
+                        <h4>Total: <span id="total-price">@TotalPirce</span> лв.</h4>
+                    </div>
+                </div>
+
+                <!-- Continue Button -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-warning btn-lg w-100">Pay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

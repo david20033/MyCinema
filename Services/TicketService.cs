@@ -95,5 +95,35 @@ namespace MyCinema.Services
             }
             await _ticketRepository.SaveAsync();
         }
+        public async Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id)
+        {
+            var order = await _ticketRepository.GetTicketOrderByIdAsync(id);
+            var Movie = order.Tickets[0].Screening.Movie;
+            var Screening = order.Tickets[0].Screening;
+            var model = new ConfirmOrderViewModel
+            {
+                PosterPath = Movie.Poster_path,
+                Title = Movie.Title,
+                ReleaseYear = DateTime.Parse(Movie.Release_date),
+                ShowStartTime = Screening.StartTime,
+                ShowEndTime = Screening.EndTime,
+                Language = Movie.Original_language.English_Name,
+                Genres = Movie.Genres.Select(g => g.Genre.Name).ToList(),
+                SalonNumber = Screening.TheatreSalon.SalonNumber,
+                RegularTicketPrice = 12,
+                VipTicketPrice = 15,
+                RegularTicketSeatsCoords = order.Tickets.Where(t => t.Type == Enums.TicketType.Regular).Select(t => t.SeatNumber).ToList(),
+                VipTicketSeatsCoords = order.Tickets.Where(t => t.Type == Enums.TicketType.VIP).Select(t => t.SeatNumber).ToList(),
+                TicketOrderId = id
+            };
+            return model; 
+
+        }
+        public async Task AddUserIdInTickerOrder(Guid TicketOrderId, string UserId)
+        {
+            var order = await _ticketRepository.GetTicketOrderByIdAsync(TicketOrderId);
+            order.CustomerId = Guid.Parse(UserId);
+            await _ticketRepository.SaveAsync();
+        }
     }
 }
