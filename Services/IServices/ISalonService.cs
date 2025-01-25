@@ -1,4 +1,7 @@
 ﻿using MyCinema.Data;
+using MyCinema.Helpers;
+using MyCinema.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MyCinema.Services.IServices
 {
@@ -8,5 +11,6 @@ namespace MyCinema.Services.IServices
         Task<List<TheatreSalon>> GetTheatreSalonsAsync();
 
         Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id);
+        Task<List<SalonMovieTimelineViewModel>> GetSalonMovieTimelineViewModels(QueryObject query);
     }
 }

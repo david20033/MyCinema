@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
+using MyCinema.Helpers;
 using MyCinema.Repositories.IRepositories;
 
 namespace MyCinema.Repositories
@@ -22,7 +23,10 @@ namespace MyCinema.Repositories
         }
         public async Task<List<TheatreSalon>> GetTheatreSalonsAsync()
         {
-            return await _context.TheatreSalon.ToListAsync();
+            return await _context.TheatreSalon
+                .Include(ts=>ts.Screenings)
+                .ThenInclude(ts=>ts.Movie)
+                .ToListAsync();
         }
         public async Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id)
         {

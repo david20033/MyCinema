@@ -1,4 +1,5 @@
 ﻿using MyCinema.Data;
+using MyCinema.Helpers;
 
 namespace MyCinema.Repositories.IRepositories
 {

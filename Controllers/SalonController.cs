@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Drawing;
+using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyCinema.Data;
+using MyCinema.Helpers;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
 
@@ -50,6 +53,17 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> SalonDetails(Guid Id)
         {
             return View(await _salonService.GetTheatreSalonByIdAsync(Id));
+        }
+        public async Task<IActionResult> MovieTimelines([FromQuery] QueryObject query)
+        {
+            if (query.Date == null)
+            {
+                query.Date = DateTime.Now;
+            }
+            var model = await _salonService.GetSalonMovieTimelineViewModels(query);
+            ViewBag.CinemaOpenTime = TimeSpan.FromHours(9);
+            ViewBag.CinemaClosingTime = TimeSpan.FromHours(23);
+            return View(model);
         }
     }
 }
