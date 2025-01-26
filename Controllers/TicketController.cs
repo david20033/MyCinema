@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyCinema.Data;
 using MyCinema.Services.IServices;
 using MyCinema.ViewModels;
+using Stripe.Checkout;
 
 namespace MyCinema.Controllers
 {
@@ -46,6 +47,7 @@ namespace MyCinema.Controllers
             if (ModelState.IsValid)
             {
                 await _ticketService.SeedSeatsCoordsWithTicketOrder(model);
+                HttpContext.Session.SetString("HasSelectedSeats", "true");
                 return RedirectToAction("ConfirmOrder", new { Id = model.TicketOrderId });
             }
             return View();
@@ -63,11 +65,20 @@ namespace MyCinema.Controllers
             if (ModelState.IsValid)
             {
                 var OrderId = model.TicketOrderId;
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                await _ticketService.AddUserIdInTickerOrder(OrderId, userId);
-                return RedirectToAction("Index");
+                var session = await _ticketService.CreateStripeSession(OrderId);
+                return Redirect(session.Url);
             }
             return View(model);
+        }
+        public async Task<IActionResult> Success([FromQuery]Guid OrderId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _ticketService.AddUserIdInTickerOrder(OrderId, userId);
+            return RedirectToAction("Index");
+        }
+        public IActionResult Cancel()
+        {
+            return RedirectToAction("Index");
         }
     }
 }

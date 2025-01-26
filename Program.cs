@@ -7,6 +7,7 @@ using MyCinema.Repositories;
 using MyCinema.Services.IServices;
 using MyCinema.Services.Mappers.IMappers;
 using MyCinema.Services.Mappers;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyCinemaDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IScreeningService, ScreeningService>();
 builder.Services.AddScoped<IScreeningRepository, ScreeningRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<IStripeService,StripeService>();
 builder.Services.AddHostedService<CleanTicketOrderService>();
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -55,6 +57,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseAuthorization();
 

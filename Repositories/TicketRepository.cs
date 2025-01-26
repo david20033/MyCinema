@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyCinema.Data;
+using MyCinema.Models;
 using MyCinema.Repositories.IRepositories;
 
 namespace MyCinema.Repositories
@@ -40,6 +41,19 @@ namespace MyCinema.Repositories
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<TicketSummary>> GetTicketSummaryByTicketOrderId(Guid id)
+        {
+            return await _context.Ticket
+                .Where(t=> t.TicketOrderId == id)
+                .GroupBy(t=> new {t.Type, t.Price})
+                .Select(g => new TicketSummary
+                {
+                    Type = g.Key.Type,
+                    Quantity = g.Count(),
+                    PricePerTicket = g.Key.Price,
+                })
+                .ToListAsync();
         }
     }
 }

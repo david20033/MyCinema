@@ -1,4 +1,5 @@
 ﻿using MyCinema.Data;
+using MyCinema.Models;
 
 namespace MyCinema.Repositories.IRepositories
 {
@@ -8,5 +9,6 @@ namespace MyCinema.Repositories.IRepositories
         Task<List<Ticket>> GetAllTickets();
         Task<TicketOrder> GetTicketOrderByIdAsync(Guid id);
         Task SaveAsync();
+        Task<List<TicketSummary>> GetTicketSummaryByTicketOrderId(Guid id);
     }
 }

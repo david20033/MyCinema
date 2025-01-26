@@ -1,5 +1,7 @@
 ﻿using MyCinema.Data;
+using MyCinema.Models;
 using MyCinema.ViewModels;
+using Stripe.Checkout;
 
 namespace MyCinema.Services.IServices
 {
@@ -11,5 +13,6 @@ namespace MyCinema.Services.IServices
         Task SeedSeatsCoordsWithTicketOrder(SelectSeatsViewModel model);
         Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id);
         Task AddUserIdInTickerOrder(Guid TicketOrderId, string UserId);
+        Task<Session> CreateStripeSession(Guid id);
     }
 }

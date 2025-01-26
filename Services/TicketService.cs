@@ -1,9 +1,12 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MyCinema.Data;
+using MyCinema.Models;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
 using MyCinema.ViewModels;
+using Stripe.Checkout;
 
 namespace MyCinema.Services
 {
@@ -11,11 +14,12 @@ namespace MyCinema.Services
     {
         private readonly ITicketRepository _ticketRepository;
         private readonly IScreeningRepository _screeningRepository;
-        public TicketService (ITicketRepository ticketRepository, IScreeningRepository screeningRepository)
+        private readonly IStripeService _stripeService;
+        public TicketService (ITicketRepository ticketRepository, IScreeningRepository screeningRepository, IStripeService stripeService)
         {
             _ticketRepository = ticketRepository;
             _screeningRepository = screeningRepository;
-        }
+            _stripeService = stripeService;        }
         public async Task<SelectTicketViewModel> GetSelectTicketViewModel(Guid ScreeningId)
         {
             var Screening = await _screeningRepository.GetScreeningByIdAsync(ScreeningId);
@@ -127,6 +131,30 @@ namespace MyCinema.Services
             var order = await _ticketRepository.GetTicketOrderByIdAsync(TicketOrderId);
             order.CustomerId = Guid.Parse(UserId);
             await _ticketRepository.SaveAsync();
+        }
+        public async Task<Session> CreateStripeSession(Guid OrderId)
+        {
+            var Tickets =  await _ticketRepository.GetTicketSummaryByTicketOrderId(OrderId);
+            var LineItems = new List<SessionLineItemOptions>();
+            foreach (var ticket in Tickets)
+            {
+                var sessionListItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)ticket.PricePerTicket * 100,
+                        Currency = "BGN",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = $"{ticket.Type} Ticket"
+                        }
+                    },
+                    Quantity = ticket.Quantity,
+                };
+                LineItems.Add(sessionListItem);
+            }
+            var domain = "https://localhost:7128";
+            return _stripeService.CreateCheckoutSession($"{domain}/Ticket/Success?OrderId={OrderId}", $"{domain}/Ticket/Cancel", LineItems);
         }
     }
 }
