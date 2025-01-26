@@ -10,5 +10,7 @@
         public Guid MovieId { get; set; }
         public Guid SalonId { get; set; }
         public string? Title { get; set; }
+        public int SalonCapacity { get; set; }
+        public int ReservedSeatsCount { get; set; }
     }
 }

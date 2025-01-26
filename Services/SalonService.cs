@@ -76,6 +76,8 @@ namespace MyCinema.Services
                         model.MovieId = screen.MovieId;
                         model.SalonId = salon.Id;
                         model.Title = screen.Movie.Title;
+                        model.SalonCapacity = salon.Capacity;
+                        model.ReservedSeatsCount = screen.ReservedSeats.Count;
                     result.Add(model);
                 }
             }
