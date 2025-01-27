@@ -34,6 +34,8 @@ builder.Services.AddScoped<IScreeningRepository, ScreeningRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IStripeService,StripeService>();
+builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddHostedService<CleanTicketOrderService>();
 builder.Services.Configure<IdentityOptions>(options =>
 {

@@ -1,0 +1,71 @@
+﻿@model List<MyCinema.ViewModels.PaymentAnalyticsViewModel>
+
+@{
+    ViewBag.Title = "Payment Analytics";
+}
+
+<h2>Payment Analytics</h2>
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="flex: 1; margin-right: 10px;">
+        <canvas id="paymentChart" width="400" height="200"></canvas>
+    </div>
+    <div style="flex: 1; margin-left: 10px;">
+        <canvas id="secondChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('paymentChart').getContext('2d');
+
+    var config = {
+        type: 'line',
+        data: {
+            labels: [
+                @foreach(var item in Model)
+                {
+                    @:  "@item.Date.Value.ToString("dd:MM:yyyy")",
+                }
+            ],
+            datasets:[{
+                label: 'Tickets',
+                data:[
+                    @foreach(var item in Model)
+                    {
+                        @: @item.TotalAmount,
+                    }
+                ],
+                fill:false,
+                bordercolor:'rgb(75, 192, 192)',
+                tension: 0.1
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Payments Over Time'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total Payments'
+                    }
+                }
+            }
+        }
+    };
+
+    var paymentChart = new Chart(ctx, config);
+</script>
