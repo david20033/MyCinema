@@ -5,7 +5,7 @@ namespace MyCinema.Services
     public class CleanTicketOrderService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly TimeSpan _interval = TimeSpan.FromMinutes(3);
+        private readonly TimeSpan _interval = TimeSpan.FromMinutes(35);
 
         public CleanTicketOrderService(IServiceScopeFactory scopeFactory)
         {

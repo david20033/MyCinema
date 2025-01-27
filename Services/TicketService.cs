@@ -144,6 +144,10 @@ namespace MyCinema.Services
             order.CustomerId = Guid.Parse(UserId);
             await _ticketRepository.SaveAsync();
         }
+        public async Task<bool> IsTicketOrderExists(Guid Id)
+        {
+            return await _ticketRepository.IsTicketOrderExist(Id);
+        }
         public async Task<Session> CreateStripeSession(Guid OrderId)
         {
             var Tickets =  await _ticketRepository.GetTicketSummaryByTicketOrderId(OrderId);

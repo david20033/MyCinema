@@ -69,6 +69,10 @@ namespace MyCinema.Controllers
             if (ModelState.IsValid)
             {
                 var OrderId = model.TicketOrderId;
+                if (await _ticketService.IsTicketOrderExists(OrderId) == false)
+                {
+                    return RedirectToAction("Index");
+                }
                 var session = await _ticketService.CreateStripeSession(OrderId);
                 return Redirect(session.Url);
             }

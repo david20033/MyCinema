@@ -55,5 +55,14 @@ namespace MyCinema.Repositories
                 })
                 .ToListAsync();
         }
+        public async Task<bool> IsTicketOrderExist(Guid id)
+        {
+            var order = await _context.TicketOrder.Where(t=>t.Id == id).FirstOrDefaultAsync();
+            if(order == null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace MyCinema.Services.IServices
         Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id);
         Task AddUserIdInTickerOrder(Guid TicketOrderId, string UserId);
         Task<Session> CreateStripeSession(Guid id);
+        Task<bool> IsTicketOrderExists(Guid Id);
     }
 }

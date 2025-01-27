@@ -10,5 +10,6 @@ namespace MyCinema.Repositories.IRepositories
         Task<TicketOrder> GetTicketOrderByIdAsync(Guid id);
         Task SaveAsync();
         Task<List<TicketSummary>> GetTicketSummaryByTicketOrderId(Guid id);
+        Task<bool> IsTicketOrderExist(Guid id);
     }
 }
