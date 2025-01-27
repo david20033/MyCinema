@@ -102,6 +102,18 @@ namespace MyCinema.Services
             }
             await _ticketRepository.SaveAsync();
         }
+        public async Task UnSeedSeatsCoordsWithTicketOrder(Guid TicketOrderId)
+        {
+            var Order = await _ticketRepository.GetTicketOrderByIdAsync(TicketOrderId);
+            if(Order.Tickets.Count == 0) return;
+            var Screening = Order.Tickets[0].Screening;
+            foreach ( var ticket in Order.Tickets)
+            {
+                Screening.ReservedSeats.Remove(ticket.SeatNumber);
+                ticket.SeatNumber = "-1";
+            }
+            await _ticketRepository.SaveAsync();
+        }
         public async Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id)
         {
             var order = await _ticketRepository.GetTicketOrderByIdAsync(id);

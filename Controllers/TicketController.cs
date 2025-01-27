@@ -37,6 +37,7 @@ namespace MyCinema.Controllers
         }
         public async Task<IActionResult> SelectSeats(Guid id)
         {
+            await _ticketService.UnSeedSeatsCoordsWithTicketOrder(id);
             var model = await _ticketService.GetSelectSeatsViewModel(id);
             return View(model);
         }
@@ -47,7 +48,6 @@ namespace MyCinema.Controllers
             if (ModelState.IsValid)
             {
                 await _ticketService.SeedSeatsCoordsWithTicketOrder(model);
-                HttpContext.Session.SetString("HasSelectedSeats", "true");
                 return RedirectToAction("ConfirmOrder", new { Id = model.TicketOrderId });
             }
             return View();
@@ -55,6 +55,10 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> ConfirmOrder(Guid Id) 
         {
             var model = await _ticketService.GetConfirmOrderViewModel(Id);
+            if (model.RegularTicketSeatsCoords.Contains("-1") || model.VipTicketSeatsCoords.Contains("-1"))
+            {
+                return RedirectToAction("SelectSeats", new { id = Id });
+            }
             return View(model);
         }
         [HttpPost]
