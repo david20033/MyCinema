@@ -4,20 +4,88 @@
     ViewBag.Title = "Payment Analytics";
 }
 
-<h2>Payment Analytics</h2>
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="flex: 1; margin-right: 10px;">
-        <canvas id="paymentChart" width="400" height="200"></canvas>
+
+   <div class="container my-4">
+    <h2>Payment Analytics</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="fromDate" class="form-label">From Date:</label>
+            <input type="date" id="fromDate" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+        </div>
+        <div class="col-md-6">
+            <label for="toDate" class="form-label">To Date:</label>
+            <input type="date" id="toDate" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+        </div>
     </div>
-    <div style="flex: 1; margin-left: 10px;">
-        <canvas id="secondChart" width="400" height="200"></canvas>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Gross (<span>@Model.Sum(t=>t.TotalAmount)лв.</span>)</h5>
+                    <canvas id="paymentChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Net (<span>@Model.Sum(t => t.TotalAmount - t.TotalAmount*0.05)лв.</span>)</h5>
+                    <canvas id="NetChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    const fromDate = document.getElementById('fromDate');
+    const toDate = document.getElementById('toDate');
+    function callBackend(){
+        const from = fromDate.value;
+        const to = toDate.value;
+        if (from && to) 
+        {
+                const url = `/Analytics?fromDate=${from}&toDate=${to}`;
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response;
+                    })
+                    .then(data => {
+                        console.log('Data from backend:', data);
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+        }
+    }
+    fromDate.addEventListener('change', () => {
+            if (toDate.value && new Date(fromDate.value) > new Date(toDate.value)) {
+                toDate.value = '';
+            }
+            toDate.min = fromDate.value;
+            callBackend();
+        });
+
+        toDate.addEventListener('change', () => {
+            if (fromDate.value && new Date(toDate.value) < new Date(fromDate.value)) {
+                fromDate.value = '';
+            }
+            fromDate.max = toDate.value;
+            callBackend();
+        });
+
     var ctx = document.getElementById('paymentChart').getContext('2d');
 
     var config = {
@@ -67,5 +135,56 @@
         }
     };
 
-    var paymentChart = new Chart(ctx, config);
+    var NetChart = new Chart(ctx, config);
+
+    var ctx = document.getElementById('NetChart').getContext('2d');
+
+    var config = {
+        type: 'line',
+        data: {
+            labels: [
+    @foreach (var item in Model)
+    {
+        @:  "@item.Date.Value.ToString("dd:MM:yyyy")",
+    }
+            ],
+            datasets:[{
+                label: 'Tickets',
+                data:[
+    @foreach (var item in Model)
+    {
+        @: @(item.TotalAmount-item.TotalAmount*0.05),
+    }
+                ],
+                fill:false,
+                bordercolor:'rgb(75, 192, 192)',
+                tension: 0.1
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Payments Over Time'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total Payments'
+                    }
+                }
+            }
+        }
+    };
+
+    var NetChart = new Chart(ctx, config);
 </script>

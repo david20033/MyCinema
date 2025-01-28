@@ -11,11 +11,13 @@ namespace MyCinema.Controllers
             _analyticsService = analyticsService;
         }
 
-        public async Task<IActionResult> Index([FromQuery] string startDate, [FromQuery] string endDate)
+        public async Task<IActionResult> Index([FromQuery] string fromDate, [FromQuery] string toDate)
         {
-            //DateTime start = DateTime.Parse(startDate);
-            //DateTime end = DateTime.Parse(endDate);
-            var data = await _analyticsService.MapPaymentsForPeriodToPaymentAnalyticViewModel(new DateTime(2025, 1, 1), new DateTime(2025, 2, 1));
+            fromDate ??= DateTime.Now.AddDays(-7).ToString();
+            toDate ??= DateTime.Now.AddDays(0).ToString();
+            DateTime from = DateTime.Parse(fromDate);
+            DateTime to = DateTime.Parse(toDate);
+            var data = await _analyticsService.MapPaymentsForPeriodToPaymentAnalyticViewModel(from, to);
             return View(data);
         }
     }

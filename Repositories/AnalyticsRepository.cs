@@ -16,6 +16,7 @@ namespace MyCinema.Repositories
             return await _context.TicketOrder
                 .Where(t => (t.OrderDate >= startDate && t.OrderDate <= endDate) && t.CustomerId!=Guid.Empty)
                 .Include(t=>t.Tickets)
+                .OrderBy(t=>t.OrderDate)
                 .ToListAsync();
         }
     }
