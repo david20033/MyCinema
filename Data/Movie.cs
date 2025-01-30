@@ -42,5 +42,6 @@ namespace MyCinema.Data
         public ICollection<MovieGenre>? Genres { get; set; }
         public List<Screening> Screenings { get; set; } = [];
         public decimal Profit { get; set; } = 0;
+        public int TicketSoldCount { get; set; }
     }
 }

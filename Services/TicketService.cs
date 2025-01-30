@@ -145,6 +145,7 @@ namespace MyCinema.Services
             foreach (var ticket in order.Tickets)
             {
                 ticket.Screening.Movie.Profit += ticket.Price;
+                ticket.Screening.Movie.TicketSoldCount++;
             }
             await _ticketRepository.SaveAsync();
         }

@@ -11,10 +11,10 @@ namespace MyCinema.Services
         {
             _analyticsRepository = analyticsRepository;
         }
-        public async Task<AnalyticsIndexViewModel> MapPaymentsForPeriodToPaymentAnalyticViewModel(DateTime StartDate, DateTime EndDate)
+        public async Task<AnalyticsIndexViewModel> MapPaymentsForPeriodToAnalyticsIndexViewModel(DateTime StartDate, DateTime EndDate)
         {
            var TicketOrder = await _analyticsRepository.GetAllTicketsOrdersForGivenPeriod(StartDate, EndDate);
-            var TopMovies = await _analyticsRepository.GetTopThreeMostProfitableMoviesForGivenPeriod(StartDate, EndDate, 3);
+            var TopMovies = await _analyticsRepository.GetMostProfitableMoviesForGivenPeriod(StartDate, EndDate, 3);
             var AnalyticsList = TicketOrder.GroupBy(t => t.OrderDate.Date)
                 .Select(g => new PaymentAnalyticsViewModel
                 {
@@ -34,6 +34,23 @@ namespace MyCinema.Services
                 Analytics = AnalyticsList,
                 Movies = MoviesList,
             };
+        }
+        public async Task<List<AnalyticsMovieViewModel>> GetAnalyticsMovieViewModels(DateTime StartDate, DateTime EndDate)
+        {
+            var MoviesList = await _analyticsRepository.GetMostProfitableMoviesForGivenPeriod(StartDate, EndDate,10);
+            var result = new List<AnalyticsMovieViewModel>();
+            foreach(var movie in MoviesList)
+            {
+                result.Add(new AnalyticsMovieViewModel
+                {
+                    movieId = movie.Id,
+                    Poster_Path = movie.Poster_path,
+                    Profit = movie.Profit,
+                    Title = movie.Title,
+                    TicketSoldCount = movie.TicketSoldCount,
+                });
+            }
+            return result;
         }
     }
 }

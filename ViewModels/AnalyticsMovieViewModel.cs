@@ -7,5 +7,6 @@
         public string? Poster_Path { get; set; }
 
         public decimal Profit { get; set; }
+        public int TicketSoldCount { get; set; }
     }
 }

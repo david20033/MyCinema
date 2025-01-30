@@ -17,8 +17,13 @@ namespace MyCinema.Controllers
             toDate ??= DateTime.Now.AddDays(0).ToString();
             DateTime from = DateTime.Parse(fromDate);
             DateTime to = DateTime.Parse(toDate);
-            var data = await _analyticsService.MapPaymentsForPeriodToPaymentAnalyticViewModel(from, to);
+            var data = await _analyticsService.MapPaymentsForPeriodToAnalyticsIndexViewModel(from, to);
             return View(data);
         }
+        public async Task<IActionResult> Movie()
+        {
+            var model = await _analyticsService.GetAnalyticsMovieViewModels(DateTime.MinValue, DateTime.MaxValue);
+            return View(model);
+        } 
     }
 }

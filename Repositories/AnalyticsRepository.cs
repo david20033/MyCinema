@@ -19,7 +19,7 @@ namespace MyCinema.Repositories
                 .OrderBy(t=>t.OrderDate)
                 .ToListAsync();
         }
-        public async Task<List<Movie>> GetTopThreeMostProfitableMoviesForGivenPeriod(DateTime startDate, DateTime endDate, int limit)
+        public async Task<List<Movie>> GetMostProfitableMoviesForGivenPeriod(DateTime startDate, DateTime endDate, int limit)
         {
             return await _context.Movie
                 .OrderBy(m => -m.Profit)
