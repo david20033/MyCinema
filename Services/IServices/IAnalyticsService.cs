@@ -4,6 +4,6 @@ namespace MyCinema.Services.IServices
 {
     public interface IAnalyticsService
     {
-        Task<List<PaymentAnalyticsViewModel>> MapPaymentsForPeriodToPaymentAnalyticViewModel(DateTime StartDate, DateTime EndDate);
+        Task<AnalyticsIndexViewModel> MapPaymentsForPeriodToPaymentAnalyticViewModel(DateTime StartDate, DateTime EndDate);
     }
 }

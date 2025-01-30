@@ -81,7 +81,7 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> Success([FromQuery]Guid OrderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _ticketService.AddUserIdInTickerOrder(OrderId, userId);
+            await _ticketService.ConfirmTicketOrder(OrderId, userId);
             return RedirectToAction("Index");
         }
         public IActionResult Cancel()

@@ -29,7 +29,6 @@ namespace MyCinema.Data
         public decimal? Popularity { get; set; }
         public string? Poster_path { get; set; }
         public List<string?>? Production_companies { get; set; }
-        //public List<CountryDTO>? production_countries { get; set; }
         public string? Release_date { get; set; }
         public int? Revenue { get; set; }
         public int? Runtime { get; set; }
@@ -42,6 +41,6 @@ namespace MyCinema.Data
         public ICollection<MoviePhoto>? MoviePhotos { get; set; }
         public ICollection<MovieGenre>? Genres { get; set; }
         public List<Screening> Screenings { get; set; } = [];
-        //public List<Ticket> Tickets { get; set; } = [];
+        public decimal Profit { get; set; } = 0;
     }
 }

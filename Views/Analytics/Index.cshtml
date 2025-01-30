@@ -1,12 +1,10 @@
-﻿@model List<MyCinema.ViewModels.PaymentAnalyticsViewModel>
+﻿@model MyCinema.ViewModels.AnalyticsIndexViewModel
 
 @{
     ViewBag.Title = "Payment Analytics";
 }
 
-
-
-   <div class="container my-4">
+<div class="container my-4">
     <h2>Payment Analytics</h2>
 
     <div class="row mb-4">
@@ -24,7 +22,7 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Gross (<span>@Model.Sum(t=>t.TotalAmount)лв.</span>)</h5>
+                    <h5 class="card-title">Gross (<span>@Model.Analytics.Sum(t => t.TotalAmount)лв.</span>)</h5>
                     <canvas id="paymentChart" width="400" height="200"></canvas>
                 </div>
             </div>
@@ -32,13 +30,34 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Net (<span>@Model.Sum(t => t.TotalAmount - t.TotalAmount*0.05)лв.</span>)</h5>
+                    <h5 class="card-title">Net (<span>@Model.Analytics.Sum(t => t.TotalAmount - t.TotalAmount * 0.05)лв.</span>)</h5>
                     <canvas id="NetChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4">Top 3 Most Profitable Movies</h3>
+        </div>
+
+        @foreach (var movie in Model.Movies.Take(3))
+        {
+            string poster_path = $"https://image.tmdb.org/t/p/original{movie.Poster_Path}";
+            <div class="col-md-4">
+                <a href="@Url.Action("Details", "Movie", new { id = movie.movieId })" class="text-decoration-none">
+                    <div class="card shadow">
+                    <img src="@poster_path" class="card-img-top" alt="@movie.Title Poster">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@movie.Title</h5>
+                            <p class="card-text fw-bold text-success">Profit: @movie.Profit лв.</p>
+                        </div>
+					</div>
+				</a>
+            </div>
+        }
+    </div>
 </div>
 
 
@@ -92,7 +111,7 @@
         type: 'line',
         data: {
             labels: [
-                @foreach(var item in Model)
+                @foreach(var item in Model.Analytics)
                 {
                     @:  "@item.Date.Value.ToString("dd:MM:yyyy")",
                 }
@@ -100,7 +119,7 @@
             datasets:[{
                 label: 'Tickets',
                 data:[
-                    @foreach(var item in Model)
+                    @foreach(var item in Model.Analytics)
                     {
                         @: @item.TotalAmount,
                     }
@@ -143,7 +162,7 @@
         type: 'line',
         data: {
             labels: [
-    @foreach (var item in Model)
+    @foreach (var item in Model.Analytics)
     {
         @:  "@item.Date.Value.ToString("dd:MM:yyyy")",
     }
@@ -151,7 +170,7 @@
             datasets:[{
                 label: 'Tickets',
                 data:[
-    @foreach (var item in Model)
+    @foreach (var item in Model.Analytics)
     {
         @: @(item.TotalAmount-item.TotalAmount*0.05),
     }

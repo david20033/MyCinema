@@ -138,10 +138,14 @@ namespace MyCinema.Services
             return model; 
 
         }
-        public async Task AddUserIdInTickerOrder(Guid TicketOrderId, string UserId)
+        public async Task ConfirmTicketOrder(Guid TicketOrderId, string UserId)
         {
             var order = await _ticketRepository.GetTicketOrderByIdAsync(TicketOrderId);
             order.CustomerId = Guid.Parse(UserId);
+            foreach (var ticket in order.Tickets)
+            {
+                ticket.Screening.Movie.Profit += ticket.Price;
+            }
             await _ticketRepository.SaveAsync();
         }
         public async Task<bool> IsTicketOrderExists(Guid Id)
