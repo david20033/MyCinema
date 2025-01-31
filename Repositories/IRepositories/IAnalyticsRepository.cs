@@ -1,4 +1,6 @@
-﻿using MyCinema.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using MyCinema.Data;
+using MyCinema.ViewModels;
 
 namespace MyCinema.Repositories.IRepositories
 {
@@ -6,5 +8,6 @@ namespace MyCinema.Repositories.IRepositories
     {
         Task<List<TicketOrder>> GetAllTicketsOrdersForGivenPeriod(DateTime startDate, DateTime endDate);
         Task<List<Movie>> GetMostProfitableMoviesForGivenPeriod(DateTime startDate, DateTime endDate, int limit);
+        Task<string?> GetUserEmailById(string id);
     }
 }

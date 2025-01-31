@@ -19,7 +19,7 @@ namespace MyCinema.Services
                 .Select(g => new PaymentAnalyticsViewModel
                 {
                     Date = g.Key,
-                    TotalAmount = (int)g.Sum(t => t.Tickets.Select(t => t.Price).Sum())
+                    TotalAmount = g.Sum(t => t.Tickets.Select(t => t.Price).Sum())
                 }).ToList();
             var MoviesList = TopMovies
                 .Select(m => new AnalyticsMovieViewModel
@@ -50,6 +50,22 @@ namespace MyCinema.Services
                     TicketSoldCount = movie.TicketSoldCount,
                 });
             }
+            return result;
+        }
+        public async Task<List<PaymentAnalyticsViewModel>> GetPaymentAnalyticsViewModelsAsync()
+        {
+            var TicketOrder = await _analyticsRepository.GetAllTicketsOrdersForGivenPeriod(DateTime.MinValue, DateTime.MaxValue);
+            var result = TicketOrder
+                .Select(t => new PaymentAnalyticsViewModel
+                {
+                    TotalAmount = t.Tickets.Select(t=>t.Price).Sum(),
+                    VipTicketAmount = t.Tickets.Where(t=>t.Type==Enums.TicketType.VIP).Select(p=>p.Price).Sum(),
+                    RegularTicketAmount = t.Tickets.Where(t => t.Type == Enums.TicketType.Regular).Select(p => p.Price).Sum(),
+                    MovieTitle = t.Tickets[0].Screening.Movie.Title,
+                    CustomerEmail = t.CustomerId.ToString(),
+                    Date=t.OrderDate,
+
+                }).ToList();
             return result;
         }
     }

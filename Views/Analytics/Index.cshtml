@@ -30,11 +30,12 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Net (<span>@Model.Analytics.Sum(t => t.TotalAmount - t.TotalAmount * 0.05)лв.</span>)</h5>
+                    <h5 class="card-title">Net (<span>@Model.Analytics.Sum(t => t.TotalAmount - t.TotalAmount * (decimal)0.05)лв.</span>)</h5>
                     <canvas id="NetChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
+        <a href="@Url.Action("Payments", "Analytics")">View More</a>
     </div>
 
     <div class="row mt-5">
@@ -173,7 +174,7 @@
                 data:[
     @foreach (var item in Model.Analytics)
     {
-        @: @(item.TotalAmount-item.TotalAmount*0.05),
+        @: @(item.TotalAmount - item.TotalAmount * (decimal)0.05),
     }
                 ],
                 fill:false,

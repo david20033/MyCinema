@@ -1,0 +1,42 @@
+﻿@model IPagedList<MyCinema.ViewModels.PaymentAnalyticsViewModel>
+@{
+    ViewBag.Title = "Payment Analytics";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Payment Analytics</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Movie Title</th>
+                <th>Customer Email</th>
+                <th>Total Amount</th>
+                <th>VIP Ticket Amount</th>
+                <th>Regular Ticket Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MovieTitle</td>
+                    <td>@item.CustomerEmail</td>
+                    <td>@item.TotalAmount?.ToString("C")</td>
+                    <td>@item.VipTicketAmount.ToString("C")</td>
+                    <td>@item.RegularTicketAmount.ToString("C")</td>
+                    <td>@item.Date?.ToString("dd-MM-yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                 new PagedListRenderOptions
+        {
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" }
+        })
+    </div>
+</div>
