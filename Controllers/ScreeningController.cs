@@ -51,5 +51,12 @@ namespace MyCinema.Controllers
             }
             return RedirectToAction("Index", "CreateScreening");
         }
+        public async Task<IActionResult> GetByDate(string movieId, string date)
+        {
+            Guid.TryParse(movieId, out Guid id);
+            DateTime.TryParse(date, out DateTime d);
+            var screenings = await _screeningService.GetMovieDetailsViewModelViewModelByMovieAndDate(id, d);
+            return PartialView("_ScreeningsPartial", screenings);
+        }
     }
 }

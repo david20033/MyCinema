@@ -6,5 +6,6 @@ namespace MyCinema.Repositories.IRepositories
     {
         Task AddScreeningInDbAsync(Screening screening);
         Task<Screening> GetScreeningByIdAsync(Guid id);
+        Task<List<Screening>> GetScreeningsByMovieAndDate(Guid movieId, DateTime date);
     }
 }

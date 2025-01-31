@@ -3,6 +3,7 @@ using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
 using MyCinema.Services.Mappers.IMappers;
 using MyCinema.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyCinema.Services
 {
@@ -43,6 +44,16 @@ namespace MyCinema.Services
 
             };
             await _screeningRepository.AddScreeningInDbAsync (screening);
+        }
+        public async Task<MovieDetailsViewModel> GetMovieDetailsViewModelViewModelByMovieAndDate(Guid movieId, DateTime date)
+        {
+            var screenings=await _screeningRepository.GetScreeningsByMovieAndDate(movieId, date);
+            var model = new MovieDetailsViewModel();
+            foreach (var s in screenings) 
+            {
+                model.Screenings.Add(s);    
+            }
+            return model;
         }
     }
 }

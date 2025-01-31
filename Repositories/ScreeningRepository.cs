@@ -50,5 +50,11 @@ namespace MyCinema.Repositories
                 .Include(s=>s.TheatreSalon)
                 .FirstOrDefaultAsync();
         }
+        public async Task<List<Screening>> GetScreeningsByMovieAndDate(Guid movieId, DateTime date)
+        {
+            return await _context.Screening
+                .Where(s => s.MovieId == movieId && s.StartTime.Date == date.Date)
+                .ToListAsync();
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace MyCinema.ViewModels
 {
     public class MovieDetailsViewModel
     {
+        public Guid? Id { get; set; }
         public bool? Adult { get; set; }
         public string? Backdrop_path { get; set; }
         public decimal? Budget { get; set; }
@@ -29,5 +30,6 @@ namespace MyCinema.ViewModels
         public string? Bellongs_to_collection { get; set; }
         public List<string>? Cast { get; set; }
         public List<string>? Directors { get; set; }
+        public List<Screening> Screenings { get; set; } = [];
     }
 }

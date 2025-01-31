@@ -1,0 +1,13 @@
+﻿@if(Model.Screenings.Count!=0){
+        @foreach (var screening in Model.Screenings)
+        {
+            <a href="@Url.Action("SelectTicket","Ticket", new {id = screening.Id})" class="btn btn-outline-primary">
+                @screening.StartTime.ToString("HH:mm")
+            </a>
+        }
+}
+else{
+
+    <p class="text-muted">No screenings available for this date.</p>
+
+}

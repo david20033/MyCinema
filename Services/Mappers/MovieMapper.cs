@@ -102,6 +102,7 @@ namespace MyCinema.Services.Mappers
             var CreditsDTO = MovieWithCreditsDTO?.Credits;
             return new MovieDetailsViewModel
             {
+                Id = Movie.Id,
                 Adult = Movie.Adult ?? MovieDTO.adult,
                 Backdrop_path = Movie.Backdrop_path ?? MovieDTO.backdrop_path,
                 Budget = Movie.Budget ?? MovieDTO.budget,

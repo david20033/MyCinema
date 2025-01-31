@@ -11,7 +11,7 @@ namespace MyCinema.ViewModels
         public int? RunTime { get; set; }
         public string? Poster_path { get; set; }
         public bool? isAdult { get; set; }
-        public List<Screening> Screenings { get; set; }
+        public List<Screening> Screenings { get; set; } = [];
         
     }
 }
