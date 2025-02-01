@@ -117,6 +117,7 @@ namespace MyCinema.Services
         public async Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id)
         {
             var order = await _ticketRepository.GetTicketOrderByIdAsync(id);
+            if (order.CustomerId != Guid.Empty) return null;
             var Movie = order.Tickets[0].Screening.Movie;
             var Screening = order.Tickets[0].Screening;
             var model = new ConfirmOrderViewModel

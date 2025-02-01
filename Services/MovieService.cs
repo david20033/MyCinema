@@ -157,7 +157,7 @@ namespace MyCinema.Services
             var movieDTO = new MovieNowPlayingDTO();
             foreach (var m in movies)
             {
-                list.Add(_movieMapper.MapToMovieListViewModel(m, movieDTO));
+                list.Add(await _movieMapper.MapToMovieListViewModel(m, movieDTO));
             }
             return list;
         }
@@ -168,7 +168,7 @@ namespace MyCinema.Services
             var movieEntity = new Movie();
             foreach (var m in movies)
             {
-                list.Add(_movieMapper.MapToMovieListViewModel(movieEntity, m));
+                list.Add(await _movieMapper.MapToMovieListViewModel(movieEntity, m));
             }
             return list;
         }

@@ -33,7 +33,8 @@ namespace MyCinema.Controllers
                 var TicketId = await _ticketService.AddTicketOwnershipInDbAsync(model);
                 return RedirectToAction("SelectSeats", new { Id = TicketId });
             }
-            return View(model);
+            var SelectTicketViewModel = await _ticketService.GetSelectTicketViewModel(model.ScreeningId);
+            return View(SelectTicketViewModel);
         }
         public async Task<IActionResult> SelectSeats(Guid id)
         {
@@ -55,6 +56,10 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> ConfirmOrder(Guid Id) 
         {
             var model = await _ticketService.GetConfirmOrderViewModel(Id);
+            if (model == null)
+            {
+                return RedirectToAction("Index", "Movie");
+            }
             if (model.RegularTicketSeatsCoords.Contains("-1") || model.VipTicketSeatsCoords.Contains("-1"))
             {
                 return RedirectToAction("SelectSeats", new { id = Id });
@@ -82,11 +87,11 @@ namespace MyCinema.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _ticketService.ConfirmTicketOrder(OrderId, userId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Movie");
         }
-        public IActionResult Cancel()
+        public IActionResult Cancel([FromQuery]Guid OrderId)
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("ConfirmOrder" , new {Id=OrderId });
         }
     }
 }

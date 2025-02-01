@@ -132,15 +132,21 @@ namespace MyCinema.Services.Mappers
                 Directors = Movie.Crew ?? CreditsDTO?.crew?.Where(m => m?.job == "Director")?.Select(p => p?.name)?.Take(5)?.ToList() ?? new List<string>(),
             };
         }
-        public MovieListViewModel MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO)
+        public async Task<MovieListViewModel> MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO)
         {
+            string lang=null;
+            if (movieDTO?.original_language != null)
+            {
+                var result =await _languageRepository.GetLanguageNameByIsoCodeAsync(movieDTO.original_language);
+                lang = result.English_Name;
+            }
             return new MovieListViewModel
             {
                 id = movie.Id != Guid.Empty ? movie.Id.ToString() : movieDTO.id != 0 ? movieDTO.id.ToString() : null,
                 moviedbId = movie.moviedb_id ?? movieDTO.id,
                 Title = movie.Title ?? movieDTO.title,
                 Release_date = movie.Release_date ?? movieDTO.release_date,
-                Original_language = movie.Original_language?.English_Name ?? movieDTO.original_language,
+                Original_language = movie.Original_language?.English_Name ?? lang,
                 Adult = movie.Adult ?? movieDTO.adult,
                 Vote_average = movie.Vote_avarage ?? (decimal?)movieDTO.vote_avarage,
                 Vote_count = movie.Vote_count ?? movieDTO.vote_count

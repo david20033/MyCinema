@@ -9,6 +9,6 @@ namespace MyCinema.Services.Mappers.IMappers
     {
         Task<Movie> MapMovieDTOToEntity(MovieResponseDTO movieDTO, List<string> cast, List<string> crew);
         MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie, MovieWithCreditsDTO MovieDTO);
-        MovieListViewModel MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO);
+        Task<MovieListViewModel> MapToMovieListViewModel(Movie movie, MovieNowPlayingDTO movieDTO);
     }
 }
