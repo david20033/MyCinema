@@ -19,11 +19,6 @@ namespace MyCinema.Controllers
         {
             _adminService = adminService;
         }
-        //public async Task<IActionResult> Index()
-        //{
-
-        //}
-       
        
         public async Task<IActionResult> InsertLanguagesInDb()
         {
@@ -33,6 +28,11 @@ namespace MyCinema.Controllers
         public async Task<IActionResult> InsertGenresInDb()
         {
             await _adminService.InsertGenresInDB();
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> SeedDb()
+        {
+            await _adminService.SeedDb();
             return RedirectToAction("Index");
         }
     }

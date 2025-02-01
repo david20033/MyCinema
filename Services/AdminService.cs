@@ -14,11 +14,13 @@ namespace MyCinema.Services
     public class AdminService : IAdminService
     {
         private readonly IApiService _apiService;
+        private readonly IMovieService _movieService;
         private readonly MyCinemaDBContext _context;
-        public AdminService (MyCinemaDBContext context, IApiService apiService)
+        public AdminService (MyCinemaDBContext context, IApiService apiService, IMovieService movieService)
         {
             _context = context;
             _apiService = apiService;
+            _movieService= movieService;
         }
         public async Task InsertLanguagesInDB()
         {
@@ -48,6 +50,17 @@ namespace MyCinema.Services
             }).ToList();
             await _context.Genre.AddRangeAsync(GenresList);
             await _context.SaveChangesAsync();
+        }
+        public async Task SeedDb()
+        {
+            try
+            {
+                await DbInitializer.SeedAsync(_context, _apiService, _movieService);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

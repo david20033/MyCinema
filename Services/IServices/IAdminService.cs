@@ -7,5 +7,6 @@ namespace MyCinema.Services.IServices
     {
         Task InsertLanguagesInDB();
         Task InsertGenresInDB();
+        Task SeedDb();
     }
 }
