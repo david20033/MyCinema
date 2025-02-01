@@ -34,22 +34,24 @@ namespace MyCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateScreening(AddScreeningViewModel model)
         {
-            foreach (var state in ModelState)
-            {
-                if (state.Value.Errors.Count > 0)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Key: {state.Key}, Error: {error.ErrorMessage}");
-                    }
-                }
-            }
+            //foreach (var state in ModelState)
+            //{
+            //    if (state.Value.Errors.Count > 0)
+            //    {
+            //        foreach (var error in state.Value.Errors)
+            //        {
+            //            Console.WriteLine($"Key: {state.Key}, Error: {error.ErrorMessage}");
+            //        }
+            //    }
+            //}
             if (ModelState.IsValid)
             {
                 await _screeningService.AddScreeningInDbAsync(model);
                 return RedirectToAction("Index", "Screening");
             }
-            return RedirectToAction("Index", "CreateScreening");
+            model.TheatreSalons = await _screeningService.GetSalonsAsync();
+            model.Movies = await _screeningService.GetMoviesAsync();
+            return View(model);
         }
         public async Task<IActionResult> GetByDate(string movieId, string date)
         {

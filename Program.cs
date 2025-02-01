@@ -17,7 +17,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<MyCinemaDBContext>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+        .AddMvcOptions(options =>
+        {
+            options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+                _ => "The field is required.");
+        });
 builder.Services.AddScoped<EnumServices>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IAdminService, AdminService>();

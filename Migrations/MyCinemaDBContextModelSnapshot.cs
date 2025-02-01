@@ -252,7 +252,7 @@ namespace MyCinema.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genre");
+                    b.ToTable("Genre", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.Language", b =>
@@ -276,7 +276,7 @@ namespace MyCinema.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language");
+                    b.ToTable("Language", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.Movie", b =>
@@ -369,7 +369,7 @@ namespace MyCinema.Migrations
 
                     b.HasIndex("Original_languageId");
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movie", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.MovieGenre", b =>
@@ -387,7 +387,7 @@ namespace MyCinema.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("MovieGenre");
+                    b.ToTable("MovieGenre", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.MoviePhoto", b =>
@@ -411,7 +411,7 @@ namespace MyCinema.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("MoviePhoto");
+                    b.ToTable("MoviePhoto", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.Screening", b =>
@@ -448,7 +448,7 @@ namespace MyCinema.Migrations
 
                     b.HasIndex("TheatreSalonId");
 
-                    b.ToTable("Screening");
+                    b.ToTable("Screening", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.TheatreSalon", b =>
@@ -478,7 +478,7 @@ namespace MyCinema.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TheatreSalon");
+                    b.ToTable("TheatreSalon", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.Ticket", b =>
@@ -510,7 +510,7 @@ namespace MyCinema.Migrations
 
                     b.HasIndex("TicketOrderId");
 
-                    b.ToTable("Ticket");
+                    b.ToTable("Ticket", (string)null);
                 });
 
             modelBuilder.Entity("MyCinema.Data.TicketOrder", b =>
@@ -529,7 +529,7 @@ namespace MyCinema.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TicketOrder");
+                    b.ToTable("TicketOrder", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

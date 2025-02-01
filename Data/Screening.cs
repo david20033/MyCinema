@@ -1,4 +1,6 @@
-﻿namespace MyCinema.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MyCinema.Data
 {
     public class Screening
     {
@@ -6,7 +8,6 @@
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public TimeSpan Duration { get; set; }
-
         public Guid TheatreSalonId { get; set; }
         public TheatreSalon TheatreSalon { get; set; }
 
