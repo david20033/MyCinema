@@ -64,5 +64,9 @@ namespace MyCinema.Repositories
             }
             return true;
         }
+        public async Task<List<AppSetting>> GetAppSettingsAsync()
+        {
+            return await _context.AppSetting.ToListAsync();
+        }
     }
 }

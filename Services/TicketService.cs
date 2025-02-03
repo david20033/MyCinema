@@ -19,10 +19,12 @@ namespace MyCinema.Services
         {
             _ticketRepository = ticketRepository;
             _screeningRepository = screeningRepository;
-            _stripeService = stripeService;        }
+            _stripeService = stripeService;        
+        }
         public async Task<SelectTicketViewModel> GetSelectTicketViewModel(Guid ScreeningId)
         {
             var Screening = await _screeningRepository.GetScreeningByIdAsync(ScreeningId);
+            var Settings = await _ticketRepository.GetAppSettingsAsync();
             return new SelectTicketViewModel
             {
                 PosterPath=Screening.Movie.Poster_path,
@@ -31,8 +33,8 @@ namespace MyCinema.Services
                 Genres = Screening.Movie.Genres.Select(g=>g.Genre.Name).ToList(),
                 SalonNumber = Screening.TheatreSalon.SalonNumber,
                 ShowTime = Screening.StartTime,
-                RegularTicketPrice = 12,
-                VipTicketPrice = 15,
+                RegularTicketPrice = int.Parse(Settings.Where(k=>k.Key== "RegularTicketPrice").FirstOrDefault().Value),
+                VipTicketPrice = int.Parse(Settings.Where(k => k.Key == "VipTicketPrice").FirstOrDefault().Value),
                 ScreeningId = ScreeningId
             };
         }
@@ -117,6 +119,7 @@ namespace MyCinema.Services
         public async Task<ConfirmOrderViewModel> GetConfirmOrderViewModel(Guid id)
         {
             var order = await _ticketRepository.GetTicketOrderByIdAsync(id);
+            var Settings = await _ticketRepository.GetAppSettingsAsync();
             if (order.CustomerId != Guid.Empty) return null;
             var Movie = order.Tickets[0].Screening.Movie;
             var Screening = order.Tickets[0].Screening;
@@ -130,8 +133,8 @@ namespace MyCinema.Services
                 Language = Movie.Original_language.English_Name,
                 Genres = Movie.Genres.Select(g => g.Genre.Name).ToList(),
                 SalonNumber = Screening.TheatreSalon.SalonNumber,
-                RegularTicketPrice = 12,
-                VipTicketPrice = 15,
+                RegularTicketPrice = int.Parse(Settings.Where(k => k.Key == "RegularTicketPrice").FirstOrDefault().Value),
+                VipTicketPrice = int.Parse(Settings.Where(k => k.Key == "VipTicketPrice").FirstOrDefault().Value),
                 RegularTicketSeatsCoords = order.Tickets.Where(t => t.Type == Enums.TicketType.Regular).Select(t => t.SeatNumber).ToList(),
                 VipTicketSeatsCoords = order.Tickets.Where(t => t.Type == Enums.TicketType.VIP).Select(t => t.SeatNumber).ToList(),
                 TicketOrderId = id

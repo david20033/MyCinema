@@ -19,7 +19,19 @@ namespace MyCinema.Controllers
         {
             _adminService = adminService;
         }
-       
+        public async Task<IActionResult> Index()
+        {
+            var settings =await _adminService.GetAppSettingsAsync();
+            return View(settings);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(string key, string value)
+        {
+            await _adminService.UpdateSetting(key,value);
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> InsertLanguagesInDb()
         {
             await _adminService.InsertLanguagesInDB();

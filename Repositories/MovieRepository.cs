@@ -75,25 +75,39 @@ namespace MyCinema.Repositories
         {
             var currentTime = DateTime.Now;
 
-            var movies = await _context.Movie
-                    .Where(m => m.Screenings.Any(s => s.StartTime > currentTime)) 
-                    .Include(m => m.Screenings.Where(s => s.StartTime > currentTime)) 
-                    .Include(m => m.Genres)
-                    .ThenInclude(g => g.Genre)
-                    .ToListAsync();
+            var queryable = _context.Movie
+                .Where(m => m.Screenings.Any(s => s.StartTime > currentTime)) 
+                .AsQueryable();
 
-            foreach (var movie in movies)
-            {
-                foreach (var screening in movie.Screenings)
-                {
-                    screening.EndTime = screening.StartTime.Add(screening.Duration);
-                }
-            }
             if (query.Date != null)
             {
-                movies = movies.Where(m => m.Screenings.Any(s => s.StartTime.Date == query.Date.Value.Date)).ToList();
+                var targetDate = query.Date.Value.Date;
+                queryable = queryable.Where(m => m.Screenings.Any(s => s.StartTime.Date == targetDate));
             }
+
+            var movies = await queryable
+                .Select(m => new Movie
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Overview = m.Overview,
+                    Runtime = m.Runtime,
+                    Poster_path = m.Poster_path,
+                    Adult = m.Adult,
+                    Screenings = m.Screenings
+                        .Where(s => s.StartTime > currentTime)  
+                        .OrderBy(s => s.StartTime)
+                        .Select(s => new Screening
+                        {
+                            Id = s.Id,
+                            StartTime = s.StartTime
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
+
             return movies;
         }
+
     }
 }

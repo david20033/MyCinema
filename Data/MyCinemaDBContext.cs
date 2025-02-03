@@ -19,6 +19,7 @@ namespace MyCinema.Data
         public virtual DbSet<Screening> Screening { get; set; }
         public virtual DbSet<TicketOrder> TicketOrder { get; set; }
         public virtual DbSet<Ticket> Ticket { get; set; }
+        public DbSet<AppSetting> AppSetting { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

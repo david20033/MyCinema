@@ -16,11 +16,36 @@ namespace MyCinema.Services
         private readonly IApiService _apiService;
         private readonly IMovieService _movieService;
         private readonly MyCinemaDBContext _context;
-        public AdminService (MyCinemaDBContext context, IApiService apiService, IMovieService movieService)
+        private readonly ISalonService _salonService;
+        private readonly IScreeningService _screeningService;
+        public AdminService (MyCinemaDBContext context, IApiService apiService, IMovieService movieService, ISalonService salonService, IScreeningService screeningService)
         {
             _context = context;
             _apiService = apiService;
-            _movieService= movieService;
+            _movieService = movieService;
+            _salonService = salonService;
+            _screeningService = screeningService;
+        }
+        public async Task<List<AppSetting>> GetAppSettingsAsync()
+        {
+            return await _context.AppSetting.ToListAsync();
+        }
+        public async Task UpdateSetting(string key, string value)
+        {
+            var setting = _context.AppSetting.FirstOrDefault(s => s.Key == key);
+            if (setting == null)
+            {
+                return;
+            }
+            if(setting.Key== "VipTicketPrice"||setting.Key== "RegularTicketPrice") 
+            {
+                if (int.Parse(value) <= 0)
+                {
+                    return;
+                }
+            }
+            setting.Value = value;
+            await _context.SaveChangesAsync();
         }
         public async Task InsertLanguagesInDB()
         {
@@ -55,7 +80,7 @@ namespace MyCinema.Services
         {
             try
             {
-                await DbInitializer.SeedAsync(_context, _apiService, _movieService);
+                await DbInitializer.SeedAsync(_context, _apiService,_movieService,_salonService,this,_screeningService);
             }
             catch (Exception ex)
             {
