@@ -44,41 +44,46 @@ namespace MyCinema.Services
         public async Task<List<SalonMovieTimelineViewModel>> GetSalonMovieTimelineViewModels(QueryObject query)
         {
             var salons = await _salonRepository.GetTheatreSalonsAsync();
-            var cinemaOpeningTime = TimeSpan.FromHours(9);
-            var cinemaClosingTime = TimeSpan.FromHours(23);
+            var cinemaOpeningTime = TimeSpan.FromHours(8);
+            var cinemaClosingTime = TimeSpan.FromHours(17);
             var totalDayDuration = cinemaClosingTime - cinemaOpeningTime;
             List<SalonMovieTimelineViewModel> result = [];
+            DateTime date;
+            if (query.Date != null)
+            {
+                date = query.Date.Value.Date;
+            }
+            else
+            {
+                date = DateTime.Now.Date;
+            }
             foreach (var salon in salons) 
             {
-                var screenings = salon.Screenings;
-                var model = new SalonMovieTimelineViewModel
+                var screenings = salon.Screenings.Where(s => s.StartTime.Date == date).ToList();
+                int salonNumber = salon.SalonNumber;
+                if (screenings == null || screenings.Count == 0)
                 {
-                    SalonNumber = salon.SalonNumber
-                };
-                if(screenings == null || screenings.Count == 0)
-                {
-                    result.Add(model);
+
+                    result.Add(new SalonMovieTimelineViewModel
+                    {
+                        SalonNumber = salonNumber,
+                    });
                 }
                 foreach (var screen in screenings) 
                 {
-                    if (query.Date != null)
+                    result.Add(new SalonMovieTimelineViewModel
                     {
-                        if (screen.StartTime.Date != query.Date.Value.Date)
-                        {
-                            result.Add(model);
-                            break;
-                        }
-                    }
-                        model.MovieStartTime = screen.StartTime;
-                        model.MovieEndTime = screen.EndTime;
-                        model.Left = (int)Math.Floor(((screen.StartTime.TimeOfDay - cinemaOpeningTime).TotalMinutes/ totalDayDuration.TotalMinutes)*100);
-                        model.Width =(int)Math.Floor((decimal)((screen.Movie.Runtime/totalDayDuration.TotalMinutes)*100));
-                        model.MovieId = screen.MovieId;
-                        model.SalonId = salon.Id;
-                        model.Title = screen.Movie.Title;
-                        model.SalonCapacity = salon.Capacity;
-                        model.ReservedSeatsCount = screen.ReservedSeats.Count;
-                    result.Add(model);
+                        SalonNumber=salonNumber,
+                        MovieStartTime = screen.StartTime,
+                        MovieEndTime = screen.EndTime,
+                        Left = (int)Math.Floor(((screen.StartTime.TimeOfDay - cinemaOpeningTime).TotalMinutes / totalDayDuration.TotalMinutes) * 100),
+                        Width = (int)Math.Floor((decimal)((screen.Movie.Runtime / totalDayDuration.TotalMinutes) * 100)),
+                        MovieId = screen.MovieId,
+                        SalonId = salon.Id,
+                        Title = screen.Movie.Title,
+                        SalonCapacity = salon.Capacity,
+                        ReservedSeatsCount = screen.ReservedSeats.Count,
+                    });
                 }
             }
             return result;

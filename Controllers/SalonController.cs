@@ -61,8 +61,8 @@ namespace MyCinema.Controllers
                 query.Date = DateTime.Now;
             }
             var model = await _salonService.GetSalonMovieTimelineViewModels(query);
-            ViewBag.CinemaOpenTime = TimeSpan.FromHours(9);
-            ViewBag.CinemaClosingTime = TimeSpan.FromHours(23);
+            ViewBag.CinemaOpenTime = TimeSpan.FromHours(8);
+            ViewBag.CinemaClosingTime = TimeSpan.FromHours(17);
             return View(model);
         }
     }
