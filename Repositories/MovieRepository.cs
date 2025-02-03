@@ -74,18 +74,10 @@ namespace MyCinema.Repositories
         public async Task<List<Movie>> GetAllUnprojectedScreenings(QueryObject query)
         {
             var currentTime = DateTime.Now;
+            var targetDate = query.Date?.Date ?? currentTime.Date;
 
-            var queryable = _context.Movie
-                .Where(m => m.Screenings.Any(s => s.StartTime > currentTime)) 
-                .AsQueryable();
-
-            if (query.Date != null)
-            {
-                var targetDate = query.Date.Value.Date;
-                queryable = queryable.Where(m => m.Screenings.Any(s => s.StartTime.Date == targetDate));
-            }
-
-            var movies = await queryable
+            var movies = await _context.Movie
+                .Where(m => m.Screenings.Any(s => s.StartTime.Date == targetDate)) 
                 .Select(m => new Movie
                 {
                     Id = m.Id,
@@ -94,8 +86,9 @@ namespace MyCinema.Repositories
                     Runtime = m.Runtime,
                     Poster_path = m.Poster_path,
                     Adult = m.Adult,
+                    Genres = m.Genres.Select(g=>new MovieGenre { Genre=g.Genre}).ToList(),
                     Screenings = m.Screenings
-                        .Where(s => s.StartTime > currentTime)  
+                        .Where(s => s.StartTime.Date == targetDate)  
                         .OrderBy(s => s.StartTime)
                         .Select(s => new Screening
                         {
