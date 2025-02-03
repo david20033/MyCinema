@@ -12,5 +12,7 @@
         public string? Title { get; set; }
         public int SalonCapacity { get; set; }
         public int ReservedSeatsCount { get; set; }
+        public TimeSpan CinemaOpenTime{ get; set; }
+        public TimeSpan CinemaCloseTime { get; set; }
     }
 }

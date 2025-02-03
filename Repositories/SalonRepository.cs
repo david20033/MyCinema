@@ -32,5 +32,16 @@ namespace MyCinema.Repositories
         {
             return await _context.TheatreSalon.Where(s=>s.Id == id).FirstOrDefaultAsync();
         }
+        public async Task<TimeSpan> GetCinemaOpenTimeAsync()
+        {
+            var result = await _context.AppSetting.Where(k => k.Key == "CinemaOpenHour").FirstOrDefaultAsync();
+            return TimeSpan.Parse(result.Value);
+
+        }
+        public async Task<TimeSpan> GetCinemaCloseTimeAsync()
+        {
+            var result = await _context.AppSetting.Where(k => k.Key == "CinemaCloseHour").FirstOrDefaultAsync();
+            return TimeSpan.Parse(result.Value);
+        }
     }
 }

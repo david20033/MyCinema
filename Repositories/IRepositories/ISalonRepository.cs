@@ -10,5 +10,7 @@ namespace MyCinema.Repositories.IRepositories
         public Task<List<TheatreSalon>> GetTheatreSalonsAsync();
 
         public  Task<TheatreSalon> GetTheatreSalonByIdAsync(Guid id);
+        Task<TimeSpan> GetCinemaOpenTimeAsync();
+        Task<TimeSpan> GetCinemaCloseTimeAsync();
     }
 }

@@ -123,7 +123,7 @@ namespace MyCinema.Data
                         TicketPrice = 12,
                     }
                     );
-                time = time.Add(movieDuration);
+                time = time.Add(movieDuration).AddMinutes(30);
                 if (time >= DateTime.Today.AddDays(CurrentAddedDays).AddHours(double.Parse(cinemaCloseTime)))
                 {
                     time=time.AddDays(1).Date;

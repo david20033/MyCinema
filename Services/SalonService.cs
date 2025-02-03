@@ -1,4 +1,5 @@
-﻿using MyCinema.Data;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MyCinema.Data;
 using MyCinema.Helpers;
 using MyCinema.Repositories.IRepositories;
 using MyCinema.Services.IServices;
@@ -44,8 +45,8 @@ namespace MyCinema.Services
         public async Task<List<SalonMovieTimelineViewModel>> GetSalonMovieTimelineViewModels(QueryObject query)
         {
             var salons = await _salonRepository.GetTheatreSalonsAsync();
-            var cinemaOpeningTime = TimeSpan.FromHours(8);
-            var cinemaClosingTime = TimeSpan.FromHours(17);
+            var cinemaOpeningTime = await _salonRepository.GetCinemaOpenTimeAsync();
+            var cinemaClosingTime = await _salonRepository.GetCinemaCloseTimeAsync();
             var totalDayDuration = cinemaClosingTime - cinemaOpeningTime;
             List<SalonMovieTimelineViewModel> result = [];
             DateTime date;
@@ -67,6 +68,8 @@ namespace MyCinema.Services
                     result.Add(new SalonMovieTimelineViewModel
                     {
                         SalonNumber = salonNumber,
+                        CinemaOpenTime = cinemaOpeningTime,
+                        CinemaCloseTime = cinemaClosingTime,
                     });
                 }
                 foreach (var screen in screenings) 
@@ -83,6 +86,8 @@ namespace MyCinema.Services
                         Title = screen.Movie.Title,
                         SalonCapacity = salon.Capacity,
                         ReservedSeatsCount = screen.ReservedSeats.Count,
+                        CinemaOpenTime = cinemaOpeningTime,
+                        CinemaCloseTime =cinemaClosingTime,
                     });
                 }
             }

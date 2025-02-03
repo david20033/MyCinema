@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using MyCinema.Data;
 using MyCinema.Helpers;
 using MyCinema.Services;
@@ -61,8 +62,14 @@ namespace MyCinema.Controllers
                 query.Date = DateTime.Now;
             }
             var model = await _salonService.GetSalonMovieTimelineViewModels(query);
-            ViewBag.CinemaOpenTime = TimeSpan.FromHours(8);
-            ViewBag.CinemaClosingTime = TimeSpan.FromHours(17);
+            if (model == null || model.Count == 0)
+            {
+                return NotFound();
+            }
+
+            ViewBag.CinemaOpenTime = model[0].CinemaOpenTime < model[0].CinemaCloseTime ? model[0].CinemaOpenTime : model[0].CinemaCloseTime;
+            ViewBag.CinemaCloseTime = model[0].CinemaOpenTime > model[0].CinemaCloseTime ? model[0].CinemaOpenTime : model[0].CinemaCloseTime;
+
             return View(model);
         }
     }
