@@ -35,3 +35,11 @@
         }
     </tbody>
 </table>
+
+<div class="alert alert-warning mt-4" role="alert">
+    <strong>Warning:</strong> Seeding the database may take some time.
+</div>
+
+<form asp-action="SeedDb" method="post">
+    <button type="submit" class="btn btn-danger">Seed Database</button>
+</form>

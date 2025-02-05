@@ -24,6 +24,7 @@ namespace MyCinema.Repositories
         public async Task<List<TheatreSalon>> GetTheatreSalonsAsync()
         {
             return await _context.TheatreSalon
+                .OrderBy(x=>x.SalonNumber)
                 .Include(ts=>ts.Screenings)
                 .ThenInclude(ts=>ts.Movie)
                 .ToListAsync();

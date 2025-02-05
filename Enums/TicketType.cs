@@ -3,7 +3,6 @@
     public enum TicketType
     {
         Regular,
-        Reduced,
         VIP
     }
 }

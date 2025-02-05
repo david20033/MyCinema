@@ -18,13 +18,17 @@ namespace MyCinema.Services
         private readonly MyCinemaDBContext _context;
         private readonly ISalonService _salonService;
         private readonly IScreeningService _screeningService;
-        public AdminService (MyCinemaDBContext context, IApiService apiService, IMovieService movieService, ISalonService salonService, IScreeningService screeningService)
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ITicketService _ticketService;
+        public AdminService (MyCinemaDBContext context, IApiService apiService, IMovieService movieService, ISalonService salonService, IScreeningService screeningService, IServiceProvider serviceProvider, ITicketService ticketService)
         {
             _context = context;
             _apiService = apiService;
             _movieService = movieService;
             _salonService = salonService;
             _screeningService = screeningService;
+            _serviceProvider = serviceProvider;
+            _ticketService = ticketService;
         }
         public async Task<List<AppSetting>> GetAppSettingsAsync()
         {
@@ -80,7 +84,7 @@ namespace MyCinema.Services
         {
             try
             {
-                await DbInitializer.SeedAsync(_context, _apiService,_movieService,_salonService,this,_screeningService);
+                await DbInitializer.SeedAsync(_context, _apiService,_movieService,_salonService,this,_screeningService,_serviceProvider,_ticketService);
             }
             catch (Exception ex)
             {

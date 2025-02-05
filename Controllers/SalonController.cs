@@ -68,7 +68,7 @@ namespace MyCinema.Controllers
             }
 
             ViewBag.CinemaOpenTime = model[0].CinemaOpenTime < model[0].CinemaCloseTime ? model[0].CinemaOpenTime : model[0].CinemaCloseTime;
-            ViewBag.CinemaCloseTime = model[0].CinemaOpenTime > model[0].CinemaCloseTime ? model[0].CinemaOpenTime : model[0].CinemaCloseTime;
+            ViewBag.CinemaCloseTime = (model[0].CinemaOpenTime > model[0].CinemaCloseTime? model[0].CinemaOpenTime: model[0].CinemaCloseTime).Add(TimeSpan.FromHours(1));
 
             return View(model);
         }

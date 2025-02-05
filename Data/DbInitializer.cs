@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
 
@@ -7,9 +9,37 @@ namespace MyCinema.Data
 {
     public class DbInitializer
     {
-        public static async Task SeedAsync(MyCinemaDBContext context, IApiService apiService, IMovieService movieService, ISalonService salonService, IAdminService adminService, IScreeningService screeningService)
+        public static async Task SeedAsync(MyCinemaDBContext context, IApiService apiService, IMovieService movieService, ISalonService salonService, IAdminService adminService, IScreeningService screeningService, IServiceProvider serviceProvider, ITicketService ticketService)
         {
             await context.Database.MigrateAsync();
+            //users
+            if (context.Users.Count() == 1)
+            {
+                var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                for(int i = 1; i <= 5; i++)
+                {
+
+                string username = $"user{i}@example.com";
+
+                if (await userManager.FindByNameAsync(username) == null)
+                {
+                        string password = "123456a";
+                    var user = new IdentityUser
+                    {
+                        UserName = username,
+                        Email = username
+                    };
+
+                    var result = await userManager.CreateAsync(user, password);
+
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                    }
+                }
+                }
+                await context.SaveChangesAsync();
+            }
             if (!context.AppSetting.Any())
             {
                 context.AppSetting.AddRange(
@@ -56,6 +86,7 @@ namespace MyCinema.Data
                 var movieIds = new List<int>();
                 movies.ForEach(t => movieIds.Add(t.id ?? 0));
                 await movieService.AddMovieRangeInDataBaseByIds(movieIds);
+                await context.SaveChangesAsync();
             }
             //TheatreSalon
             if (!context.TheatreSalon.Any())
@@ -70,7 +101,6 @@ namespace MyCinema.Data
                         Columns = 15,
                         isVip = true,
                     },
-                    //"0,5","1,5","2,5","2,6","2,7","2,8","2,9","1,9","0,9","0,8","0,7","0,6","1,6","1,7","1,8"
                     "[\"0,5\",\"1,5\",\"2,5\",\"2,6\",\"2,7\",\"2,8\",\"2,9\",\"1,9\",\"0,9\",\"0,8\",\"0,7\",\"0,6\",\"1,6\",\"1,7\",\"1,8\"]"
                     );
                 await salonService.AddSalonAsync
@@ -85,6 +115,7 @@ namespace MyCinema.Data
                     },
                     ""
                     );
+                await context.SaveChangesAsync();
             }
             //Screening
             if (!context.Screening.Any())
@@ -93,6 +124,66 @@ namespace MyCinema.Data
                 for (int i = 0; i < salons.Count; i++)
                 {
                     await SeedSalonWithScreenings(movieService, salonService, adminService,screeningService,i);
+                }
+                await context.SaveChangesAsync();
+            }
+            //Ticket, TicketOrder
+            if (!context.TicketOrder.Any())
+            {
+                var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var Screenings = await context.Screening.Include(s=>s.TheatreSalon).ToListAsync();
+                var settings = await adminService.GetAppSettingsAsync();
+                var Users = await userManager.Users.ToListAsync();
+                var Price1 = settings.Where(k => k.Key == "RegularTicketPrice").FirstOrDefault()?.Value;
+                var Price2 = settings.Where(k => k.Key == "VipTicketPrice").FirstOrDefault()?.Value;
+                foreach (var screen in Screenings)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var randomUser = Users[RandomNumberGenerator.GetInt32(0, Users.Count)];
+                        var ticketOrder = new TicketOrder
+                        {
+                            Id = Guid.NewGuid(),
+                            OrderDate = DateTime.Now,
+                        };
+                        var Salon = screen.TheatreSalon;
+                        await context.TicketOrder.AddAsync(ticketOrder);
+                        int to = RandomNumberGenerator.GetInt32(1, 8);
+                        for (int j = 0; j < to;  j++)
+                        {
+                            int randomType = RandomNumberGenerator.GetInt32(0, 2);
+                            var seatCoords = GenerateSalonCoords(Salon);
+                            while (Salon.EmptySeatsCoords.Contains(seatCoords))
+                            {
+                                seatCoords = GenerateSalonCoords(Salon);
+                            }
+                            decimal price = 0;
+                            if(randomType == 1)
+                            {
+                                price = decimal.Parse(Price2);
+                            }
+                            else
+                            {
+                                price = decimal.Parse(Price1);
+                            }
+                            var ticket = new Ticket
+                            {
+                                Id = Guid.NewGuid(),
+                                Price = price,
+                                Type = (Enums.TicketType)randomType,
+                                SeatNumber = seatCoords,
+                                Screening = screen,
+                                ScreeningId = screen.Id,
+                                TicketOrder = ticketOrder,
+                                TicketOrderId = ticketOrder.Id
+                            };
+                            screen.ReservedSeats.Add(seatCoords);
+                            ticketOrder.Tickets.Add(ticket);
+                            await context.Ticket.AddAsync(ticket);
+                        }
+                        await context.SaveChangesAsync();
+                        await ticketService.ConfirmTicketOrder(ticketOrder.Id, randomUser.Id);
+                    }
                 }
             }
 
@@ -106,8 +197,8 @@ namespace MyCinema.Data
             var cinemaOpenTime = settings.Where(k => k.Key == "CinemaOpenHour").FirstOrDefault()?.Value;
             var cinemaCloseTime = settings.Where(k => k.Key == "CinemaCloseHour").FirstOrDefault()?.Value;
             int CurrentAddedDays = 1;
-            var time = DateTime.Today.AddDays(1).AddHours(double.Parse(cinemaOpenTime));
-            var maxTime = DateTime.Today.AddDays(7).AddHours(double.Parse(cinemaCloseTime));
+            var time = DateTime.Today.AddDays(1).AddHours(TimeSpan.Parse(cinemaOpenTime).Hours);
+            var maxTime = DateTime.Today.AddDays(7).AddHours(TimeSpan.Parse(cinemaCloseTime).Hours);
             while (time <= maxTime)
             {
                 int index = RandomNumberGenerator.GetInt32(0, movies.Count);
@@ -124,13 +215,24 @@ namespace MyCinema.Data
                     }
                     );
                 time = time.Add(movieDuration).AddMinutes(30);
-                if (time >= DateTime.Today.AddDays(CurrentAddedDays).AddHours(double.Parse(cinemaCloseTime)))
+                var to = DateTime.Today.AddDays(CurrentAddedDays).AddHours(TimeSpan.Parse(cinemaCloseTime).Hours); //debugging
+                if (time >=to)
                 {
+                    if (time.Date != to.Date)
+                    {
+                        time = new DateTime(to.Year,to.Month,to.Day);
+                    }
                     time=time.AddDays(1).Date;
-                    time = time.AddHours(double.Parse(cinemaOpenTime));
+                    time = time.AddHours(TimeSpan.Parse(cinemaOpenTime).Hours);
                     CurrentAddedDays++;
                 }
             }
+        }
+        private static string GenerateSalonCoords(TheatreSalon salon)
+        {
+            int randomRow = RandomNumberGenerator.GetInt32(0, salon.Rows);
+            int randomCol = RandomNumberGenerator.GetInt32(0, salon.Columns);
+            return $"{randomRow},{randomCol}";
         }
     }
 }
