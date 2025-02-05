@@ -96,10 +96,16 @@ namespace MyCinema.Services.Mappers
             }
             return result;
         }
-        public MovieDetailsViewModel MapToMovieDetailViewModel(Movie Movie, MovieWithCreditsDTO MovieWithCreditsDTO)
+        public async Task<MovieDetailsViewModel> MapToMovieDetailViewModel(Movie Movie, MovieWithCreditsDTO MovieWithCreditsDTO)
         {
             var MovieDTO = MovieWithCreditsDTO?.Movie;
             var CreditsDTO = MovieWithCreditsDTO?.Credits;
+            string lang = null;
+            if (MovieDTO.original_language != null)
+            {
+                var result = await _languageRepository.GetLanguageNameByIsoCodeAsync(MovieDTO.original_language);
+                lang = result.English_Name;
+            }
             return new MovieDetailsViewModel
             {
                 Id = Movie.Id,
@@ -108,7 +114,7 @@ namespace MyCinema.Services.Mappers
                 Budget = Movie.Budget ?? MovieDTO.budget,
                 Homapage = Movie.Homapage ?? MovieDTO.homapage,
                 Imdb_id = Movie.Imdb_id ?? MovieDTO.imdb_id,
-                Original_language = Movie.Original_language?.English_Name ?? MovieDTO.original_language,
+                Original_language = Movie.Original_language?.English_Name ?? lang,
                 Original_title = Movie.Original_title ?? MovieDTO.original_title,
                 Overview = Movie.Overview ?? MovieDTO.overview,
                 Popularity = Movie.Popularity ?? MovieDTO.popularity,

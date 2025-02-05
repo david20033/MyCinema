@@ -44,7 +44,7 @@ namespace MyCinema.Controllers
                 ViewBag.BackButton = "NowPlaying";
             }
          
-            return View(_movieService.MovieDetailsViewModel(Movie,MovieDTO));
+            return View(await _movieService.MovieDetailsViewModel(Movie,MovieDTO));
         }
         [Authorize(Roles = "Admin")]
         public IActionResult AddMovie()

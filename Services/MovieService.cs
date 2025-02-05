@@ -146,9 +146,9 @@ namespace MyCinema.Services
                 await _movieRepository.AddMovieAsync(movieEntity);
             }
         }    
-        public MovieDetailsViewModel MovieDetailsViewModel(Movie movie, MovieWithCreditsDTO MovieDTO)
+        public async Task<MovieDetailsViewModel> MovieDetailsViewModel(Movie movie, MovieWithCreditsDTO MovieDTO)
         {
-            return _movieMapper.MapToMovieDetailViewModel(movie, MovieDTO);
+            return await _movieMapper.MapToMovieDetailViewModel(movie, MovieDTO);
         }
         public async Task<List<MovieListViewModel>> GetMovieListViewModelFromDb (int page)
         {
