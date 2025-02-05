@@ -101,6 +101,12 @@ namespace MyCinema.Repositories
 
             return movies;
         }
+        public async Task<List<Movie>> SearchMoviesAsync(string searchTerm)
+        {
+            return await _context.Movie
+                .Where(m => m.Title.Contains(searchTerm))
+                .ToListAsync();
+        }
 
     }
 }

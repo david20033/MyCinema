@@ -14,5 +14,6 @@ namespace MyCinema.Repositories.IRepositories
         Task<int> GetMoviesCount();
         Task<List<Movie>> GetAllMoviesAsync();
         Task<List<Movie>> GetAllUnprojectedScreenings(QueryObject query);
+        Task<List<Movie>> SearchMoviesAsync(string searchTerm);
     }
 }

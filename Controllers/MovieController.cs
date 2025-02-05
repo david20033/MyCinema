@@ -90,5 +90,10 @@ namespace MyCinema.Controllers
             await _movieService.AddMovieRangeInDataBaseByIds(selectedMovieIds);
             return RedirectToAction("MovieList", "Movie");
         }
+        public async Task<IActionResult> Search([FromQuery] string query)
+        {
+            var Movies = await _movieService.GetMoviesFromApiBySearchTerm(query);
+            return View(Movies);
+        }
     }
 }

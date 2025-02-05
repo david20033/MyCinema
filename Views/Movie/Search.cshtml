@@ -1,0 +1,15 @@
+﻿<div class="container">
+    <div class="table-responsive">
+        <partial name="_movieListPartial" />
+        <div class="d-flex justify-content-between mt-2">
+            <div class="pagination-container overflow-auto">
+                <ul class="pagination">
+                    @for (var i = 1; i <= ViewBag.totalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.currentPage == i ? "active" : "")">
+                            <a class="page-link" href="?page=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>

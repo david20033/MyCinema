@@ -201,6 +201,17 @@ namespace MyCinema.Services
             }
             return result;
         }
+        public async Task<List<MovieListViewModel>> GetMoviesFromApiBySearchTerm(string query)
+        {
+            var list = new List<MovieListViewModel>();
+            var movies = await _apiService.GetMovieSearchResponseAsync(query);
+            var movieEntity = new Movie();
+            foreach (var m in movies.results)
+            {
+                list.Add(await _movieMapper.MapToMovieListViewModel(movieEntity, m));
+            }
+            return list;
+        }
 
     }
 }

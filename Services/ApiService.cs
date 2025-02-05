@@ -111,5 +111,23 @@ namespace MyCinema.Services
             var Movie = await GetMovieDetailsByIdAsync(id);
             return new MovieWithCreditsDTO { Credits = Credits, Movie = Movie };
         }
+        public async Task<MovieSearchResponseDTO> GetMovieSearchResponseAsync(string query)
+        {
+            var options = new RestClientOptions($"https://api.themoviedb.org/3/search/movie?query={query}&language=en-US&page=1");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+            var bearerToken = _configuration["ApiSettings:BearerToken"];
+            request.AddHeader("accept", "application/json");
+            request.AddHeader("Authorization", bearerToken);
+            var response = await client.GetAsync(request);
+
+            if (!response.IsSuccessful || string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception("Failed to fetch languages.");
+            }
+            var movieSearchResponse = JsonConvert.DeserializeObject<MovieSearchResponseDTO>(response.Content);
+            return movieSearchResponse;
+
+        }
     }
 }
