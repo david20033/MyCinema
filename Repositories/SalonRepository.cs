@@ -35,14 +35,21 @@ namespace MyCinema.Repositories
         }
         public async Task<TimeSpan> GetCinemaOpenTimeAsync()
         {
-            var result = await _context.AppSetting.Where(k => k.Key == "CinemaOpenHour").FirstOrDefaultAsync();
-            return TimeSpan.Parse(result.Value);
+            var result = await _context.AppSetting
+                                        .Where(k => k.Key == "CinemaOpenHour")
+                                        .FirstOrDefaultAsync();
 
+            var timeSpan = new TimeSpan(int.Parse(result.Value),0,0);
+            return TimeSpan.FromHours(timeSpan.TotalHours);
         }
         public async Task<TimeSpan> GetCinemaCloseTimeAsync()
         {
-            var result = await _context.AppSetting.Where(k => k.Key == "CinemaCloseHour").FirstOrDefaultAsync();
-            return TimeSpan.Parse(result.Value);
+            var result = await _context.AppSetting
+                                        .Where(k => k.Key == "CinemaCloseHour")
+                                        .FirstOrDefaultAsync();
+
+            var timeSpan = new TimeSpan(int.Parse(result.Value), 0, 0);
+            return TimeSpan.FromHours(timeSpan.TotalHours);
         }
     }
 }

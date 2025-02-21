@@ -45,8 +45,8 @@ namespace MyCinema.Data
                 context.AppSetting.AddRange(
                     new AppSetting { Key = "RegularTicketPrice", Value = "13", Description="Regular Ticket Price", InputType = Enums.InputType.number },
                     new AppSetting { Key = "VipTicketPrice", Value = "17" ,Description = "VIP Ticket Price", InputType = Enums.InputType.number },
-                    new AppSetting { Key = "CinemaOpenHour", Value = "8", Description = "Cinema Open Hour",InputType=Enums.InputType.time},
-                    new AppSetting { Key = "CinemaCloseHour", Value = "17", Description = "Cinema Close Hour", InputType = Enums.InputType.time }
+                    new AppSetting { Key = "CinemaOpenHour", Value = "10", Description = "Cinema Open Hour",InputType=Enums.InputType.time},
+                    new AppSetting { Key = "CinemaCloseHour", Value = "23", Description = "Cinema Close Hour", InputType = Enums.InputType.time }
                     );
                 await context.SaveChangesAsync();
             }
@@ -197,8 +197,8 @@ namespace MyCinema.Data
             var cinemaOpenTime = settings.Where(k => k.Key == "CinemaOpenHour").FirstOrDefault()?.Value;
             var cinemaCloseTime = settings.Where(k => k.Key == "CinemaCloseHour").FirstOrDefault()?.Value;
             int CurrentAddedDays = 1;
-            var time = DateTime.Today.AddDays(1).AddHours(TimeSpan.Parse(cinemaOpenTime).Hours);
-            var maxTime = DateTime.Today.AddDays(7).AddHours(TimeSpan.Parse(cinemaCloseTime).Hours);
+            var time = DateTime.Today.AddDays(1).AddHours(Double.Parse(cinemaOpenTime));
+            var maxTime = DateTime.Today.AddDays(7).AddHours(Double.Parse(cinemaCloseTime));
             while (time <= maxTime)
             {
                 int index = RandomNumberGenerator.GetInt32(0, movies.Count);
@@ -215,7 +215,7 @@ namespace MyCinema.Data
                     }
                     );
                 time = time.Add(movieDuration).AddMinutes(30);
-                var to = DateTime.Today.AddDays(CurrentAddedDays).AddHours(TimeSpan.Parse(cinemaCloseTime).Hours); //debugging
+                var to = DateTime.Today.AddDays(CurrentAddedDays).AddHours(Double.Parse(cinemaCloseTime)); //debugging
                 if (time >=to)
                 {
                     if (time.Date != to.Date)
@@ -223,7 +223,7 @@ namespace MyCinema.Data
                         time = new DateTime(to.Year,to.Month,to.Day);
                     }
                     time=time.AddDays(1).Date;
-                    time = time.AddHours(TimeSpan.Parse(cinemaOpenTime).Hours);
+                    time = time.AddHours(Double.Parse(cinemaOpenTime));
                     CurrentAddedDays++;
                 }
             }
