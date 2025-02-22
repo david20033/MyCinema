@@ -5,6 +5,7 @@ namespace MyCinema.ViewModels
     public class MovieDetailsViewModel
     {
         public Guid? Id { get; set; }
+        public string? ApiId { get; set; }
         public bool? Adult { get; set; }
         public string? Backdrop_path { get; set; }
         public decimal? Budget { get; set; }

@@ -109,6 +109,7 @@ namespace MyCinema.Services.Mappers
             return new MovieDetailsViewModel
             {
                 Id = Movie.Id,
+                ApiId =  MovieDTO.id.ToString(),
                 Adult = Movie.Adult ?? MovieDTO.adult,
                 Backdrop_path = Movie.Backdrop_path ?? MovieDTO.backdrop_path,
                 Budget = Movie.Budget ?? MovieDTO.budget,

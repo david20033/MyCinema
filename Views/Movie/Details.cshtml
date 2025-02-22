@@ -138,6 +138,15 @@
                         <h5><strong>Belongs to Collection:</strong> No collection available</h5>
                     }
                 </div>
+                @if (Model.Id == Guid.Empty&&User.IsInRole("Admin"))
+                {
+                    <div class="container text-center mt-4">
+                        <form method="POST" asp-action="AddMoviesToDataBase">
+                            <input type="hidden" id="selectedMoviesInput" name="selectedMovies"  value="@Model.ApiId" />
+                            <input type="submit" value="Add Movie to Database" class="btn btn-primary" />
+                        </form>
+                    </div>
+                }
             </div>
         </div>
     </div>
