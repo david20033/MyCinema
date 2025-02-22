@@ -32,22 +32,22 @@ namespace MyCinema.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateScreening(AddScreeningViewModel model)
+        public async Task<IActionResult>
+    CreateScreening(AddScreeningViewModel model)
         {
-            //foreach (var state in ModelState)
-            //{
-            //    if (state.Value.Errors.Count > 0)
-            //    {
-            //        foreach (var error in state.Value.Errors)
-            //        {
-            //            Console.WriteLine($"Key: {state.Key}, Error: {error.ErrorMessage}");
-            //        }
-            //    }
-            //}
             if (ModelState.IsValid)
             {
-                await _screeningService.AddScreeningInDbAsync(model);
-                return RedirectToAction("Index", "Screening");
+                try
+                {
+                    await _screeningService.AddScreeningInDbAsync(model);
+                    return RedirectToAction("Index", "Screening");
+                }
+                catch (InvalidOperationException ex)
+                {
+
+                    ViewData["ErrorMessage"] = ex.Message;
+                    return View(model);
+                }
             }
             model.TheatreSalons = await _screeningService.GetSalonsAsync();
             model.Movies = await _screeningService.GetMoviesAsync();

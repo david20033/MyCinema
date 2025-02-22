@@ -3,7 +3,16 @@
 @{
     ViewData["Title"] = "Add Screening";
 }
+@{
+    var errorMessage = ViewData["ErrorMessage"] as string;
+}
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @errorMessage
+    </div>
+}
 <div class="container my-5">
     <h1 class="text-primary mb-4">Add Screening</h1>
 
