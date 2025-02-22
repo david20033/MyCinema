@@ -49,15 +49,6 @@ namespace MyCinema.Services
             var cinemaClosingTime = await _salonRepository.GetCinemaCloseTimeAsync();
             var totalDayDuration = cinemaClosingTime - cinemaOpeningTime;
             List<SalonMovieTimelineViewModel> result = [];
-            DateTime date;
-            if (query.Date != null)
-            {
-                date = query.Date.Value.Date;
-            }
-            else
-            {
-                date = DateTime.Now.Date;
-            }
             foreach (var salon in salons) 
             {
                 var screenings = salon.Screenings.ToList();
