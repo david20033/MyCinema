@@ -54,6 +54,7 @@ namespace MyCinema.Repositories
         {
             return await _context.Screening
                 .Where(s => s.MovieId == movieId && s.StartTime.Date == date.Date)
+                .OrderBy(t=>t.StartTime)
                 .ToListAsync();
         }
     }
