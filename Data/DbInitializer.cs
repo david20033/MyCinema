@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -136,15 +137,19 @@ namespace MyCinema.Data
                 var Users = await userManager.Users.ToListAsync();
                 var Price1 = settings.Where(k => k.Key == "RegularTicketPrice").FirstOrDefault()?.Value;
                 var Price2 = settings.Where(k => k.Key == "VipTicketPrice").FirstOrDefault()?.Value;
+                Random random = new Random();
                 foreach (var screen in Screenings)
                 {
                     for (int i = 0; i < 10; i++)
                     {
                         var randomUser = Users[RandomNumberGenerator.GetInt32(0, Users.Count)];
+                        int randomDays = random.Next(0, 8);
+                        DateTime today = DateTime.Now;
+                        DateTime randomOrderDate = today.AddDays(-randomDays);
                         var ticketOrder = new TicketOrder
                         {
                             Id = Guid.NewGuid(),
-                            OrderDate = DateTime.Now,
+                            OrderDate = randomOrderDate,
                         };
                         var Salon = screen.TheatreSalon;
                         await context.TicketOrder.AddAsync(ticketOrder);
