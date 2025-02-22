@@ -8,158 +8,161 @@
 <div class="container my-5">
     <div class="row">
         <!-- Movie Poster -->
-        <div class="col-md-4 text-center">
+        <div class="col-md-4 text-center mb-4">
             @if (!string.IsNullOrEmpty(Model.Poster_path))
             {
                 string poster_path = $"https://image.tmdb.org/t/p/original{Model.Poster_path}";
-                    <img src="@poster_path" alt="Movie Poster" class="img-fluid rounded shadow">
+                <img src="@poster_path" alt="Movie Poster" class="img-fluid rounded shadow-lg">
             }
             else
             {
-                    <p>No poster available.</p>
+                <p class="text-muted">No poster available.</p>
             }
         </div>
 
         <!-- Movie Information -->
         <div class="col-md-8">
-            <h1 class="display-4 text-primary">@Model.Title</h1>
-            <h5 class="text-muted">@Model.Original_title (@Model.Release_date)</h5>
+            <div class="card shadow-sm p-4">
+                <h1 class="display-4 text-primary">@Model.Title</h1>
+                <h5 class="text-muted">@Model.Original_title (@Model.Release_date)</h5>
 
-            <!-- Overview -->
-            <div class="mt-3">
-                <h4 class="font-weight-bold">Overview:</h4>
-                <p>@Model.Overview</p>
-            </div>
+                <!-- Overview -->
+                <div class="mt-3">
+                    <h4 class="font-weight-bold">Overview:</h4>
+                    <p>@Model.Overview</p>
+                </div>
 
-            <!-- Directors and Actors Row -->
-            <div class="row mt-3">
-                <div class="col-sm-6">
-                    <h5 class="font-weight-bold">Directors:</h5>
-                    <ul class="list-inline">
-                        @foreach (var director in Model.Directors)
-                        {
+                <!-- Directors and Actors Row -->
+                <div class="row mt-3">
+                    <div class="col-sm-6">
+                        <h5 class="font-weight-bold">Directors:</h5>
+                        <ul class="list-inline">
+                            @foreach (var director in Model.Directors)
+                            {
                                 <li class="list-inline-item"><i class="fas fa-user-tie"></i> @director</li>
-                        }
-                    </ul>
-                </div>
-                <div class="col-sm-6">
-                    <h5 class="font-weight-bold">Actors:</h5>
-                    <ul class="list-inline">
-                        @foreach (var actor in Model.Cast)
-                        {
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5 class="font-weight-bold">Actors:</h5>
+                        <ul class="list-inline">
+                            @foreach (var actor in Model.Cast)
+                            {
                                 <li class="list-inline-item"><i class="fas fa-user"></i> @actor</li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Additional Information -->
-            <div class="row mt-3">
-                <div class="col-sm-6">
-                    <h5><strong>Status:</strong> @Model.Status</h5>
-                </div>
-                <div class="col-sm-6">
-                    <h5><strong>Run Time:</strong> @Model.RunTime minutes</h5>
-                </div>
-            </div>
-
-            <!-- Budget and Revenue -->
-            <div class="row mt-3">
-                <div class="col-sm-6">
-                    <h5><strong>Budget:</strong> @Model.Budget?.ToString("C")</h5>
-                </div>
-                <div class="col-sm-6">
-                    <h5><strong>Revenue:</strong> @Model.Revenue?.ToString("C")</h5>
-                </div>
-            </div>
-
-            <!-- Genres -->
-            @if (Model.Genres != null && Model.Genres.Any())
-            {
-                    <div class="mt-3">
-                        <h5><strong>Genres:</strong> 
-                        @foreach (var genre in Model.Genres)
-                        {
-                                    <span class="badge bg-info text-white">@genre</span>
-                        }
-                        </h5>
+                            }
+                        </ul>
                     </div>
-            }
+                </div>
 
-            <!-- Production Companies -->
-            @if (Model.Production_companies != null && Model.Production_companies.Any())
-            {
-                    <div class="mt-3">
-                        <h5><strong>Production Companies:</strong> 
-                        @foreach (var comp in Model.Production_companies)
-                        {
-                                    <span class="badge bg-primary text-white">@comp</span>
-                        }
-                        </h5>
+                <!-- Additional Information -->
+                <div class="row mt-3">
+                    <div class="col-sm-6">
+                        <h5><strong>Status:</strong> @Model.Status</h5>
                     </div>
-            }
+                    <div class="col-sm-6">
+                        <h5><strong>Run Time:</strong> @Model.RunTime minutes</h5>
+                    </div>
+                </div>
 
-            <!-- Additional Information -->
-            <div class="mt-3">
-                <h5><strong>Original Language:</strong> @Model.Original_language</h5>
-                <h5><strong>Popularity:</strong> @Model.Popularity</h5>
-                <h5>
-                    <strong>Vote Average:</strong>
-                    <span class="vote-average">
-                        @for (int i = 1; i <= 10; i++)
-                        {
-                            if (i <= Model.Vote_average)
-                            {
-                                <i class="fas fa-star text-warning"></i>
-                            }
-                            else if (i - 1 < Model.Vote_average && Model.Vote_average < i)
-                            {
-                                <i class="fas fa-star-half-alt text-warning"></i>
-                            }
-                            else
-                            {
-                                <i class="far fa-star text-warning"></i>
-                            }
-                        }
-                    </span>
-                    <span class="ml-2">(@Model.Vote_average)</span>
-                </h5>
-                <h5><strong>Vote Count:</strong> @Model.Vote_count</h5>
-                <h5><strong>Only for adults:</strong> @Model.Adult</h5>
-                @if (!string.IsNullOrEmpty(Model.Bellongs_to_collection))
+                <!-- Budget and Revenue -->
+                <div class="row mt-3">
+                    <div class="col-sm-6">
+                        <h5><strong>Budget:</strong> @Model.Budget?.ToString("C")</h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5><strong>Revenue:</strong> @Model.Revenue?.ToString("C")</h5>
+                    </div>
+                </div>
+
+                <!-- Genres -->
+                @if (Model.Genres != null && Model.Genres.Any())
                 {
+                    <div class="mt-3">
+                        <h5>
+                            <strong>Genres:</strong>
+                            @foreach (var genre in Model.Genres)
+                            {
+                                <span class="badge bg-info text-white">@genre</span>
+                            }
+                        </h5>
+                    </div>
+                }
+
+                <!-- Production Companies -->
+                @if (Model.Production_companies != null && Model.Production_companies.Any())
+                {
+                    <div class="mt-3">
+                        <h5>
+                            <strong>Production Companies:</strong>
+                            @foreach (var comp in Model.Production_companies)
+                            {
+                                <span class="badge bg-primary text-white">@comp</span>
+                            }
+                        </h5>
+                    </div>
+                }
+
+                <!-- Additional Information -->
+                <div class="mt-3">
+                    <h5><strong>Original Language:</strong> @Model.Original_language</h5>
+                    <h5><strong>Popularity:</strong> @Model.Popularity</h5>
+                    <h5>
+                        <strong>Vote Average:</strong>
+                        <span class="vote-average">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                if (i <= Model.Vote_average)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                else if (i - 1 < Model.Vote_average && Model.Vote_average < i)
+                                {
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+                            }
+                        </span>
+                        <span class="ml-2">(@Model.Vote_average)</span>
+                    </h5>
+                    <h5><strong>Vote Count:</strong> @Model.Vote_count</h5>
+                    <h5><strong>Only for adults:</strong> @Model.Adult</h5>
+                    @if (!string.IsNullOrEmpty(Model.Bellongs_to_collection))
+                    {
                         <h5><strong>Belongs to Collection:</strong> @Model.Bellongs_to_collection</h5>
-                }
-                else
-                {
+                    }
+                    else
+                    {
                         <h5><strong>Belongs to Collection:</strong> No collection available</h5>
-                }
+                    }
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Date Buttons for Screenings -->
+    @if (Model.Id != Guid.Empty)
+    {
+        <div class="container text-center mt-4">
+            <h4>Select a Date:</h4>
+            <div class="btn-group" role="group" aria-label="Date Selection">
+                @for (int i = 0; i < 7; i++)
+                {
+                    var date = DateTime.Today.AddDays(i).ToString("yyyy-MM-dd");
+                    <button class="btn btn-outline-primary mx-1" onclick="fetchScreenings('@date')">@date</button>
+                }
+            </div>
+        </div>
+
+        <!-- Available Screenings -->
+        <div class="container mt-4">
+            <h4 class="text-center">Available Screenings</h4>
+            <div id="screenings" class="text-center text-muted">Select a date to view screenings.</div>
+        </div>
+    }
 </div>
-@if (Model.Id != Guid.Empty)
-{
-<!-- Date Buttons for Screenings -->
-<div class="container text-center mt-4">
-    <h4>Select a Date:</h4>
-    <div class="btn-group" role="group" aria-label="Date Selection">
-        @for (int i = 0; i < 7; i++)
-        {
-            var date = DateTime.Today.AddDays(i).ToString("yyyy-MM-dd");
-            <button class="btn btn-outline-primary" onclick="fetchScreenings('@date')">@date</button>
-        }
-    </div>
-</div>
-
-
-<!-- Available Screenings -->
-<div class="container mt-4">
-    <h4 class="text-center">Available Screenings</h4>
-    <div id="screenings" class="text-center text-muted">Select a date to view screenings.</div>
-	</div>
-}
-
 
 <script>
     function fetchScreenings(date) {
