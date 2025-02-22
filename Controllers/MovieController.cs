@@ -8,6 +8,8 @@ using MyCinema.Helpers;
 using MyCinema.Services;
 using MyCinema.Services.IServices;
 using MyCinema.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using X.PagedList;
 
 namespace MyCinema.Controllers
 {
@@ -64,12 +66,14 @@ namespace MyCinema.Controllers
             return RedirectToAction("Index");
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> NowPlaying(int page)
+        public async Task<IActionResult> NowPlaying(int? page)
         {
             if (page == 0) page = 1;
-            ViewBag.currentPage = page;
-            ViewBag.totalPages = 100; //will be changed later
-            return View(await _movieService.GetMovieListViewModelFromApi(page));
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            var data = await _movieService.GetMovieListViewModelFromApi(pageNumber);
+            var pagedList = new StaticPagedList<MovieListViewModel>(data, pageNumber, pageSize, 1000);
+            return View(pagedList);
         }
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> MovieList(int page)
