@@ -32,7 +32,7 @@
     </table>
 
     <div class="d-flex justify-content-center">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+        @Html.PagedListPager(Model, page => Url.Action("Payments", new { page }),
                  new PagedListRenderOptions
         {
             LiElementClasses = new[] { "page-item" },

@@ -27,14 +27,19 @@ namespace MyCinema.Controllers
         {
             var model = await _analyticsService.GetAnalyticsMovieViewModels(DateTime.MinValue, DateTime.MaxValue);
             return View(model);
-        } 
+        }
         public async Task<IActionResult> Payments(int? page)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            var data = await _analyticsService.GetPaymentAnalyticsViewModelsAsync();
-            IPagedList<PaymentAnalyticsViewModel> pagedList = data.ToPagedList(pageNumber, pageSize);
+
+            var (data, totalCount) = await _analyticsService.GetPaymentAnalyticsViewModelsAsync(pageNumber);
+
+
+            var pagedList = new StaticPagedList<PaymentAnalyticsViewModel>(data, pageNumber, pageSize, totalCount);
+
             return View(pagedList);
         }
+
     }
 }

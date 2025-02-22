@@ -52,21 +52,23 @@ namespace MyCinema.Services
             }
             return result;
         }
-        public async Task<List<PaymentAnalyticsViewModel>> GetPaymentAnalyticsViewModelsAsync()
+        public async Task<(List<PaymentAnalyticsViewModel> data, int totalCount)> GetPaymentAnalyticsViewModelsAsync(int pageNumber)
         {
-            var TicketOrder = await _analyticsRepository.GetAllTicketsOrdersForGivenPeriod(DateTime.MinValue, DateTime.MaxValue);
-            var result = TicketOrder
+            var (ticketOrders, totalCount) = await _analyticsRepository.GetAllTicketsOrdersWithDetailsForGivenPeriod(DateTime.MinValue, DateTime.MaxValue, pageNumber);
+
+            var result = ticketOrders
                 .Select(t => new PaymentAnalyticsViewModel
                 {
-                    TotalAmount = t.Tickets.Select(t=>t.Price).Sum(),
-                    VipTicketAmount = t.Tickets.Where(t=>t.Type==Enums.TicketType.VIP).Select(p=>p.Price).Sum(),
-                    RegularTicketAmount = t.Tickets.Where(t => t.Type == Enums.TicketType.Regular).Select(p => p.Price).Sum(),
-                    MovieTitle = t.Tickets[0].Screening.Movie.Title,
+                    TotalAmount = t.Tickets.Sum(ticket => ticket.Price),
+                    VipTicketAmount = t.Tickets.Where(ticket => ticket.Type == Enums.TicketType.VIP).Sum(ticket => ticket.Price),
+                    RegularTicketAmount = t.Tickets.Where(ticket => ticket.Type == Enums.TicketType.Regular).Sum(ticket => ticket.Price),
+                    MovieTitle = t.Tickets.First().Screening.Movie.Title,
                     CustomerEmail = t.CustomerId.ToString(),
-                    Date=t.OrderDate,
+                    Date = t.OrderDate
+                })
+                .ToList();
 
-                }).ToList();
-            return result;
+            return (result, totalCount);
         }
     }
 }
