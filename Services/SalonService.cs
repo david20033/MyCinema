@@ -44,7 +44,7 @@ namespace MyCinema.Services
         }
         public async Task<List<SalonMovieTimelineViewModel>> GetSalonMovieTimelineViewModels(QueryObject query)
         {
-            var salons = await _salonRepository.GetTheatreSalonsAsync();
+            var salons = await _salonRepository.GetTheatreSalonsWithScreeningsAsync(query);
             var cinemaOpeningTime = await _salonRepository.GetCinemaOpenTimeAsync();
             var cinemaClosingTime = await _salonRepository.GetCinemaCloseTimeAsync();
             var totalDayDuration = cinemaClosingTime - cinemaOpeningTime;
@@ -60,7 +60,7 @@ namespace MyCinema.Services
             }
             foreach (var salon in salons) 
             {
-                var screenings = salon.Screenings.Where(s => s.StartTime.Date == date).ToList();
+                var screenings = salon.Screenings.ToList();
                 int salonNumber = salon.SalonNumber;
                 if (screenings == null || screenings.Count == 0)
                 {

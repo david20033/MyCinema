@@ -25,7 +25,15 @@ namespace MyCinema.Repositories
         {
             return await _context.TheatreSalon
                 .OrderBy(x=>x.SalonNumber)
-                .Include(ts=>ts.Screenings)
+                //.Include(ts=>ts.Screenings.Where(s => s.StartTime == query.Date))
+                //.ThenInclude(ts=>ts.Movie)
+                .ToListAsync();
+        }
+        public async Task<List<TheatreSalon>> GetTheatreSalonsWithScreeningsAsync(QueryObject query)
+        {
+              return await _context.TheatreSalon
+                .OrderBy(x=>x.SalonNumber)
+                .Include(ts=>ts.Screenings.Where(s => s.StartTime.Date == query.Date.Value.Date))
                 .ThenInclude(ts=>ts.Movie)
                 .ToListAsync();
         }
