@@ -114,6 +114,9 @@ MyCinema features a consistent navigation bar across all pages with the followin
 ![image](https://github.com/user-attachments/assets/3bb1634d-2f4c-4c75-9425-62b21b037c2d)
 **Add Theatre Salon Form**
 ![image](https://github.com/user-attachments/assets/284ba947-d85e-4551-bdf6-b13d3b12c241)
+**Analytics page**
+![image](https://github.com/user-attachments/assets/6afb3b08-c068-4242-b010-33f9ccbf070d)
+![image](https://github.com/user-attachments/assets/ca3eaf8e-bd5f-4bb7-a404-b99b30ae73db)
 
 ## FAQ and Troubleshooting
 - **Issue:** Database connection error.
